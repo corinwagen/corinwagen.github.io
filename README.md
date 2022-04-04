@@ -29,7 +29,7 @@ $ go run build.go
 
 ## License
 
-This project is licensed under the Apache License, Version 2.0.
+This project is licensed under the GNU Public License, Version 3.0.
 
 *Copyright 2021 by Corin Wagen*
 
