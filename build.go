@@ -32,6 +32,7 @@ type Page struct {
 	Title   string  `yaml:"title"`
 	IsBlog  bool    `yaml:"blog"`
 	Date    string  `yaml:"date"`
+	Summary string  `yaml:"summary"`
 	Content string  `fm:"content" yaml:"-"`
     Path    string
     DateObj time.Time
@@ -68,6 +69,7 @@ func build_page(path string, info os.FileInfo, err error) error {
     if post.IsBlog {
         formatted_text = strings.Replace(blog_template, "TITLE", post.Title, -1)
         formatted_text = strings.Replace(formatted_text, "CONTENT", post.Content, -1)
+        formatted_text = strings.Replace(formatted_text, "SUMMARY", post.Summary, -1)
         post.DateObj, _ = time.Parse(date_input, post.Date)
         formatted_text = strings.Replace(formatted_text, "DATE", post.DateObj.Format(date_output), -1)
 
