@@ -16,7 +16,7 @@ import (
 // config
 const source_dir            string  = "src/"
 const template_path         string  = "static/template.html"
-const target_dir            string  = "public/"
+const target_dir            string  = "public/main/"
 
 // blog config
 const blog_template_path    string  = "static/blog-template.html"
@@ -102,7 +102,7 @@ func main() {
     for idx := 0; idx < len(blog_posts); idx++ {
         post := blog_posts[idx]
 
-        current_page = current_page + "<div class='blogroll-container'><h2><a class='blogroll-title' href='../" + post.Path  + "'>" + post.Title + "</a></h2><i>"
+        current_page = current_page + "<div class='blogroll-container'><h2><a class='blogroll-title' href='../../" + post.Path  + "'>" + post.Title + "</a></h2><i>"
         current_page = current_page + post.DateObj.Format(date_output) + "</i>" + post.Content + "</div>"
 
         count++
@@ -116,7 +116,7 @@ func main() {
                 current_page = current_page + "<div class='next-link'><a href='blog_p" + strconv.Itoa(page_num + 1) + ".html'>next</a></div>"
             }
 
-            formatted_text := strings.Replace(page_template, "TITLE", "Blogroll", -1)
+            formatted_text := strings.Replace(page_template, "TITLE", "Blog", -1)
             formatted_text = strings.Replace(formatted_text, "CONTENT", current_page, -1)
             fmt.Println("Building " + target_dir + "blog_p" + strconv.Itoa(page_num) + ".html")
             write_file(target_dir + "blog_p" + strconv.Itoa(page_num) + ".html", formatted_text)

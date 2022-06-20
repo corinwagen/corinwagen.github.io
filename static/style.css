@@ -41,7 +41,6 @@ ul {
   padding-left: 1.2em;
 }
 
-/*li:not(:last-child) { */
 li {
     margin-top: 5px;
     margin-bottom: 5px;
@@ -57,6 +56,8 @@ li {
   margin-right: auto;
   max-width: 90%;
   display: block;
+  margin-top: 0.75em;
+  margin-bottom: 0.75em;
 }
 
 .menu-list {
@@ -109,4 +110,10 @@ li {
   padding: 0.6em;
   font-size: 85%;
   overflow: scroll;
+}
+
+figcaption {
+  font-size: 9pt;
+  font-style: italic;
+  text-align: center;
 }
