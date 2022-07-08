@@ -127,3 +127,11 @@ th,td {
     text-align: center;
     padding: 0 10px;
 }
+
+sup,sub {
+  line-height: 0;
+}
+
+.footnotes {
+    font-size: 11pt;
+}
