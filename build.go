@@ -92,7 +92,7 @@ func main() {
 
     filepath.Walk(source_dir, build_page)
 
-    // All we need to do now is build the blogroll.
+    // All we need to do now is build the blogroll and the archive.
     sort.Slice(blog_posts, func(i, j int) bool {
         return blog_posts[i].DateObj.After(blog_posts[j].DateObj)
     })
@@ -101,22 +101,33 @@ func main() {
     current_page := "<h1 class='blogroll-header'>Blog</h1>"
     count := 0
     page_num := 0
+
+    blog_archive := "<h1 class='blogroll-header'>Archive</h1>"
+
+    if len(blog_posts) > posts_per_page {
+        current_page = current_page + "<div class='next-link'><a href='blog_p2.html'>next page</a></div>"
+    }
+
     for idx := 0; idx < len(blog_posts); idx++ {
         post := blog_posts[idx]
 
         current_page = current_page + "<div class='blogroll-container'><h2><a class='blogroll-title' href='../../" + post.Path  + "'>" + post.Title + "</a></h2><i>"
         current_page = current_page + post.DateObj.Format(date_output) + "</i>" + post.Content + "</div>"
 
+        blog_archive = blog_archive + "<a href='../../" + post.Path  + "'>" + post.Title + "</a> (" + post.DateObj.Format(date_output) + ")<br>"
+
         count++
         if (count == posts_per_page) || (idx + 1 == len(blog_posts)) {
             page_num++
             if page_num > 1 {
-                current_page = current_page + "<div class='previous-link'><a href='blog_p" + strconv.Itoa(page_num - 1) + ".html'>previous</a></div>"
+                current_page = current_page + "<div class='previous-link'><a href='blog_p" + strconv.Itoa(page_num - 1) + ".html'>previous page</a></div>"
             }
 
             if idx + 1 < len(blog_posts) {
-                current_page = current_page + "<div class='next-link'><a href='blog_p" + strconv.Itoa(page_num + 1) + ".html'>next</a></div>"
+                current_page = current_page + "<div class='next-link'><a href='blog_p" + strconv.Itoa(page_num + 1) + ".html'>next page</a></div>"
             }
+
+            current_page = current_page
 
             formatted_text := strings.Replace(page_template, "TITLE", "Blog", -1)
             formatted_text = strings.Replace(formatted_text, "CONTENT", current_page, -1)
@@ -125,4 +136,9 @@ func main() {
             current_page = "<h1 class='blogroll-header'>Blog</h1>"
         }
     }
+
+    formatted_text := strings.Replace(page_template, "TITLE", "Archive", -1)
+    formatted_text = strings.Replace(formatted_text, "CONTENT", blog_archive, -1)
+    fmt.Println("Building " + target_dir + "archive.html")
+    write_file(target_dir + "archive.html", formatted_text)
 }
