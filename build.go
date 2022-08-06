@@ -100,13 +100,14 @@ func main() {
     // This is a bit messy, but gets the job done.
     current_page := "<h1 class='blogroll-header'>Blog</h1>"
     count := 0
-    page_num := 0
+    page_num := 1
 
     blog_archive := "<h1 class='blogroll-header'>Archive</h1>"
 
     if len(blog_posts) > posts_per_page {
-        current_page = current_page + "<div class='next-link'><a href='blog_p2.html'>next page</a></div>"
+        current_page = current_page + "<div class='next-link'><a href='blog_p" + strconv.Itoa(page_num + 1) + ".html'>next page</a></div>"
     }
+    current_page = current_page + "<br>"
 
     for idx := 0; idx < len(blog_posts); idx++ {
         post := blog_posts[idx]
@@ -118,7 +119,7 @@ func main() {
 
         count++
         if (count == posts_per_page) || (idx + 1 == len(blog_posts)) {
-            page_num++
+            // finish old page
             if page_num > 1 {
                 current_page = current_page + "<div class='previous-link'><a href='blog_p" + strconv.Itoa(page_num - 1) + ".html'>previous page</a></div>"
             }
@@ -126,14 +127,24 @@ func main() {
             if idx + 1 < len(blog_posts) {
                 current_page = current_page + "<div class='next-link'><a href='blog_p" + strconv.Itoa(page_num + 1) + ".html'>next page</a></div>"
             }
-
-            current_page = current_page
+            current_page = current_page + "<br>"
 
             formatted_text := strings.Replace(page_template, "TITLE", "Blog", -1)
             formatted_text = strings.Replace(formatted_text, "CONTENT", current_page, -1)
             fmt.Println("Building " + target_dir + "blog_p" + strconv.Itoa(page_num) + ".html")
             write_file(target_dir + "blog_p" + strconv.Itoa(page_num) + ".html", formatted_text)
+
+            // start new page
             current_page = "<h1 class='blogroll-header'>Blog</h1>"
+            page_num++
+            if page_num > 1 {
+                current_page = current_page + "<div class='previous-link'><a href='blog_p" + strconv.Itoa(page_num - 1) + ".html'>previous page</a></div>"
+            }
+
+            if idx + posts_per_page + 1 < len(blog_posts) {
+                current_page = current_page + "<div class='next-link'><a href='blog_p" + strconv.Itoa(page_num + 1) + ".html'>next page</a></div>"
+            }
+            current_page = current_page + "<br>"
         }
     }
 

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      Singleton Saturday: Dynamics at the Border Between General- and Specific-Acid Catalysis
+    </title>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="language" content="en">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--twitter-->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@github" />
+    <meta name="twitter:title" content="Singleton Saturday: Dynamics at the Border Between General- and Specific-Acid Catalysis" />
+    <meta name="twitter:description" content="How acid-catalyzed reactions behave as intermediate lifetime approaches zero." />
+
+    <link rel="stylesheet" href="../../static/style.css">
+
+    <!--google-->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MTNZ0ZSG3W"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MTNZ0ZSG3W');
+    </script>
+
+  </head>
+  <body>
+    <ul class="menu-list">
+      <li class="menu-item"><a href="../main/index.html" class="menu-link menu-title">Corin Wagen</a></li>
+      <li class="menu-item"><a href="../main/index.html#about" class="menu-link">About</a></li>
+      <li class="menu-item"><a href="../main/index.html#projects" class="menu-link">Projects</a></li>
+      <li class="menu-item"><a href="../main/index.html#past_work" class="menu-link">Past Work</a></li>
+      <li class="menu-item"><a href="../main/blog_p1.html" class="menu-link">Blog</a></li>
+    </ul>
+    <h1> Singleton Saturday: Dynamics at the Border Between General- and Specific-Acid Catalysis </h1>
+    <p>
+      <i>August 6, 2022</i>
+    </p>
+    
+<p>
+<i>
+This is the first in what will hopefully become a series of blog posts focusing on the fascinating work of Dan Singleton (professor at Texas A&amp;M). My goal is to provide concise and accessible summaries of his work and highlight conclusions relevant to the mechanistic or computational chemist. 
+</i>
+</p>
+
+<p>
+A central theme in mechanistic chemistry is the question of concertedness: if two steps occur simultaneously (“concerted”) or one occurs before the other (“stepwise”). One common way to visualize these possibilities is to plot the reaction coordinate of each step on two axes to form a 2D More O’Ferrall–Jencks (<a href="https://en.wikipedia.org/wiki/More_O%27Ferrall%E2%80%93Jencks_plot">MOJ</a>) plot. On an MOJ plot, a perfectly concerted reaction looks like a straight line, since the two steps occur together, while a stepwise reaction follows the border of the plot, with an intermediate located at one of the corners:
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20220805_moj.png" style="width:450px;" alt="generic MOJ plot" />
+  <figcaption> Generic More O'Ferrall–Jencks plot for general- and specific-acid catalysis (Figure 1 in the paper) </figcaption>
+</figure>
+
+<p>
+In the context of acid catalysis, where a Brønsted acid activates a substrate towards further transformations, the concerted mechanism is known as “general-acid catalysis” and the stepwise mechanism is known as “specific-acid catalysis.” This case is particularly interesting because the timescales of heavy-atom motion and proton motion are somewhat different, as can be seen by comparing typical O–H and C–O IR stretching frequencies:
+</p>
+<p>
+1/(3500 cm<sup>-1</sup> * 3e10 cm/s) = 9.5 fs for O–H bond vibration
+</p>
+<p>
+1/(1200 cm<sup>-1</sup> * 3e10 cm/s) = 28 fs for C–O bond vibration
+</p>
+
+<p>
+Since these timescales are so different, it’s impossible for the two steps to proceed perfectly synchronously, since the proton transfer will be done before heavy-atom motion is even half complete; in other words, the slope of the reaction’s path on the MOJ diagram can’t be 1. <i>Ceteris paribus</i>, then, one might expect stepwise specific-acid mechanisms to be favored. In some cases, however, the putative intermediate would be so unstable that its lifetime ought to be roughly zero (an <a href="https://pubs.acs.org/doi/10.1021/ar50150a001">enforced concerted mechanism</a>, to paraphrase Jencks). 
+</p>
+
+<p>
+In <a href="https://pubs.acs.org/doi/full/10.1021/jacs.7b02148">this week's paper</a>, Aziz and Singleton investigate the mechanism of one such example, the decarboxylation of benzoylacetic acid, which in the stepwise limit proceeds through a bizarre-looking zwitterion:
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20220805_mech.png" style="width:450px;" alt="mechanistic possibilities" />
+  <figcaption> Concerted vs. stepwise mechanisms for decarboxylation of benzoylacetic acid (taken from the paper)</figcaption>
+</figure>
+
+<p>
+Distinguishing concerted and stepwise mechanisms is, in general, a very tough question. In rare cases an intermediate can actually be observed spectroscopically, but inability to observe the intermediate proves nothing: the intermediate could be 10 kcal/mol above the ground state (leading to a vanishingly low concentration) or could persist only briefly before undergoing subsequent reactions. Accordingly, other techniques must be used to study the mechanisms of these reactions. 
+</p>
+
+<p>
+In this case, the authors measured the <sup>12</sup>C/<sup>13</sup>C kinetic isotope effects using their group’s 
+<a href="https://pubs.acs.org/doi/10.1021/ja00141a030">natural abundance method</a>. Heavy-atom kinetic isotope effects are one of the best ways to study these sorts of mechanistic questions because isotopic perturbation is at once <a href="https://pubs.acs.org/doi/full/10.1021/jacs.1c07351">extremely informative</a> and very gentle, causing minimal perturbation to the potential energy surface (unlike e.g. a Hammett study). The KIEs they found are shown below:
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20220805_kies.png" style="width:450px;"/>
+  <figcaption> Kinetic isotope effects for decarboxylation of benzoylacetic acid (Figure 2 from the paper)</figcaption>
+</figure>
+
+<p>
+These KIEs match the computed structure shown below nicely, which shows that proton transfer precedes C–C bond breaking: 
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20220805_ts.png" style="width:400px;"/>
+  <figcaption> Transition state for decarboxylation of benzoylacetic acid (M06-2X/6-311+G**) (taken from the paper)</figcaption>
+</figure>
+
+<p>
+To probe the stepwise/concerted nature of this reaction, the authors conducted quasiclassical <i>ab initio</i> molecular dynamics, propagating trajectories forwards and backwards from the transition state. Surprisingly, the dynamics show that proton transfer is complete before C–C bond scission occurs, forming an intermediate (<b>6</b>) which persists for, on average, 3.4 O–H bond vibrations despite not being a minimum on the PES. This reaction therefore inhabits the border between general- and specific-acid catalysis—proton transfer does occur before decarboxylation, but the intermediate species (in the nomenclature of <a href="https://www.pnas.org/doi/full/10.1073/pnas.1209316109">Houk and Doubleday</a>, a “dynamic intermediate”) is incredibly ephemeral.
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20220805_trajs.png" style="width:450px;"/>
+  <figcaption> Results of quasiclassical trajectories showing the existence of a dynamic intermediate (<b>6</b>) before C–C bond breakage occurs (Figure 4a from the paper)</figcaption>
+</figure>
+
+<p>
+This surprising scenario occurs because of the different timescales of the two elementary mechanistic steps, as discussed above. In the words of the authors:
+</p>
+
+<blockquote>
+It is well understood in chemistry that concerted multibond reactions often involve highly asynchronous bonding changes. However, the normal understanding of asynchronous concerted reactions is that the bonding changes overlap. If otherwise, why should the reaction be concerted at all? This view fails to take into account the differing physics of the heavy-atom versus proton motions. <b>Because of the uneven contribution of the motions, their separation is arguably intrinsic and unavoidable whenever the reaction is highly asynchronous.</b> <i>(emphasis added)</i>
+</blockquote>
+
+<p>
+Aziz and Singleton also observe a curious phenomenon in the quasiclassical trajectories, wherein some trajectories initiated backwards from the (late) transition state fully form the C–C bond before reverting to enol + CO<sub>2</sub>. This phenomenon, termed “deep recrossing,” occurs because the oxygen of the carboxylate is unable to receive the proton, stalling the reaction in the region of the unstable zwitterion; unable to progress forward, the species simply extrudes CO<sub>2</sub> and reverts back to the enol. Thus, even though the O–H bond is formed after the C–C bond (in the reverse direction) and little O–H movement occurs in the TS, inability to form the O–H bond prevents productive reaction, just like one might expect for a concerted TS.
+</p>
+
+<p>
+The picture that emerges, then, is a reaction which “wants” to be concerted, owing to the absence of a stable intermediate along the reaction coordinate, but ends up proceeding through a stepwise mechanism because of the speed of proton transfer. Importantly, the dynamic intermediate “undergoes a series of relevant bond vibrations, as would any intermediate, and it can proceed from this structure in either forward or backward directions”: it is, in meaningful ways, an intermediate.
+</p>
+
+<p>
+Given the ubiquity of proton transfer in organic chemistry, it is likely that many more reactions proceed through this sort of rapidly stepwise mechanism than is commonly appreciated. One case which I find particularly intriguing is “E<sub>2</sub>” reactions, which typically feature proton transfer to a strong base (e.g. potassium <i>tert</i>-butoxide) at the same time as C–Br or C–I bond dissociation. How do these reactions actually proceed on the femtosecond timescale? Is it possible that, <a href="https://pubs.acs.org/doi/pdf/10.1021/ar50059a003">as Bordwell proposed</a>, many E<sub>2</sub> reactions are actually stepwise? So much remains to be learned.
+</p>
+
+
+  </body>
+  <br>
+  <br>
+  <footer>
+    <a href="mailto:cwagen@g.harvard.edu">email</a>
+    <a href="https://github.com/corinwagen">github</a>
+    <a href="https://twitter.com/CorinWagen">twitter</a>
+    <div style="float:right;">
+      <a href='archive.html'>blog archive</a>
+    </div>
+  </footer>
+</html>

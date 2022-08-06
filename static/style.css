@@ -98,6 +98,10 @@ li {
   float: right
 }
 
+.previous-link {
+  float: left
+}
+
 .code {
   font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
   background-color: #ededed;
