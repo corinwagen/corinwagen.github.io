@@ -41,43 +41,43 @@
     
 <p>
 The growing accessibility of computational chemistry has, unfortunately, led to a preponderance of papers with bad computations. Organic chemists are all too familiar with the “DFT section” of an otherwise high-quality publication which typically contains a transition-state structure or two, some sort of enigmatic cartoon purporting to explain the observed selectivity, and perhaps an uninterpretable NCIPLOT cited as evidence for the preceding claims.<sup><a href="#fn1">1</a></sup>
-<p>
+</p>
 
 <p>
 Faced with this sort of landscape, experimental chemists typically adopt one of two faulty heuristics: excessive credulity or universal skepticism. Being too trusting is dangerous, as evidenced by <a href="https://pubs.acs.org/doi/abs/10.1021/acs.organomet.8b00456">work</a> showcasing the manifold ways that simulations can deceive the unwary scientist. Almost anyone who’s made a catalyst predicted to be better by computations knows this well (even when the computations are your own).
-<p>
+</p>
 
 <p>
 However, equally dangerous—and, in my view, less appreciated—is the creeping ennui that diminishes the entire field. This is exemplified by statements like “I don’t believe computations can ever be predictive,” “You can make DFT say anything you want to,” or, more delicately, “Computations are more for generating hypotheses, not being physically correct.” Although most people may be too polite to admit this to their computational collaborators, this nihilism is pervasive—just listen to the conversations as students walk back from a departmental seminar.
-<p>
+</p>
 
 <p>
 This viewpoint is wrong. The existence of bad computational models does not mean that all models are bad, nor does it imply that the task of creating models is inherently futile. Examples from other scientific fields, like orbital mechanics and fluid dynamics, indicate that computations can achieve impressive degrees of accuracy and become pivotal and trustworthy components of the scientific process. Closer to home, even the most skeptical chemists would admit that for e.g. calculating IR frequencies in the ground state, DFT shows impressive predictive accuracy (modulo the usual systematic error). There’s no intrinsic reason why accurately modeling chemical systems, even prospectively, ought to be impossible; chemistry is not a social science.
-<p>
+</p>
 
 <p>
 Why, then, is this variety of skepticism so common? Part of the problem comes from the bewildering milieu of options available to practitioners in the field. While a seasoned expert can quickly assess the relative merits of BYLP/MIDI! and DSD-PBEP86/def2-TZVP, to the layperson it’s tough to guess which might be superior. Without transparent heuristics by which to judge the quality of computational results, it’s no surprise that zeroth-order approximations (“DFT good” or “DFT bad”) have become so common among non-experts.<sup><a href="#fn2">2</a></sup>
-<p>
+</p>
 
 <p>
 Another issue is the generally optimistic demeanor of computational chemists towards their field. While the temptation to emphasize the potential upside of one’s research area is understandable, overestimating the capabilities of state-of-the-art technology inevitably leads to a reckoning when the truth becomes obvious. Except in certain circumscribed cases, we are still far from any predictive models of reactivity or selectivity for typical solution-phase reactions, various purported “breakthroughs” notwithstanding. Based on questions I’ve heard in talks, this uncomfortable truth is not universally understood by experimental audiences.
-<p>
+</p>
 
 <p>
 What, then, are the practical conclusions for computational chemists? Firstly, we should not be afraid to be our field’s own harshest critics. Allowing low-quality work into the literature erodes trust in our field; although raising our standards may be difficult and unpopular in the short term (kinetics), in the long run it will benefit the field (thermodynamics). You never get a second chance at a first impression; every bad paper published causes good papers to get that much less attention.
-<p>
+</p>
 
 <p>
 Secondly, we should work to develop consistent standards and workflows by which one can obtain reliable computational results. Just like there are accepted means by which new compounds are characterized (<sup>1</sup>H NMR, <sup>13</sup>C NMR, HRMS, IR), there ought to be transparent methods by which transition states can reliably be found and studied. The manifold diversity of parameters employed today is a sign of the field’s immaturity—in truly mature fields, there’s an accepted right way to do things.<sup><a href="#fn3">3</a></sup> The growing popularity of tools like <a href=https://xtb-docs.readthedocs.io/en/latest/crest.html><i>crest</i></a> is an important step in this direction, as is the ability to to use high-level post-Hartree–Fock wavefunction methods like DLPNO-CCSD(T) to refine single-point energies.
-<p>
+</p>
 
 <p>
 Finally, we must be honest about the limitations of our techniques and our results. So much about the chemical world remains mysterious and far beyond our understanding, let alone our ability to reproduce <i>in silico</i>. Far from being a failure for the field, however, this is something to be acknowledged and celebrated; science is only possible when there remain secrets to be found.
-<p>
+</p>
 
 <p>
 Between the Scylla of gullible credulity and the Charybdis of defensive nihilism, we must chart a middle way.
-<p>
+</p>
 
 <i>
 Thanks to Hayden Sharma for reading a draft of this post.
