@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      The Rate-Determining Span
+    </title>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="language" content="en">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--twitter-->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@github" />
+    <meta name="twitter:title" content="The Rate-Determining Span" />
+    <meta name="twitter:description" content="A simple mathematical demonstration that the existence of a low-energy intermediate has no impact on rate." />
+
+    <link rel="stylesheet" href="../../static/style.css">
+
+    <!--google-->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MTNZ0ZSG3W"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MTNZ0ZSG3W');
+    </script>
+
+  </head>
+  <body>
+    <ul class="menu-list">
+      <li class="menu-item"><a href="../main/index.html" class="menu-link menu-title">Corin Wagen</a></li>
+      <li class="menu-item"><a href="../main/index.html#about" class="menu-link">About</a></li>
+      <li class="menu-item"><a href="../main/index.html#projects" class="menu-link">Projects</a></li>
+      <li class="menu-item"><a href="../main/index.html#past_work" class="menu-link">Past Work</a></li>
+      <li class="menu-item"><a href="../main/blog_p1.html" class="menu-link">Blog</a></li>
+    </ul>
+    <h1> The Rate-Determining Span </h1>
+    <p>
+      <i>August 15, 2022</i>
+    </p>
+    
+<p>
+One common misconception in mechanistic organic chemistry is that reactions are accelerated by speeding up the rate-determining step. 
+This mistaken belief can lead to an almost monomaniacal focus on determining the nature of the rate-determining step.
+In fact, it's more correct to think of reactions in terms of the <u>rate-determining span</u>: the difference between the resting state and the highest-energy transition state.
+(I thank Eugene Kwan's <a href=https://ekwan.github.io/pdfs/chem106/28%20-%20First-Order%20Kinetics.pdf>notes</a> for introducing me to this idea.)
+</p>
+
+<p>
+In this post, I hope to demonstrate the veracity of this concept by showing that, under certain idealized assumptions, the existence of a low-energy intermediate has no effect on rate. Consider the following system:
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20220815_scheme.png" style="width:375px;" />
+  <figcaption> Concerted and stepwise mechanisms. </figcaption>
+</figure>
+
+<p>
+We can imagine plotting these two mechanisms on a potential energy surface:
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20220815_rds.png" style="width:450px;" />
+  <figcaption> Concerted and stepwise mechanisms, on a PES. </figcaption>
+</figure>
+
+<p>
+In this example, <b>X</b> = <b>Y</b> + <b>Z</b>; the energy of the transition state and ground state are the same in both cases, and only the presence (or absence) of an intermediate differentiates the two potential energy surfaces. We will now compute the rate of product formation in both cases.
+Using the <a href="https://en.wikipedia.org/wiki/Eyring_equation">Eyring–Polyani equation</a>, it's straightforward to arrive at an overall rate for the concerted reaction as a function of the barrier:
+</p>
+
+<br>
+<p>
+k = k<sub>B</sub>T/h * exp(-<b>X</b>/RT)
+</p>
+<p>
+rate<sub>concerted</sub> = k * [SM]
+</p>
+<p>
+rate<sub>concerted</sub> = k<sub>B</sub>T/h * exp(-<b>X</b>/RT) * [SM]
+</p>
+<br>
+
+<p>
+The stepwise case is only slightly more complicated. Assuming that the barrier to formation of the intermediate is much lower than the barrier to formation of the product, and that the intermediate is substantially lower in energy than the rate-limiting transition state, we can apply the <a href="https://www-jmg.ch.cam.ac.uk/tools/magnus/kineticnotes.html">pre-equilibrium approximation</a>:
+</p>
+
+<br>
+<p>
+rate<sub>stepwise</sub> = k<sub>2</sub> * [INT] 
+</p>
+<p>
+k<sub>2</sub> = k<sub>B</sub>T/h * exp(-<b>Z</b>/RT)
+</p>
+<p>
+rate<sub>stepwise</sub> = k<sub>B</sub>T/h * exp(-<b>Z</b>/RT) * [INT]
+</p>
+<br>
+
+<p>
+Solving for [INT] is straightforward, and we can plug the result in to get our final answer:
+</p>
+
+<br>
+<p>
+<b>Y</b> = -RT * ln([INT]/[SM])
+</p>
+<p>
+[INT] = exp(-<b>Y</b>/RT)*[SM]
+</p>
+<p>
+rate<sub>stepwise</sub> = k<sub>B</sub>T/h * exp(-<b>Z</b>/RT) * exp(-<b>Y</b>/RT) * [SM] 
+</p>
+<p>
+rate<sub>stepwise</sub> = k<sub>B</sub>T/h * exp(-<b>X</b>/RT) * [SM] = rate<sub>concerted</sub>
+</p>
+<br>
+
+<p>
+As promised, the rates are the same—where the preequilibrium approximation holds, the existence of an intermediate has no impact on rate.
+All that matters is the relative energy of the transition state and the ground state.
+</p>
+
+<p>
+This method of thinking is particularly useful for rationalizing tricky Hammett trends. For instance, it's known that electron-rich indoles <a href="https://pubs.acs.org/doi/abs/10.1021/jacs.7b06811">react much faster</a> in Brønsted-acid-catalyzed Pictet–Spengler reactions, even though these reactions proceed through rate-determining elimination from a carbocation. Since electron-poor carbocations are more acidic, simple analysis of the rate-determining step predicts the opposite trend.
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20220815_ps.png" style="width:650px;" />
+  <figcaption> Brønsted-acid-catalyzed Pictet–Spengler reactions. </figcaption>
+</figure>
+
+<p>
+However, if we ignore the intermediate, it's clear that the transition state contains much more carbocationic character than the ground state, and so electron-donating groups will stabilize the transition state relative to the ground state and thereby accelerate the reaction. Thinking about intermediates is a great way to get confused; to understand trends in reactivity, all you need to consider is the transition state and the ground state.
+</p>
+
+
+  </body>
+  <br>
+  <br>
+  <footer>
+    <a href="mailto:cwagen@g.harvard.edu">email</a>
+    <a href="https://github.com/corinwagen">github</a>
+    <a href="https://twitter.com/CorinWagen">twitter</a>
+    <div style="float:right;">
+      <a href='../main/archive.html'>blog archive</a>
+    </div>
+  </footer>
+</html>
