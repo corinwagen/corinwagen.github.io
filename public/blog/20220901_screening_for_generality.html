@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      Screening for Generality: Reflections
+    </title>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="language" content="en">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--twitter-->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@github" />
+    <meta name="twitter:title" content="Screening for Generality: Reflections" />
+    <meta name="twitter:description" content="How the project started, the challenges we faced, and what I've learned from it." />
+
+    <link rel="stylesheet" href="../../static/style.css">
+
+    <!--google-->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MTNZ0ZSG3W"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MTNZ0ZSG3W');
+    </script>
+
+  </head>
+  <body>
+    <ul class="menu-list">
+      <li class="menu-item"><a href="../main/index.html" class="menu-link menu-title">Corin Wagen</a></li>
+      <li class="menu-item"><a href="../main/index.html#about" class="menu-link">About</a></li>
+      <li class="menu-item"><a href="../main/index.html#projects" class="menu-link">Projects</a></li>
+      <li class="menu-item"><a href="../main/index.html#past_work" class="menu-link">Past Work</a></li>
+      <li class="menu-item"><a href="../main/blog_p1.html" class="menu-link">Blog</a></li>
+    </ul>
+    <h1> Screening for Generality: Reflections </h1>
+    <p>
+      <i>September 1, 2022</i>
+    </p>
+    
+<p>
+Now that our work on screening for generality has finally been published in <a href="https://www.nature.com/articles/s41586-022-05263-2"><i>Nature</i></a>, I wanted to first share a few personal reflections and then highlight the big conclusions that I gleaned from this project. 
+</p>
+
+<p>
+This project originated from conversations I had with Eugene Kwan back in February 2019, when I was still an undergraduate at MIT. Although at the time our skills were almost completely non-overlapping, we shared both an interest in “big data” and high-throughput experimentation and a conviction that organic chemistry could benefit from more careful thinking about optimization methods. 
+</p>
+
+<p>
+After a few months of work, Eugene and I had settled on the idea of a “catalytic reaction atlas” (in analogy to the <a href="https://www.cancer.gov/about-nci/organization/ccg/research/structural-genomics/tcga">cancer genome atlas</a>) where we would exhaustively investigate catalysts, conditions, substrates, etc. for a single asymmetric reaction and then (virtually) compare different optimization methods to see which algorithms led to the best hits. Even with fairly conservative assumptions, we estimated that this would take on the order of 10<sup>5</sup> reactions, or about a year of continuous HPLC time, meaning that some sort of analytical advance was needed.
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20220901_slide.png" style="width:550px;"/>
+  <figcaption>A slide comparing different optimization strategies, from April 2019.<br>Multi-substrate screening is proposed as one of many different algorithms.</figcaption>
+</figure>
+
+<p>
+When I proposed this project to Eric, he was interested but suggested we focus more narrowly on the question of generality, or how to discover reactions with broad substrate scope. In an excited phone call, Eugene and I had the insight that we could screen lots of substrates at once by using mass spectrometry, thus bypassing our analytical bottleneck and enabling us to access the “big data” regime without needing vast resources to do so.<sup><a href="#fn1">1</a></sup>
+</p>
+
+<p>
+Getting the analytical technology to work took about two years of troubleshooting. We were lucky to be joined by Spencer, an incredible analytical chemist and SFC guru, and eventually were able to get reproducible and accurate data by a combination of experimental insights (running samples at high dilution) and computational tweaks (better peak models and fitting algorithms). To make sure that the method was working properly, we ran validation experiments both on a bunch of scalemic samples and on a varied set of complex pharmaceutical racemates.
+</p>
+
+<p>
+Choosing the proper reaction took a bit of thought, but once we settled on a set of substrates and catalysts the actual experiments were a breeze. Almost all the screening for this project was done in November–December 2021: in only a few hours, I could easily run and analyze hundreds of reactions per week. 
+</p>
+
+<p>
+I want to conclude by sharing three high-level conclusions that I’ve taken away from working on this project; for the precise scientific conclusions of this study, you can read the paper itself.
+</p>
+
+<h3> 1. Chemical space is big, so how you search matters</h3>
+
+<p>
+There are a ton of potential catalysts waiting to be discovered, and it seems likely that almost any hit can be optimized to 90% ee by sufficient graduate-student hours. Indeed, one of the reasons we selected the Pictet–Spengler reaction was the diversity of different catalyst structures capable of giving high enantioselectivity. But just because you can get 90% ee from a given catalyst family doesn’t mean you should: it might be terrible for other substrates, or a different class of catalysts might be much easier to optimize or much more reactive. 
+</p>
+
+<p>
+Understanding how many catalysts are out there to be discovered should make us think more carefully about which hits we pursue, since our time is too valuable to waste performing needless catalyst optimizations. In this study, we showed that screening only one substrate can be misleading when the goal is substrate generality, but one might prefer to screen for other factors: low catalyst loading, tolerance of air or water, or recyclability all come to mind. In all cases, including these considerations in initial screens means that the hits generated are more likely to be relevant to the final goal. Just looking for 90% ee is almost certainly not the best way to find a good reaction.
+</p>
+
+<h3>2. Don’t ignore analytical chemistry</h3>
+
+<p>
+Although assay development is a normal part of many scientific fields, many organic chemists seem to barely consider analytical chemistry in their research. Any ingenuity is applied to developing new catalysts, while the analytical method remains essentially a constant factor in the background. This is true even in cases where the analytical workflow represents a large fraction of the project (e.g. having to remove toluene before NMR for every screen).
+</p>
+
+<p>
+This shouldn’t be the case! Spending time towards the beginning of a project to develop a nice assay is an investment that can yield big returns: this can be as simple as making a GC calibration curve to determine yield from crude reaction mixtures, or as complex as what we undertook here. Time is too valuable to waste running endless columns.
+</p>
+
+<p>
+More broadly, it seems like analytical advances (e.g. NMR and HPLC) have had a much bigger impact on the field than any individual chemical discoveries. Following this trend forward in time would imply that we should be making bigger investments in new analytical technologies now, to increase scientist productivity in the future.
+</p>
+
+<h3>3. A little computer science can go a long way</h3>
+
+<p>
+A key part of this project (mentioned only briefly in the paper) was developing our own peak-fitting software that allowed us to reliably fit overlapped peaks. This was computationally quite simple and relied almost entirely on existing libraries (e.g. <i>scipy</i> and <i>lmfit</i>), but took a certain amount of comfort with signal processing / data science.<sup><a href="#fn2">2</a></sup> We later ended up moving our software pipeline out of unwieldy Jupyter notebooks and into a little Streamlit web app that Eugene wrote, which allowed us to quickly and easily get ee values from larger screens. 
+</p>
+
+<p>
+Neither of these two advances required significant coding skill; rather, just being able to apply some computer science techniques to our chemistry problem unlocked new scientific opportunities and massive time savings (a la <a href="https://en.wikipedia.org/wiki/Pareto_principle#In_computing">Pareto principle</a>). Moving forward, I expect that programming will become a more and more central tool in scientific research, much like Excel is today. Being fluent in both chemistry and CS is currently a rare and valuable combination, and will only grow in importance in the coming decades.
+</p>
+
+<i>Thanks to Eugene Kwan for reading a draft of this post.</i>
+
+<h3>Footnotes</h3>
+<ol class=footnotes>
+  <li id="fn1">
+    I'd like to propose the following principle: any sufficiently clever analytical technique inevitably depends on mass spectrometry. If you don't believe me, just look at the field of proteomics...
+  </li>
+  <li id="fn2">
+    I heavily recommend <a href="https://terpconnect.umd.edu/~toh/spectrum/"><i>A Pragmatic Introduction to Signal Processing</i></a> by Tom O'Haver.
+  </li>
+</ol>
+
+  </body>
+  <br>
+  <br>
+  <footer>
+    <a href="mailto:cwagen@g.harvard.edu">email</a>
+    <a href="https://github.com/corinwagen">github</a>
+    <a href="https://twitter.com/CorinWagen">twitter</a>
+    <div style="float:right;">
+      <a href='../main/archive.html'>blog archive</a>
+    </div>
+  </footer>
+</html>
