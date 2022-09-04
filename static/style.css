@@ -70,11 +70,13 @@ li {
 
 .menu-item {
   float: left;
+  padding: 8px;
 }
 
 .menu-link {
-  display: block;
-  padding: 8px;
+  display: inline-block;
+  padding-right: 3px;
+  padding-left: 3px;
   text-decoration: none;
   color: black;
   font-size: 14;
