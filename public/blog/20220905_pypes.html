@@ -44,14 +44,14 @@
     
 <p>
     Organic chemists often think in terms of <a href="https://corinwagen.github.io/public/blog/20220815_rate_determining_span.html">potential energy surfaces</a>, especially when plotting the results of a computational study.
-    Unfortunately it is non-trivial to generate high-quality potential energy surfaces: it's not too difficult to sketch something crude in ChemDraw or Powerpoint, but getting the actual
+    Unfortunately it is non-trivial to generate high-quality potential energy surfaces. It's not too difficult to sketch something crude in ChemDraw or Powerpoint, but getting the actual
     barrier heights correct and proportional has always seemed rather tedious to me.
 </p>
 
 <p>
     I've admired the smooth potential energy surfaces from the <a href="https://baik-laboratory.com/publications">Baik group</a> for years, and so several months ago I decided to try and write my own
     program to generate these diagrams. I initially envisioned this as a python package (with the dubiously clever name of <i>pypes</i>), but it turned out to be simpler than expected, such that I 
-    haven't actually ever turned it into a library—it's easier to just copy and paste the code into various Jupyter notebooks as needed.
+    haven't actually ever turned it into a library. It's easier to just copy and paste the code into various Jupyter notebooks as needed.
 </p>
 
 <p>
@@ -73,6 +73,7 @@ plt.rc('figure', titlesize=14)
 
 %matplotlib inline
 %config InlineBackend.figure_format='retina'
+
 # x and y positions. y in kcal/mol, if you want, and x in the range [0,1].
 Y = [2.49, 3.5, 0, 20.2, 19, 21.5, 20, 20.3, -5]
 X = [0, 0.15, 0.3, 0.48, 0.55, 0.63, 0.70, 0.78, 1]
