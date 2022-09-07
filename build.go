@@ -66,12 +66,18 @@ func build_page(path string, info os.FileInfo, err error) error {
     post.Path = pieces[len(pieces)-1]
 
     var formatted_text string
-
     if post.IsBlog {
         formatted_text = strings.Replace(blog_template, "TITLE", post.Title, -1)
         formatted_text = strings.Replace(formatted_text, "CONTENT", post.Content, -1)
         formatted_text = strings.Replace(formatted_text, "SUMMARY", post.Summary, -1)
-        formatted_text = strings.Replace(formatted_text, "IMAGE_PATH", post.ImagePath, -1)
+
+        if len(post.ImagePath) > 0 {
+            formatted_text = strings.Replace(formatted_text, "IMAGE_PATH", post.ImagePath, -1)
+        } else {
+            formatted_text = strings.Replace(formatted_text, "<meta name=\"twitter:image\" content=\"IMAGE_PATH\" />", "", -1)
+            formatted_text = strings.Replace(formatted_text, "summary_large_image", "summary", -1)
+        }
+
         post.DateObj, _ = time.Parse(date_input, post.Date)
         formatted_text = strings.Replace(formatted_text, "DATE", post.DateObj.Format(date_output), -1)
 
