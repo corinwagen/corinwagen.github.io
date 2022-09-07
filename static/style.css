@@ -141,3 +141,9 @@ sup,sub {
 .footnotes {
     font-size: 11pt;
 }
+
+.poetry {
+  font-family: "Roboto","Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-style: italic;
+  padding: 0 2em;
+}
