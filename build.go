@@ -126,7 +126,7 @@ func main() {
         blog_archive = blog_archive + "<a href='../../" + post.Path  + "'>" + post.Title + "</a> (" + post.DateObj.Format(date_output) + ")<br>"
 
         count++
-        if (count == posts_per_page) || (idx + 1 == len(blog_posts)) {
+        if (count % posts_per_page == 0) || (idx + 1 == len(blog_posts)) {
             // finish old page
             if page_num > 1 {
                 current_page = current_page + "<div class='previous-link'><a href='blog_p" + strconv.Itoa(page_num - 1) + ".html'>previous page</a></div>"

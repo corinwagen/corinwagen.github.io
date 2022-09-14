@@ -30,7 +30,7 @@ h3 {
 p {
   margin-block-start: 0.6em;
   margin-block-end: 0.6em;
-  text-indent: 1.5em;
+  text-indent: 1em;
 }
 
 b {
@@ -147,3 +147,10 @@ sup,sub {
   font-style: italic;
   padding: 0 2em;
 }
+
+blockquote {
+  border-left: 4px solid #ccc;
+  margin: 1em 0;
+  padding: 0 1.5em;
+}
+
