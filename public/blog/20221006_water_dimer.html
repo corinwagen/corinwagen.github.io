@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      Entropy in the Water Dimer
+    </title>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="language" content="en">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--twitter-->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@github" />
+    <meta name="twitter:title" content="Entropy in the Water Dimer" />
+    <meta name="twitter:description" content="Different approaches for studying dissociation of the water dimer." />
+    <meta name="twitter:image" content="corinwagen.github.io/public/img/20221006_PES.png" />
+
+    <link rel="stylesheet" href="../../static/style.css">
+
+    <!--google-->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MTNZ0ZSG3W"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MTNZ0ZSG3W');
+    </script>
+
+  </head>
+  <body>
+    <ul class="menu-list">
+      <li class="menu-item"><a href="../main/index.html" class="menu-link menu-title">Corin Wagen</a></li>
+      <li class="menu-item"><a href="../main/index.html#about" class="menu-link">About</a></li>
+      <li class="menu-item"><a href="../main/index.html#projects" class="menu-link">Projects</a></li>
+      <li class="menu-item"><a href="../main/index.html#past_work" class="menu-link">Past Work</a></li>
+      <li class="menu-item">
+        <a href="../main/blog_p1.html" class="menu-link">Blog</a>
+        <a href='../main/archive.html' class="menu-link">(Archive)</a>
+      </li>   
+    </ul>
+    <h1> Entropy in the Water Dimer </h1>
+    <i>October 6, 2022</i>
+    
+<p>
+The failure of conventional calculations to handle entropy is well-documented. Entropy, which <a href="https://en.wikipedia.org/wiki/Boltzmann%27s_entropy_formula">fundamentally</a> depends on the number of microstates accesible to a system, is challenging to describe in terms of a single set of XYZ coordinates (i.e. a single microstate), and naïve approaches to computation simply disregard this important consideration.
+</p>
+
+<p>
+Most programs get around this problem by partitioning entropy into various components—translational, rotational, vibrational, and configurational—and handling each of these separately. For many systems, conventional approximations perform well. Translational and rotational entropy depend in <a href="https://gaussian.com/thermo/">predictable ways</a> on the mass and moment of inertia of the molecule, and vibrational entropy can be estimated from normal-mode analysis at stationary points. Conformational entropy is less easily automated and as a result is often neglected in the literature (see the <a href="https://pubs.acs.org/doi/10.1021/ja5111392">discussion</a> in the SI), although <a href="https://pubs.rsc.org/en/content/articlelanding/2021/sc/d1sc00621e">some</a> <a href="https://pubs.acs.org/doi/10.1021/acs.jctc.0c01213">recent</a> <a href="https://pubs.rsc.org/en/content/articlelanding/2022/cp/d1cp05805c">publications</a> are changing that. 
+</p>
+
+<p>
+In general, however, the approximations above only work for ground states. To quote the Gaussian vibrational analysis <a href="https://gaussian.com/vib/">white paper</a>:
+</p>
+
+<blockquote>
+Vibrational analysis, as it’s descibed in most texts and implemented in <i>Gaussian</i>, is valid only when the first derivatives of the energy with respect to displacement of the atoms are zero. In other words, the geometry used for vibrational analysis must be optimized at the same level of theory and with the same basis set that the second derivatives were generated with. Analysis at transition states and higher order saddle points is also valid. Other geometries are not valid. 
+</blockquote>
+
+<p>
+While this isn't a huge issue in most cases, since most processes are associated with a minima or first-order saddle point on the electronic energy surface, it can become a big deal for reactions where entropy significantly shifts the position of the transition state (e.g. Figure 4 in <a href="https://pubs.acs.org/doi/10.1021/ja208779k">this study</a> of cycloadditions). Even worse, however, are cases where entropy constitutes the entire driving force for the reaction: association/dissociation processes. In his elegant <a href="https://pubs.acs.org/doi/pdf/10.1021/acs.organomet.8b00456">review</a> of various failures of computational modelling, Mookie Baik illustrated this point by showing that no transition state could be found for dissociation of the water dimer in the gas phase:
+</p>
+
+<figure>
+  <img class=centered-img src=../img/20221006_baik.png style="width:500px;" />
+  <figcaption>
+  Figure 11 from Baik's review.
+  </figcaption>
+</figure>
+
+<p>
+Panel (b) of this figure shows the electronic energy surface for dissociation, which monotonically increases out to infinity—there's never a maximum, and so there's no transition state. To estimate the position of the transition state, Baik proposes computing the entropy (using the above stationary-point approximations) at the first few points, where the two molecules are still tightly bound, and then extrapolating the curve into a sigmoid function. Combining the two surfaces then yields a nice-looking (if noisy) curve with a clear transition state at an O–H distance of around 3 Å.
+</p>
+
+<p>
+This approach, while clever, seems theoretically a bit dubious—is it guaranteed that entropy must always follow a smooth sigmoidal interpolation between bound and unbound forms? I thought that a more direct solution to the entropy problem would take advantage of <i>ab initio</i> molecular dynamics. While too slow for most systems, AIMD intrinsically accounts for entropy and thus should be able to generate considerably more accurate energy surfaces for association/dissociation events.
+</p>
+
+<p>
+Using <a href="https://github.com/corinwagen/presto"><i>presto</i></a>, I ran 36 constrained 100 ps <i>NVT</i> simulations of the water dimer with different O–O distances, and used the <a href="https://onlinelibrary.wiley.com/doi/abs/10.1002/jcc.540130812">weighted histogram analysis method</a> to stitch them together into a final potential energy surface. I then compared these results to those obtained from a direct <span class=code>opt=modredundant</span> calculation (with frequencies at every point) from Gaussian. (All calculations were performed in Gaussian 16 at the wB97XD/6-31G(d) level of theory, which overbinds the water dimer a bit owing to basis-set superposition error.)
+</p>
+
+<p>
+The results are shown below (error bars from the AIMD simulation are derived from bootstrapping):
+</p>
+
+<figure>
+  <img class=centered-img src=../img/20221006_PES.png style="width:550px;" />
+  <figcaption>
+  Comparison of different approaches for studying dissociation of the water dimer.
+  </figcaption>
+</figure>
+
+<p>
+As expected, no transition state can be seen on the black line corresponding to the electronic energy surface, or on the green line corresponding to enthalpy. All methods that depend on normal-mode analysis show sizeable variation at non-stationary points, which is perhaps unsurprising. What was more surprising was how much conventional DFT calculations (purple) overestimated entropy relative to AIMD! <a href="https://pubs.acs.org/doi/full/10.1021/jp205508z">Correcting for low-frequency vibrational modes</a> brought the DFT values more into line with AIMD, but a sizeable discrepancy persists.
+</p>
+
+<p>
+Also surprising is how different the AIMD free energy surface looks from Baik's estimated free energy surface. Although the scales are clearly different (I used O–O distance for the X axis, whereas Baik used O–H distance), the absence of a sharp maximum in both the AIMD data and the corrected Gibbs free energy data from conventional DFT is striking. Is this another instance of <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4124006/">entropy–enthalpy compensation</a>?
+</p>
+
+<p>
+In the absence of good gas-phase estimates of the free energy surface, it's tough to know how far the AIMD curve is from the true values; perhaps others more skilled in these issues can propose higher-level approaches or suggest additional sources of error. Still, on the meta-level, this case study demonstrates how molecular dynamics holds promise for modelling things that just can't be modelled other ways. Although this approach is still too expensive for medium to large systems, it's exciting to imagine what might be possible in 5 or 10 years!
+</p>
+
+<em>
+Thanks to Richard Liu and Eugene Kwan for insightful discussions about these issues.
+</em>
+
+  </body>
+  <br>
+  <br>
+  <footer>
+    <a href="mailto:cwagen@g.harvard.edu">email</a>
+    <a href="https://github.com/corinwagen">github</a>
+    <a href="https://twitter.com/CorinWagen">twitter</a>
+    <!--<div style="float:right;">
+      <a href='../main/archive.html'>blog archive</a>
+    </div>-->
+  </footer>
+</html>
