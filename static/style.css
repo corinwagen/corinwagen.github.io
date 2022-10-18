@@ -154,3 +154,9 @@ blockquote {
   padding: 0 1.5em;
 }
 
+div.dinkus {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
