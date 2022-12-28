@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      Evaluating Error in Boltzmann Weighting
+    </title>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="language" content="en">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--twitter-->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@github" />
+    <meta name="twitter:title" content="Evaluating Error in Boltzmann Weighting" />
+    <meta name="twitter:description" content="Are relative energies good enough to make Boltzmann weighting worth it?" />
+    <meta name="twitter:image" content="https://corinwagen.github.io/public/img/20221228_randomShifts.png" />
+
+    <link rel="stylesheet" href="../../static/style.css">
+
+    <!--google-->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MTNZ0ZSG3W"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MTNZ0ZSG3W');
+    </script>
+
+  </head>
+  <body>
+    <ul class="menu-list">
+      <li class="menu-item"><a href="../main/index.html" class="menu-link menu-title">Corin Wagen</a></li>
+      <li class="menu-item"><a href="../main/index.html#about" class="menu-link">About</a></li>
+      <li class="menu-item"><a href="../main/index.html#projects" class="menu-link">Projects</a></li>
+      <li class="menu-item"><a href="../main/index.html#past_work" class="menu-link">Past Work</a></li>
+      <li class="menu-item">
+        <a href="../main/blog_p1.html" class="menu-link">Blog</a>
+        <a href='../main/archive.html' class="menu-link">(Archive)</a>
+      </li>   
+    </ul>
+    <h1> Evaluating Error in Boltzmann Weighting </h1>
+    <i>December 28, 2022</i>
+    
+<p>
+A technique that I’ve seen employed more and more in computational papers over the past few years is to calculate Boltzmann-weighted averages of some property over a conformational ensemble. This is potentially very useful because most complex molecules exist in a plethora of conformations, and so just considering the lowest energy conformer might be totally irrelevant. 
+To quote a <a href=https://onlinelibrary.wiley.com/doi/full/10.1002/anie.202205735>recent perspective</a> from Grimme and friends:
+</p>
+
+<blockquote>
+For highly flexible structures, a molecular property, such as energy, nuclear magnetic resonance spectra, or optical rotation values may not be sufficiently described by a single structure. At finite temperatures, various conformers are populated and the overall property must be described as thermal average over the unique property values of each conformer.
+</blockquote>
+
+<p>
+What's been bothering me about this, however, is that Boltzmann weights are calculated as <i>e</i> to the power of the relative energy:
+</p>
+
+<pre class=code-block>
+def boltzmann_weight(conformer_properties, conformer_energies, temp=298):
+    """ Some simple Python code to calculate Boltzmann weights. """
+
+    energies = conformer_energies - np.min(conformer_energies)
+
+    R = 3.1668105e-6 # eH/K
+    weights = np.exp(-1*energies/(627.509*R*temp))
+    weights = weights / np.sum(weights)
+
+    return weights, np.average(conformer_properties, weights=weights)
+</pre>
+
+<p>
+Since relative energies of conformers are usually calculated with only middling accuracy (±0.2 kcal/mol with <a href=https://pubs.rsc.org/en/content/articlelanding/2011/cp/c0cp02984j>common methods</a>), we’re taking the exponential of a potentially inaccurate value—which seems bad from the standpoint of error propagation!
+</p>
+
+<figure>
+  <img class=centered-img src=../img/20221228_xkcd.png style="width:375px;" />
+  <figcaption>
+  Excerpt from <a href="https://xkcd.com/2295/">xkcd</a>, on error propagation (line #3 is what's relevant here).
+  </figcaption>
+</figure>
+
+<p>
+Grimme and co-authors address this point explicitly in their review:
+</p>
+
+<blockquote>
+At the same time, however, conformational energies need to be accurate to within about 0.1–0.2 kcal mol<sup>−1</sup> to predict Boltzmann populations at room temperature reasonably well. This is particularly important since properties can vary strongly and even qualitatively between populated conformers…
+</blockquote>
+
+<p>
+Although the best answer is, of course, to just get more accurate energies, it's not always practical to do that in the real world.
+If we take imperfect energies as our starting point, what's the best strategy to pursue?
+</p>
+
+<p>
+One could imagine a scenario in which error causes relatively unimportant conformers to end up with large weights, making the answer even worse than the naïve approach would have been. If the lowest energy conformer accounts for 60-70% of the answer, might it be best to just stick with that, instead of trying to throw in some messy corrections?
+</p>
+
+<p>
+To test this, I drew a random flexible-looking molecule with a few functional groups, conducted a conformational search using <i>crest</i>, and then optimized it and calculated <sup>19</sup>F NMR shieldings using wB97X-D/6-31G(d). (There are <a href=https://pubs.acs.org/doi/abs/10.1021/acs.jctc.8b00624>better NMR methods</a> out there, but the absolute accuracy of the shift isn’t really the point here.)
+</p>
+
+<figure>
+  <img class=centered-img src=../img/20221228_cylview.png style="width:350px;" />
+  <figcaption>
+  The lowest energy conformer of the molecule I drew (3-fluorohex-5-enal).
+  </figcaption>
+</figure>
+
+<p>
+I then computed more accurate energies using DLPNO-CCSD(T)/cc-pVTZ, and compared the results from Boltzmann weighting with DFT and coupled-cluster energies.
+(<sup>19</sup>F values are just the isotropic shielding tensor, and energies are in kcal/mol.)
+</p>
+
+<table>
+  <tr>
+    <th>Conformer</th> 
+    <th><sup>19</sup>F shift</th> 
+    <th>DFT energy</th>
+    <th>DFT weight</th>
+    <th>CC energy</th>
+    <th>CC weight</th>
+  </tr>
+  <tr><td>c00003</td><td>401.76</td><td>0.00</td><td>0.624</td><td>0.00</td><td>0.529</td></tr>
+  <tr><td>c00001</td><td>403.08</td><td>1.02</td><td>0.112</td><td>0.68</td><td>0.167</td></tr>
+  <tr><td>c00010</td><td>396.63</td><td>1.12</td><td>0.093</td><td>1.10</td><td>0.083</td></tr>
+  <tr><td>c00007</td><td>391.45</td><td>1.56</td><td>0.045</td><td>1.54</td><td>0.039</td></tr>
+  <tr><td>c00004</td><td>396.77</td><td>1.82</td><td>0.029</td><td>1.64</td><td>0.033</td></tr>
+  <tr><td>c00006</td><td>400.16</td><td>2.31</td><td>0.013</td><td>1.75</td><td>0.028</td></tr>
+  <tr><td>c00029</td><td>400.37</td><td>2.36</td><td>0.012</td><td>1.75</td><td>0.028</td></tr>
+  <tr><td>c00032</td><td>393.96</td><td>2.05</td><td>0.020</td><td>1.76</td><td>0.027</td></tr>
+  <tr><td>c00027</td><td>394.60</td><td>2.54</td><td>0.009</td><td>2.21</td><td>0.013</td></tr>
+  <tr><td>c00017</td><td>394.69</td><td>3.12</td><td>0.003</td><td>2.27</td><td>0.011</td></tr>
+  <tr><td>c00018</td><td>402.24</td><td>2.24</td><td>0.014</td><td>2.35</td><td>0.010</td></tr>
+  <tr><td>c00011</td><td>381.31</td><td>2.59</td><td>0.008</td><td>2.49</td><td>0.008</td></tr>
+  <tr><td>c00023</td><td>388.77</td><td>2.51</td><td>0.009</td><td>2.54</td><td>0.007</td></tr>
+  <tr><td>c00013</td><td>390.32</td><td>3.02</td><td>0.004</td><td>2.61</td><td>0.006</td></tr>
+  <tr><td>c00020</td><td>394.97</td><td>3.23</td><td>0.003</td><td>2.62</td><td>0.006</td></tr>
+  <tr><td>c00015</td><td>398.24</td><td>3.02</td><td>0.004</td><td>2.97</td><td>0.004</td></tr>
+  <tr><td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td><tr>
+  <tr><th>Final <sup>19</sup>F Shift</th><td></td><td></td><td>400.20</td><td></td><td>400.13</td></tr>
+</table>
+
+<p>
+The match is really quite good, much better than just guessing the lowest energy conformer would have been! This is despite having a decent number of low-energy conformers, so I don’t think this is a particularly rigged case.
+</p>
+
+<p>
+But, what if we just got lucky in this case? The relative energies are off by 0.28 kcal/mol on average. If we simulate adding 0.28 kcal/mol of error to each of the “true” energies a bunch of times, we can see how well Boltzmann weighting does on average, even with potentially unlucky combinations of errors.
+</p>
+
+<figure>
+  <img class=centered-img src=../img/20221228_randomShifts.png style="width:400px;" />
+  <figcaption>
+  Shifts from 100,000 simulations with random error added to CCSD(T) energies.
+  </figcaption>
+</figure>
+
+<p>
+The above image shows the predicted shift from 100,000 different randomly generated sets of “wrong” energies. We can see that the Boltzmann-weighted value is almost always closer to the true value than the shift of the major conformer is (99.01% of the time, to be precise). This is despite substantial changes in the weight of the major conformer:
+</p>
+
+<figure>
+  <img class=centered-img src=../img/20221228_randomWeights.png style="width:400px;" />
+  <figcaption>
+  Major conformer weights from 100,000 simulations with random error added to CCSD(T) energies.
+  </figcaption>
+</figure>
+
+<p>
+Thus, we can see that Boltzmann weighting is relatively resistant to random errors in this case. Although this is only one molecule, and no doubt scenarios can be devised where inaccurate energies lead to ludicrously incorrect predictions, this little exercise has helped temper my skepticism of Boltzmann weighting.
+</p>
+
+<i>
+Thanks to Eugene Kwan and Joe Gair for discussions around these topics over the past few years. Data available upon request.
+</i>
+
+
+  </body>
+  <br>
+  <br>
+  <footer>
+    <a href="mailto:cwagen@g.harvard.edu">email</a>
+    <a href="https://github.com/corinwagen">github</a>
+    <a href="https://twitter.com/CorinWagen">twitter</a>
+    <!--<div style="float:right;">
+      <a href='../main/archive.html'>blog archive</a>
+    </div>-->
+  </footer>
+</html>
