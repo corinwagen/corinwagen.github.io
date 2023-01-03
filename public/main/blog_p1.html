@@ -34,6 +34,12 @@
     </ul>
     <h1 class='blogroll-header'>Blog</h1><div class='next-link'><a href='blog_p2.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230103_hdkie_puzzle.html'>Misleading H/D KIE Experiments</a></h2><i>January 3, 2023</i>
 <p>
+<i>
+Note: old versions of this post lacked a discussion of S<sub>N</sub>2. I've added an appendix which remedies this.
+</i>
+</p>
+
+<p>
 In <a href=https://corinwagen.github.io/public/blog/20220815_rate_determining_span.html>“The Rate-Limiting Span,”</a> I discussed how thinking in terms of the span from ground state to transition state, rather than in terms of elementary steps, can help prevent conceptual errors. Today, I want to illustrate why this is important in the context of a little H/D KIE puzzle. 
 </p>
 
@@ -68,7 +74,7 @@ Unfortunately this is not true. Instead, all mechanistic possibilities give seco
 -->
 
 <figure>
-  <img class="centered-img" src="../img/20230103_kie.png" style="width:500px;" />
+  <img class="centered-img" src="../img/20230103_kie.png" style="width:550px;" />
   <figcaption> 
     The raw data from PyQuiver is a little fuzzy, so I applied a convolution to smooth the data. Details later on. 
   </figcaption>
@@ -101,7 +107,32 @@ We can also conceptualize this in terms of elementary steps. Taken by itself, al
 In summary, although this experiment seems informative, it’s actually not very useful. It tells you something about the structure of the transition state, but not which step is rate-limiting! In this case, a better experiment would be to measure <sup>13</sup>C KIEs, or an H/D KIE on the nucleophile. 
 </p>
 
-<h3>Appendix: Smoothing the KIE Grid</h3>
+<h3>Appendix I: What About S<sub>N</sub>2?</h3>
+
+<p>
+On Twitter, <a href="https://twitter.com/LevinChem/status/1610287881993728000">Mark Levin</a> asks about the KIE for the concerted path. I originally meant to include a discussion of this, but then totally forgot to! So let’s fix that.
+</p>
+
+<p>
+As shown in the graph above, extremely concerted pathways (i.e. going right down the middle of the MOJ plot) will have pretty small isotope effects. These sorts of mechanisms are common where the carbocation would be extremely unstable (methyl iodide) but much less common for stabilized carbocations like we’re discussing here. When oxocarbeniums or iminiums are involved, even “concerted” mechanisms shift towards the bottom right corner: this is the <a href=https://pubs.acs.org/doi/pdf/10.1021/ja506092h>“loose”/“exploded” S<sub>N</sub>2</a> often seen in glycosylation. These pathways will have a modest to large H/D KIE, depending on the exact system and how “exploded” they are (see page 53 of <a href=https://pubs.acs.org/doi/10.1021/jacs.6b10621>this SI</a> for examples)
+</p>
+
+<p>
+Putting this together, then, what experimental results would be conclusive? A very small KIE would be diagnostic for a “classic” synchronous S<sub>N</sub>2 process, which I consider to be very unlikely here. But medium or large H/D KIEs are consistent with any possibility: S<sub>N</sub>1 with rate-limiting ionization, S<sub>N</sub>1 with rate-limiting nucleophilic attack, or a loose S<sub>N</sub>2. There’s an annulus of different mechanistic possibilities that all give about the same isotope effect, as shown below:
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20230103_sn2_plot.png" style="width:470px;" />
+  <figcaption> 
+  Any TS in the red zone is consistent with a moderately large KIE (say, 15%).
+  </figcaption>
+</figure>
+
+<p>
+To make matters worse, H/D KIEs are pretty tough to simulate quantitatively, because of tunneling, so the annulus isn’t even that precise. That’s why I think this isn’t a very good experiment.
+</p>
+
+<h3>Appendix II: Smoothing the KIE Grid</h3>
 
 <p>
 The raw KIE values from PyQuiver were pretty noisy, probably because there are small or multiple imaginary frequencies for some of these non-stationary points, so I used convolution to smooth things out a bit. 
