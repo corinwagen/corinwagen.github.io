@@ -26,7 +26,7 @@
       <li class="menu-item"><a href="index.html" class="menu-link menu-title">Corin Wagen</a></li>
       <li class="menu-item"><a href="index.html#about" class="menu-link">About</a></li>
       <li class="menu-item"><a href="index.html#projects" class="menu-link">Projects</a></li>
-      <li class="menu-item"><a href="index.html#past_work" class="menu-link">Past Work</a></li>
+      <!--<li class="menu-item"><a href="index.html#past_work" class="menu-link">Past Work</a></li>-->
       <li class="menu-item">
         <a href="blog_p1.html" class="menu-link">Blog</a>
         <a href='archive.html' class="menu-link">(Archive)</a>
@@ -58,67 +58,38 @@
 
 <h2 id="projects" style="clear:both;"> Current Projects </h2>
 
-<h3> "Screening for Generality" in Asymmetric Catalysis </h3>
-<img class="centered-img" src="../img/sfcms.png" style="width:650px;" alt="comparison of SFC-UV and SFC-MS" />
-<p>
-  Most asymmetric reactions are optimized using a single model substrate, generating methods that often work only for a narrow range of substrates.
-  While screening on multiple substrates might yield more general transformations, existing enantiodetermination methods require substrate-specific
-  optimization, making this strategy too costly to be practical.
-  By replacing SFC-UV with SFC-MS,
-  we were able to measure the enantioselectivity of mixtures of crude products with acceptable error, 
-  enabling rapid multi-substrate screening.
-  We surveyed the generality of reported Brønsted-acid catalysts for the Pictet–Spengler reaction
-  and found that SPINOL-derived chiral phosphoric acids gave promising results for a wide variety of substrates.
-  <i>(<a href="https://www.nature.com/articles/s41586-022-05263-2">article in Nature</a>;
-  with Eugene Kwan and Spencer McMinn)</i>
-</p>
+<a href=generality.html>
+  <div id="project-container">
+    <h3>Generality in Asymmetric Catalysis</h3>
+    <img class="centered-img" src="../img/generality_thumbnail.png" style="height:200px;" alt="comparison of SFC-UV and SFC-MS" />
+  </div>
+</a>
 
-<h3> Mechanistic Study of Enantioselective Brønsted Acid Catalysis</h3>
-<img class="centered-img" src="../img/prins.png" style="width:500px;" alt="summary of Prins project" />
-<p>
-  Recent results from our group indicate that chiral hydrogen-bond-donor catalysts can act cooperatively with strong achiral Brønsted acids to promote challenging acid-catalyzed reactions
-  with high enantioselectivity. In particular, we found that hydrogen-bond donors lead to a 93x increase in the rate of an HCl-catalyzed Prins reaction, giving product in up to 98% ee.
-  Surprisingly, <i>in situ</i> pKa measurements revealed that the catalyst actually decreases the acidity of HCl by forming a catalyst•HCl complex; 
-  rate acceleration comes not from enhancement of acidity but through catalyst control of chloride positioning, 
-  which creates an electric field that stabilizes electron flow in the major transition state.
-  <i>(<a href="https://pubs.acs.org/doi/10.1021/jacs.2c06688">article in JACS</a>; with Dennis Kutateladze)</i>
-</p>
+<a href=mechanism.html>
+  <div id="project-container">
+    <h3>Investigating Reaction Mechanism</h3>
+    <img class="centered-img" src="../img/mechanism_thumbnail.png" style="height:200px;" alt="summary of Prins project" />
+  </div>
+</a>
 
-<h3> <i>presto</i>: Efficient and Modular QM/QM' Molecular Dynamics </h3>
-<p>
-  Although quantum mechanical models have been applied to molecular dynamics for decades, 
-  the immense computing power now available makes this feasible on an unpredecented scale.
-  By using an ONIOM-based approach that combines density-functional theory and Stefan Grimme's <i>xtb</i> semiempirical methods, 
-  we have been able to simulate large systems (over 1000 atoms in the "low" level) for tens of picoseconds. 
-  This approach can be combined with existing biased-sampling techniques like <a href=http://membrane.urmc.rochester.edu/?page_id=126>WHAM</a>, 
-  enabling the construction of solvated free energy surfaces for complex transformations. 
-  For more details, see <a href="https://corinwagen.github.io/presto/public/index.html">the website</a>.
-</p>
+<a href=aimd.html>
+  <div id="project-container">
+    <h3><i>Ab Initio</i> Molecular Dynamics</h3>
+    <img class="centered-img" src="../img/oxonium_rdf.png" style="height:200px;" alt="radial distribution function of toluene about an oxonium ion" />
+  </div>
+</a>
 
-<h2 id="past_work"> Past Work </h2>
+<a href=software.html>
+  <div id="project-container">
+    <h3>Software Development</h3>
+    <img class="centered-img" src="../img/software_thumbnail.png" style="height:200px;" alt="some python code" />
+  </div>
+</a>
 
-<h3><i>cctk</i>: computational chemistry toolkit </h3>
-<p> 
-  <i>cctk</i> is a Python library which automates routine tasks in computational chemistry, 
-  such as geometric perturbations, file type conversion, and property extraction.
-  This enables simultaneous monitoring and analysis of thousands of jobs, greatly increasing computational throughput,
-  and serves as the foundation for my other computational projects.
-  For more details, see <a href="https://cctk.rtfd.io">the website</a>.
-  <i>(with Eugene Kwan)</i>
-</p>
+<br>
+<br>
 
-<h3> Triaryl Ligand Design </h3>
-<p> 
-  Although C–F reductive elimination from Pd(II) was long thought to be impossible, 
-  the triaryl ligand <a href="https://pubs.acs.org/doi/full/10.1021/jacs.5b09308">AlPhos</a> renders this step facile even at room temperature.
-  We studied this unique ligand by synthesizing a library of analogues and measuring their initial rates for a model fluorination reaction.
-  Our data demonstrate that the <i>ortho</i>-fluorines on the bottom ring are crucial for reactivity, 
-  consistent with the hypothesis that F–F repulsion destabilizes the Pd(II) fluoride intermediate
-  and promotes reductive elimination.
-  <i>(with Bryan Ingoglia, results published in <a href="https://dspace.mit.edu/handle/1721.1/123195">his thesis</a>)</i>
-</p>
-
-<h2 id="pubs"> Publications </h3>
+<h2 id="pubs" style="clear:both;"> Publications </h2>
 <ol class="pub-list" reversed>
   <li class="citation">
     Vonesh, H. L.; <u>Wagen, C. C.</u>, McMinn, S. E.; Thedford, J. B.; Kwan, E. E.; Schindler, C. S.
@@ -129,7 +100,7 @@
   <li class="citation">
     <u>Wagen, C. C.</u>; Jacobsen, E. N.
     Evidence for Oxonium Ions in Ethereal "Hydrogen Chloride."
-    <i>Org. Lett</i>, <b>2022</b>, ASAP.
+    <i>Org. Lett</i>, <b>2022</b>, <i>24</i>, 8826–8831.
     (<a href="https://pubs.acs.org/doi/10.1021/acs.orglett.2c03622">link</a>,
     <a href="https://chemrxiv.org/engage/chemrxiv/article-details/63536344aca19808acdffc65">preprint</a>)
     <br><br>
@@ -139,7 +110,6 @@
         <a href="https://www.science.org/content/blog-post/acid-personalities">Acid Personalities</a> (<i>In the Pipeline</i> post)
       </li>
     </ul>
-  </li>
   </li>
   <li class="citation">
     <u>Wagen, C. C.</u><sup>†</sup>; McMinn, S. E.<sup>†</sup>; Kwan, E. E.; Jacobsen, E. N.

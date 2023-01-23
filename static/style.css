@@ -161,3 +161,10 @@ div.dinkus {
   text-align: center;
 }
 
+div#project-container {
+  display: inline-block;
+  margin: 0.1em;
+  float: left;
+  width: 45%;
+  color: #222222;
+}

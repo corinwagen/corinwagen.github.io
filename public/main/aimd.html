@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      Ab Initio Molecular Dynamics
+    </title>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="language" content="en">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="../../static/style.css">
+
+    <!--google-->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MTNZ0ZSG3W"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MTNZ0ZSG3W');
+    </script>
+
+  </head>
+  <body>
+    <ul class="menu-list">
+      <li class="menu-item"><a href="index.html" class="menu-link menu-title">Corin Wagen</a></li>
+      <li class="menu-item"><a href="index.html#about" class="menu-link">About</a></li>
+      <li class="menu-item"><a href="index.html#projects" class="menu-link">Projects</a></li>
+      <!--<li class="menu-item"><a href="index.html#past_work" class="menu-link">Past Work</a></li>-->
+      <li class="menu-item">
+        <a href="blog_p1.html" class="menu-link">Blog</a>
+        <a href='archive.html' class="menu-link">(Archive)</a>
+      </li>
+    </ul>
+    <h1> <i>Ab Initio</i> Molecular Dynamics </h1>
+
+<img class="centered-img" src="../img/oxonium_rdf.png" style="width:400px;" alt="radial distribution function of toluene about an oxonium ion" />
+
+<p>
+  Although quantum mechanical models have been applied to molecular dynamics for decades, 
+  the immense computing power now available makes this feasible on an unpredecented scale.
+  By using an ONIOM-based approach that combines density-functional theory and Stefan Grimme's <i>xtb</i> semiempirical methods, 
+  it's now possible to simulate large systems (over 1000 atoms in the "low" level) for tens of picoseconds. 
+  This approach can be combined with existing biased-sampling techniques like <a href=http://membrane.urmc.rochester.edu/?page_id=126>WHAM</a>, 
+  enabling the construction of solvated free energy surfaces for complex transformations, or used to study the lifetime of reactive intermediates.
+</p>
+
+<p>
+I’ve used AIMD to address tricky computational problems in a few projects, listed below. With Eugene Kwan, I also develop and maintain <i>presto</i>, an open-source Python package for running QM/QM’ calculations. For more details about <i>presto</i>, see <a href="https://corinwagen.github.io/presto/public/index.html">the website</a>.
+</p>
+
+<h3 id="pubs"> Publications </h3>
+<ul class="pub-list">
+  <li class="citation">
+    Vonesh, H. L.; <u>Wagen, C. C.</u>, McMinn, S. E.; Thedford, J. B.; Kwan, E. E.; Schindler, C. S.
+    Inadequacy of Continuum Solvation for Polar Reactions: Predicting the Mechanism of Carbonyl–Olefin Metathesis.
+    <i>ChemRxiv</i>, <b>2022</b>.
+    (<a href="https://chemrxiv.org/engage/chemrxiv/article-details/6362b49531107263acfa50e6">preprint</a>)
+  </li>
+  <li class="citation">
+    <u>Wagen, C. C.</u>; Jacobsen, E. N.
+    Evidence for Oxonium Ions in Ethereal "Hydrogen Chloride."
+    <i>Org. Lett</i>, <b>2022</b>, <i>24</i>, 8826–8831.
+    (<a href="https://pubs.acs.org/doi/10.1021/acs.orglett.2c03622">link</a>,
+    <a href="https://chemrxiv.org/engage/chemrxiv/article-details/63536344aca19808acdffc65">preprint</a>)
+  </li>
+  <li class="citation">
+    Kutateladze, D. A.<sup>†</sup>; <u>Wagen, C. C.</u><sup>†</sup>; Jacobsen, E. N.
+    Chloride-Mediated Alkene Activation Drives Enantioselective Thiourea and Hydrogen Chloride Co-Catalyzed Prins Cyclizations.
+    <i>J. Am. Chem. Soc.</i> <b>2022</b>, <i>144</i>, 15812–15824.
+    (<a href="https://pubs.acs.org/doi/10.1021/jacs.2c06688">link</a>,
+    <a href="https://chemrxiv.org/engage/chemrxiv/article-details/62cdc62381efd03336a6c5c4">preprint</a>)
+  </li>
+
+  <li class="citation">
+    Li, Q.<sup>†</sup>; Levi, S. M.<sup>†</sup>; <u>Wagen, C. C.</u>; Wendlandt, A. E.; Jacobsen, E. N.
+    Site-Selective, Stereocontrolled Glycosylation of Minimally Protected Sugars.
+    <i>Nature</i>, <b>2022</b>, <i>608</i>, 74–79.
+    (<a href="https://www.nature.com/articles/s41586-022-04958-w">link</a>, 
+    <a href="https://chemrxiv.org/engage/chemrxiv/article-details/62583cfbbdc9c26845d47c58">preprint</a>)
+  </li>
+</ul>
+
+  </body>
+  <br>
+  <footer>
+    <a href="mailto:cwagen@g.harvard.edu">email</a>
+    <a href="https://github.com/corinwagen">github</a>
+    <a href="https://twitter.com/CorinWagen">twitter</a>
+    <!--<div style="float:right;">
+      <a href='archive.html'>blog archive</a>
+    </div> -->
+  </footer>
+</html>
