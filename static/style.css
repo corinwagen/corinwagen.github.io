@@ -164,7 +164,7 @@ div.dinkus {
 div#project-container {
   display: inline-block;
   margin: 0.1em;
-  float: left;
+  float: center;
   width: 45%;
   color: #222222;
 }
