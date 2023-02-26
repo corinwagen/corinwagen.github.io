@@ -1,5 +1,7 @@
 // Builds static .html files from a template.
 
+// RSS code modified from https://medium.com/@etiennerouzeaud/a-rss-feed-valid-in-go-edfc22e410c7
+
 package main
 import (
     "fmt"
@@ -11,6 +13,7 @@ import (
     "time"
     "sort"
     "strconv"
+    "encoding/xml"
 )
 
 // config
@@ -24,6 +27,9 @@ const blog_target_dir       string  = "public/blog/"
 const date_input            string  = "2006-01-02"
 const date_output           string  = "January 2, 2006"
 const posts_per_page         int     = 5
+
+// rss feed config
+const feed_target_path         string  = "public/main/rss.xml"
 
 var page_template   string
 var blog_template   string
@@ -39,6 +45,22 @@ type Page struct {
     DateObj time.Time
 }
 
+type RSSItem struct {
+    Title       string `xml:"title"`
+    Link        string `xml:"link"`
+    Description string `xml:"description"`
+    PubDate     string `xml:"pubDate"`
+}
+
+type rss struct {
+    Version     string `xml:"version,attr"`
+    Description string `xml:"channel>description"`
+    Link        string `xml:"channel>link"`
+    Title       string `xml:"channel>title"`
+
+    Item []RSSItem `xml:"channel>item"`
+}
+
 var blog_posts = make([]Page, 0)
 
 // Load a file with path ``name`` as a string.
@@ -51,6 +73,43 @@ func load_file(name string) string {
 func write_file(name string, text string) {
     content := []byte(text)
     ioutil.WriteFile(name, content, 0644)
+}
+
+// Write RSS feed .xml file
+func write_rss(pages []Page) {
+    var rss_posts = make([]RSSItem, 0)
+    for idx := 0; idx < len(blog_posts); idx++ {
+        post := blog_posts[idx]
+
+        var rss_post = RSSItem{post.Title, post.Path, post.Summary, post.DateObj.Format(time.RFC1123Z)}
+        rss_posts = append(rss_posts, rss_post)
+    }
+
+    feed := &rss{
+        Version:     "2.0",
+        Description: "My personal blog, mainly focusing on issues of chemistry and metascience.",
+        Link:        "https://corinwagen.github.io",
+        Title:       "Corin Wagen",
+        Item:        rss_posts,
+    }
+
+    fo, err := os.Create(feed_target_path)
+    if err != nil {
+        panic(err)
+    }
+
+    // on exit, close fo
+    defer func() {
+        if err := fo.Close(); err != nil {
+            panic(err)
+        }
+    }()
+
+    enc := xml.NewEncoder(fo)
+    enc.Indent("  ", "    ")
+    if err := enc.Encode(feed); err != nil {
+        fmt.Printf("error: %feed\n", err)
+    }
 }
 
 // Build a given ``.html`` file with appropriate FrontMatter into a proper web page.
@@ -160,4 +219,6 @@ func main() {
     formatted_text = strings.Replace(formatted_text, "CONTENT", blog_archive, -1)
     fmt.Println("Building " + target_dir + "archive.html")
     write_file(target_dir + "archive.html", formatted_text)
+
+    write_rss(blog_posts)
 }
