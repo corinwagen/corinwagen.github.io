@@ -28,8 +28,8 @@ const date_input            string  = "2006-01-02"
 const date_output           string  = "January 2, 2006"
 const posts_per_page         int     = 5
 
-// rss feed config
-const feed_target_path         string  = "public/main/rss.xml"
+// rss feed config - needs to go in root dir to be discoverable
+const feed_target_path         string  = "rss.xml"
 
 var page_template   string
 var blog_template   string
