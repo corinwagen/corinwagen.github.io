@@ -4,6 +4,12 @@
           <link>https://corinwagen.github.io</link>
           <title>Corin Wagen</title>
           <item>
+              <title>Gilliam and Girard on Scientific Innovation</title>
+              <link>public/blog/20230228_gilliam_and_girard.html</link>
+              <description>Two views on how practical applications can lead to innovations in basic research.</description>
+              <pubDate>Tue, 28 Feb 2023 00:00:00 +0000</pubDate>
+          </item>
+          <item>
               <title>Models and Oracles</title>
               <link>public/blog/20230221_models_and_oracles.html</link>
               <description>On the predictive power of calculations, and why we still need human intuition.</description>
