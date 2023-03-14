@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      Computational NMR Prediction: A Microreview
+    </title>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="language" content="en">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--twitter-->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@github" />
+    <meta name="twitter:title" content="Computational NMR Prediction: A Microreview" />
+    <meta name="twitter:description" content="Predicting experimental NMR spectra for fun and profit." />
+    
+
+    <link rel="stylesheet" href="../../static/style.css">
+
+    <link rel="alternate" type="application/rss+xml" title="RSS feed for the blog" href="/rss.xml">
+
+    <!--google-->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MTNZ0ZSG3W"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MTNZ0ZSG3W');
+    </script>
+
+  </head>
+  <body>
+    <ul class="menu-list">
+      <li class="menu-item"><a href="../main/index.html" class="menu-link menu-title">Corin Wagen</a></li>
+      <li class="menu-item"><a href="../main/index.html#about" class="menu-link">About</a></li>
+      <li class="menu-item"><a href="../main/index.html#projects" class="menu-link">Projects</a></li>
+      <!--<li class="menu-item"><a href="../main/index.html#past_work" class="menu-link">Past Work</a></li>-->
+      <li class="menu-item">
+        <a href="../main/blog_p1.html" class="menu-link">Blog</a>
+        <a href='../main/archive.html' class="menu-link">(Archive)</a>
+      </li>   
+    </ul>
+    <h1> Computational NMR Prediction: A Microreview </h1>
+    <i>March 14, 2023</i>
+    
+<p>
+Recently, I’ve been working to assign the relative configuration of some tricky diastereomers, which has led me to do a bit of a deep dive into the world of computational NMR prediction. Having spent the last week or so researching the current state-of-the-art in simulating experimental <sup>1</sup>H NMR spectra, I’m excited to share some of my findings.
+</p>
+
+<p>
+My main resource in this quest has been <a href=https://www.mdpi.com/1420-3049/28/6/2449>a new NMR benchmarking paper</a>, published on March 7th by authors from Merck (and a few other places). Why this paper in particular? Although there have been many NMR benchmarks, not all of these papers are as useful as they seem. Broadly speaking, there are two ways to benchmark NMR shifts: (1) against high-level computed results or (2) against experimental NMR shifts.
+</p>
+
+<p>
+The first strategy seems to be popular with theoretical chemists: NMR shifts at a very high level of theory are presumably very accurate, and so if we can just reproduce those values with a cheap method, we will have solved the NMR prediction problem. Of course, effects due to solvation and vibrational motion will be ignored, but these effects can always be corrected for later. In contrast, the second strategy is more useful for experimental chemists: if the calculation is going to be compared to experimental NMR spectra in CDCl<sub>3</sub> solution, the match with experiment is much more important than the gas-phase accuracy of the functional employed.
+</p>
+
+<p>
+Not only are these two approaches different in theory, they yield vastly different results in practice, as is nicely illustrated by the case of the double-hybrid functional DSD-PBEP86. DSD-PBEP86 was <a href=https://pubs.acs.org/doi/full/10.1021/acs.jctc.8b00624>first reported in 2018</a> by Frank Neese and coworkers, who found it to be much superior to regular DFT methods or MP2-type wavefunction methods at reproducing CCSD(T) reference data.<sup><a href=#fn1>1</a></sup> <a href=https://pubs.acs.org/doi/full/10.1021/acs.jctc.1c00919>A subsequent benchmark</a> by Kaupp and coworkers looked at a much larger set of compounds and confirmed that DSD-PBEP86 was indeed superior at reproducing CCSD(T) data, with a mean absolute error (MAE) for <sup>1</sup>H of 0.06 ppm. In contrast, <a href=https://pubs.acs.org/doi/full/10.1021/acs.jctc.1c00604>de Oliveira and coworkers</a> found that DSD-PBEP86 and related double-hybrid methods were much worse at predicting experimental <sup>1</sup>H NMR shifts, with a MAE of 0.20 ppm, making them no better than conventional DFT approaches.
+</p>
+
+</p>
+The difference between these two mindsets is nicely demonstrated by Kaupp’s paper, which dismisses de Oliveira’s work as suffering from “methodological inadequacies” and states:
+</p>
+
+<blockquote>
+[Benchmarking] can be done by comparing approximative calculations to experimental data or to data computed using high-level ab initio methodologies. The latter helps to eliminate a number of factors that often complicate the direct comparison against experiment, such as environmental, ro-vibrational, or thermal contributions (possibly also relativistic effects, see below).
+</blockquote>
+
+<p>
+While Kaupp is correct that using gas-phase CCSD(T) data does eliminate “environmental” effects (e.g. from solvent), it’s not clear that these effects always ought to be eliminated! Although directly optimizing a computational method to reproduce a bunch of ill-defined environmental effects is perhaps inelegant, it’s certainly pragmatic.
+</p>
+
+<p>
+The authors of the 2023 benchmark create a new set of well-behaved reference compounds that avoid troublesome heavy-atom effects (poorly handled by most conventional calculations) or low-lying conformational equilibria, and re-acquire experimental spectra (in chloroform) for every compound in the set. They then score a wide variety of computational methods against this dataset: functionals, basis sets, implicit solvent methods, and more.
+</p>
+
+<p>
+In the end, <a href=https://pubs.acs.org/doi/10.1021/ct6001016>Cramer’s WP04 functional</a> is found to be best, which is perhaps unsurprising given that it was specifically optimized for the prediction of <sup>1</sup>H shifts in chloroform.<sup><a href="#fn2">2</a></sup> The WP04/6-311++G(2d,p)/PCM(chloroform) level of theory is optima, giving an MAE of 0.08 ppm against experiment, but WP04/jul-CC-PVDZ/PCM(chloroform) is cheaper and not much worse. B3LYP-D3/6-31G(d) works fine for geometry optimization, as do wB97X-D/6-31G(d) and M06-2X/6-31G(d).
+</p>
+
+<p>
+Based on these results, my final workflow for predicting experimental proton spectra is:
+</p>
+
+<ol>
+<li><a href=https://corinwagen.github.io/public/blog/20221219_low_code_csearch.html>Run a conformational search using <i>crest</i></a>.</li>
+<li>Optimize each conformer using B3LYP-D3BJ/6-31G(d).</li>
+<li>Remove duplicate conformers with <span class=code>cctk.ConformationalEnsemble.eliminate_redundant()</span>.</li>
+<li>Predict NMR shifts for each conformer using WP04/6-311++G(2d,p)/PCM(chloroform).</li>
+<li>Combine conformer predictions through <a href=https://corinwagen.github.io/public/blog/20221228_boltzmann_error.html>Boltzmann weighting</a>, and apply a linear correction.</li>
+</ol>
+
+<p>
+For small molecules, this workflow runs extremely quickly (just a few hours from start to finish), and has produced good-quality results that solved the problem I was trying to solve.
+</p>
+
+<p>
+Nevertheless, the theoreticians have a point—although WP04 can account for a lot of environmental effects (essentially by overfitting to experimental data), there are plenty of systems for which this pragmatic approach cannot succeed. For instance, the DELTA50 dataset intentionally excludes molecules which might exhibit concentration-dependent aggregation behavior, which includes basically anything capable of hydrogen bonding or π–π stacking! If we hope to get beyond a certain level of accuracy, it seems likely that physically correct models of NMR shieldings, solvent effects, and aggregation will be necessary.
+</p>
+
+<h3>Footnotes</h3>
+<ol class=footnotes>
+  <li id="fn1">
+  CCSD(T) NMR shifts have to be computed in <a href=https://cfour.uni-mainz.de/cfour/>CFOUR</a>.
+  </li>
+  <li id="fn2">
+  The WP04 functional is not technically in Gaussian, but can be employed with the following route card: <span class=code>#p nmr=giao BLYP IOp(3/ 76=1000001189,3/77=0961409999,3/78=0000109999) 6-311++G(2d,p) scrf=(pcm,solvent=chloroform)</span>.
+  </li>
+</ol>
+
+  </body>
+  <br>
+  <br>
+  <footer>
+    <a href="mailto:cwagen@g.harvard.edu">email</a>
+    <a href="https://github.com/corinwagen">github</a>
+    <a href="https://twitter.com/CorinWagen">twitter</a>
+    <div style="float:right;">
+      <a href="/rss.xml">blog rss feed</a>
+    </div>
+  </footer>
+</html>

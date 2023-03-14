@@ -4,6 +4,12 @@
           <link>https://corinwagen.github.io</link>
           <title>Corin Wagen</title>
           <item>
+              <title>Computational NMR Prediction: A Microreview</title>
+              <link>public/blog/20230314_nmr_microreview.html</link>
+              <description>Predicting experimental NMR spectra for fun and profit.</description>
+              <pubDate>Tue, 14 Mar 2023 00:00:00 +0000</pubDate>
+          </item>
+          <item>
               <title>Optimizing Python</title>
               <link>public/blog/20230309_optimizing_python.html</link>
               <description>How to make a very slow language slightly less slow.</description>

@@ -34,7 +34,73 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p4.html'>previous page</a></div><div class='next-link'><a href='blog_p6.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220928_talent.html'>Book Review: Talent</a></h2><i>September 28, 2022</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p4.html'>previous page</a></div><div class='next-link'><a href='blog_p6.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20221006_water_dimer.html'>Entropy in the Water Dimer</a></h2><i>October 6, 2022</i>
+<p>
+The failure of conventional calculations to handle entropy is well-documented. Entropy, which <a href="https://en.wikipedia.org/wiki/Boltzmann%27s_entropy_formula">fundamentally</a> depends on the number of microstates accesible to a system, is challenging to describe in terms of a single set of XYZ coordinates (i.e. a single microstate), and naïve approaches to computation simply disregard this important consideration.
+</p>
+
+<p>
+Most programs get around this problem by partitioning entropy into various components—translational, rotational, vibrational, and configurational—and handling each of these separately. For many systems, conventional approximations perform well. Translational and rotational entropy depend in <a href="https://gaussian.com/thermo/">predictable ways</a> on the mass and moment of inertia of the molecule, and vibrational entropy can be estimated from normal-mode analysis at stationary points. Conformational entropy is less easily automated and as a result is often neglected in the literature (see the <a href="https://pubs.acs.org/doi/10.1021/ja5111392">discussion</a> in the SI), although <a href="https://pubs.rsc.org/en/content/articlelanding/2021/sc/d1sc00621e">some</a> <a href="https://pubs.acs.org/doi/10.1021/acs.jctc.0c01213">recent</a> <a href="https://pubs.rsc.org/en/content/articlelanding/2022/cp/d1cp05805c">publications</a> are changing that. 
+</p>
+
+<p>
+In general, however, the approximations above only work for ground states. To quote the Gaussian vibrational analysis <a href="https://gaussian.com/vib/">white paper</a>:
+</p>
+
+<blockquote>
+Vibrational analysis, as it’s descibed in most texts and implemented in <i>Gaussian</i>, is valid only when the first derivatives of the energy with respect to displacement of the atoms are zero. In other words, the geometry used for vibrational analysis must be optimized at the same level of theory and with the same basis set that the second derivatives were generated with. Analysis at transition states and higher order saddle points is also valid. Other geometries are not valid. 
+</blockquote>
+
+<p>
+While this isn't a huge issue in most cases, since most processes are associated with a minima or first-order saddle point on the electronic energy surface, it can become a big deal for reactions where entropy significantly shifts the position of the transition state (e.g. Figure 4 in <a href="https://pubs.acs.org/doi/10.1021/ja208779k">this study</a> of cycloadditions). Even worse, however, are cases where entropy constitutes the entire driving force for the reaction: association/dissociation processes. In his elegant <a href="https://pubs.acs.org/doi/pdf/10.1021/acs.organomet.8b00456">review</a> of various failures of computational modelling, Mookie Baik illustrated this point by showing that no transition state could be found for dissociation of the water dimer in the gas phase:
+</p>
+
+<figure>
+  <img class=centered-img src=../img/20221006_baik.png style="width:500px;" />
+  <figcaption>
+  Figure 11 from Baik's review.
+  </figcaption>
+</figure>
+
+<p>
+Panel (b) of this figure shows the electronic energy surface for dissociation, which monotonically increases out to infinity—there's never a maximum, and so there's no transition state. To estimate the position of the transition state, Baik proposes computing the entropy (using the above stationary-point approximations) at the first few points, where the two molecules are still tightly bound, and then extrapolating the curve into a sigmoid function. Combining the two surfaces then yields a nice-looking (if noisy) curve with a clear transition state at an O–H distance of around 3 Å.
+</p>
+
+<p>
+This approach, while clever, seems theoretically a bit dubious—is it guaranteed that entropy must always follow a smooth sigmoidal interpolation between bound and unbound forms? I thought that a more direct solution to the entropy problem would take advantage of <i>ab initio</i> molecular dynamics. While too slow for most systems, AIMD intrinsically accounts for entropy and thus should be able to generate considerably more accurate energy surfaces for association/dissociation events.
+</p>
+
+<p>
+Using <a href="https://github.com/corinwagen/presto"><i>presto</i></a>, I ran 36 constrained 100 ps <i>NVT</i> simulations of the water dimer with different O–O distances, and used the <a href="https://onlinelibrary.wiley.com/doi/abs/10.1002/jcc.540130812">weighted histogram analysis method</a> to stitch them together into a final potential energy surface. I then compared these results to those obtained from a direct <span class=code>opt=modredundant</span> calculation (with frequencies at every point) from Gaussian. (All calculations were performed in Gaussian 16 at the wB97XD/6-31G(d) level of theory, which overbinds the water dimer a bit owing to basis-set superposition error.)
+</p>
+
+<p>
+The results are shown below (error bars from the AIMD simulation are derived from bootstrapping):
+</p>
+
+<figure>
+  <img class=centered-img src=../img/20221006_PES.png style="width:550px;" />
+  <figcaption>
+  Comparison of different approaches for studying dissociation of the water dimer.
+  </figcaption>
+</figure>
+
+<p>
+As expected, no transition state can be seen on the black line corresponding to the electronic energy surface, or on the green line corresponding to enthalpy. All methods that depend on normal-mode analysis show sizeable variation at non-stationary points, which is perhaps unsurprising. What was more surprising was how much conventional DFT calculations (purple) overestimated entropy relative to AIMD! <a href="https://pubs.acs.org/doi/full/10.1021/jp205508z">Correcting for low-frequency vibrational modes</a> brought the DFT values more into line with AIMD, but a sizeable discrepancy persists.
+</p>
+
+<p>
+Also surprising is how different the AIMD free energy surface looks from Baik's estimated free energy surface. Although the scales are clearly different (I used O–O distance for the X axis, whereas Baik used O–H distance), the absence of a sharp maximum in both the AIMD data and the corrected Gibbs free energy data from conventional DFT is striking. Is this another instance of <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4124006/">entropy–enthalpy compensation</a>?
+</p>
+
+<p>
+In the absence of good gas-phase estimates of the free energy surface, it's tough to know how far the AIMD curve is from the true values; perhaps others more skilled in these issues can propose higher-level approaches or suggest additional sources of error. Still, on the meta-level, this case study demonstrates how molecular dynamics holds promise for modelling things that just can't be modelled other ways. Although this approach is still too expensive for medium to large systems, it's exciting to imagine what might be possible in 5 or 10 years!
+</p>
+
+<em>
+Thanks to Richard Liu and Eugene Kwan for insightful discussions about these issues.
+</em>
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220928_talent.html'>Book Review: Talent</a></h2><i>September 28, 2022</i>
 <p>
 <i>Talent</i>, by Tyler Cowen and Daniel Gross, is a book about talent selection—in other words, a book about hiring. Although I confess this sounded very boring to me initially, the authors address this concern right away:
 </p>
@@ -615,115 +681,6 @@ Thiel’s point about definite optimism also translates readily to the research 
 <p>
 Overall, I think <i>Zero to One</i> is an excellent book, and worth reading for anyone considering anything startup-related (including starting a research group).
 </p>
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220909_nitration_of_toluene.html'>Singleton Saturday: Nitration of Toluene</a></h2><i>September 10, 2022</i>
-<p>
-<i>
-This is the second in what will hopefully become a series of blog posts (<a href="https://corinwagen.github.io/public/blog/20220805_singleton_saturday_decarboxylation.html">previously</a>) focusing on the fascinating work of Dan Singleton (professor at Texas A&amp;M). My goal is to provide concise and accessible summaries of his work and highlight conclusions relevant to the mechanistic or computational chemist. 
-</i>
-</p>
-
-<p>
-Today I want to discuss one of my favorite papers, a detailed study of the nitration of toluene by Singleton lab at Texas A&amp;M. 
-</p>
-
-<figure>
-<img class=centered-img src="../img/20220910_exp_regiochem.png" style="width:450px;" />
-<figcaption>
-Regiochemistry of the nitration of toluene with nitronium tetrafluoroborate in dichloromethane.
-</figcaption>
-</figure>
-
-<p>
-This reaction, a textbook example of electrophilic aromatic substitution, has long puzzled organic chemists. The central paradox is that intermolecular selectivity is typically quite poor between different arenes, but positional selectivity is high—implying that NO<sub>2</sub><sup>+</sup> is unable to recognize more electron-rich arenes but somehow still able to recognize more electron-rich sites within a given arene. 
-</p>
-
-<p>
-George Olah devoted considerable effort to studying this paradox:
-</p>
-
-<blockquote>
-Kuhn and I have subsequently developed a new efficient nitration method by using stable nitronium salts (like tetrafluoroborate) as nitrating agents. Nitronium salt nitrations are also too fast to measure their absolute rates, but the use of the competition method showed in our work low substrate selectivity, e.g., k<sub>t</sub>/k<sub>b</sub> of 1-2. <i>[In other words, competition experiments show at most a 2-fold preference for toluene.]</i> <u>On the basis of the Brown selectivity rules, if these fast reactions followed σ-complex routes they would also have a predictably low positional selectivity (with high meta isomer content).</u> However, the observed low substrate selectivities were all accompanied by high discrimination between available positions (typical isomer distributions of nitrotoluenes were (%) ortho:meta:para = 66:3:31). Consequently, a meta position would seem to be sevenfold deactivated compared to a benzene position, giving a partial rate factor of m<sub>f</sub> = 0.14. These observations are inconsistent with any mechanism in which the individual nuclear positions compete for the reagent (in the σ-complex step).
-<br>
-<br>
-In explanation, we suggested the formation of a π complex in the first step of the reactions followed by conversion into σ complexes (which are of course separate for the individual ortho, para, and meta positions), allowing discrimination in orientation of products. 
-(<a href=https://pubs.acs.org/doi/pdf/10.1021/ar50043a002>ref</a>, emphasis added)
-</blockquote>
-
-<p>
-His conclusion, summarized in the last sentence of the above quote, was that two different sets of complexes were involved: π complexes which controlled arene–arene selectivity, and σ complexes which controlled positional selectivity. Thus, the paradox could be resolved simply by invoking different ∆∆G<sup>‡</sup> values for the transition states leading to π- and σ-complex formation. The somewhat epicyclic nature of this proposal led to pushback from the community, and (as Singleton summarizes) no cogent explanation for this reactivity had yet been advanced at the time of writing. 
-</p>
-
-<figure>
-<img class=centered-img src="../img/20220910_olah_mech.png" style="width:425px;" />
-<figcaption>A summary of Olah’s proposed resolution, featuring π- and σ-complexes.</figcaption>
-</figure>
-
-<p>
-The authors of this paper initiated their studies of this reaction by performing an extensive series of “traditional” DFT calculations in implicit solvent. M06-2X/6-311G(d) was chosen by benchmarking against coupled-cluster calculations, and the regiochemistry was examined with a variety of computational methods. 
-</p>
-
-<p>
-In the absence of BF<sub>4</sub><sup>-</sup>, naïve calculations predict entirely the wrong result: the <i>para</i> product is predicted to be more favorable than the <i>ortho</i> product, and no <i>meta</i> product is predicted to form at all. However, closer examination of the transition states reveals post-transition-state bifurcation in each case: for instance, the “<i>para</i>” transition state actually leads to <i>para</i>/<i>meta</i> in a 89:11 ratio. When all possible bifurcations for all transition states are taken into account in a Boltzmann-weighted way, the results remain wrong: <i>para</i> is still incorrectly favored over <i>ortho</i>, and <i>meta</i> is now predicted to form in a much higher proportion than observed.
-</p>
-
-<figure>
-<img class=centered-img src="../img/20220910_implicit.png" style="width:550px;" />
-<figcaption>Illustration of transition states and post-TS bifurcations for traditional DFT calculations.</figcaption>
-</figure>
-
-<p>
-The authors examine various potential resolutions of this problem, including inclusion of BF<sub>4</sub><sup>-</sup>, use of explicit solvent within an ONIOM scheme, and other nitration systems which might lead to more dissociated counterions. These methods lead to different, but equally wrong, conclusions. 
-</p>
-
-<p>
-They then perform free energy calculations to determine the energetics of nitronium approach to toluene (in dichloromethane). Surprisingly, no barrier exists to NO<sub>2</sub><sup>+</sup> attack: once nitronium comes within 4.5 Å of the arene, it is “destined to form some isomer” of product (in the authors’ words). Singleton and Nieves-Quinones dryly note:
-</p>
-
-<blockquote>
-…The apparent absence of transition states (more on this later) after formation of the encounter complex has never previously been suggested. This absence is in fact counter to basic ideas in all previous explanations of the selectivity.
-</blockquote>
-
-<p>
-This observation explains one horn of the dilemma—why selectivity between different arenes is low—but leaves unanswered why positional selectivity is so high. To examine this question, the authors then directly run reactions <i>in silico</i> by using unconstrained <i>ab initio</i> molecular dynamics (AIMD) and observe the product ratio. The product ratio (45:2:53 <i>o</i>/<i>m</i>/<i>p</i>) they observe matches the experimental values (41:2:57 <i>o</i>/<i>m</i>/<i>p</i>) almost perfectly!
-</p>
-
-<p>
-With this support for the validity of the computational model in hand, the authors then examine the productive trajectories in great detail. Surprisingly, they find that although no barrier exists to nitronium attack, the reaction is relatively slow to proceed, taking on average of 3.1 ps to form the product. Trajectories lacking either explicit solvent or tetrafluoroborate lack both this recalcitrance and the observed selectivity: instead, nitronium opportunistically reacts with the first carbon it approaches. This suggests that selectivity is only possible when the nitronium–toluene complex is sufficiently persistent.
-</p>
-
-<figure>
-<img class=centered-img src="../img/20220910_explicit.png" style="width:550px;" />
-<figcaption>
-  Nitronium roams within the π complex, sampling different carbons before ultimately forming product.
-</figcaption>
-</figure>
-
-<p>
-The authors attribute the long life of the NO<sub>2</sub><sup>+</sup>—toluene complex to the fact that the explicit solvent cage must reorganize to stabilize formation of the Wheland intermediate. This requires both reorientation of the dichloromethane molecules and repositioning of the tetrafluoroborate anion, which both occur on the timescale of the trajectories (<a href=https://corinwagen.github.io/public/blog/20220719_timescales.html>ref</a>). Accordingly, the reaction is put on hold while cage reorganization occurs, giving NO<sub>2</sub><sup>+</sup> time to preferentially attack the <i>ortho</i> and <i>para</i> carbons. (I would be tempted to call the π complex a dynamic/entropic intermediate, in the language of either <a href="https://corinwagen.github.io/public/blog/20220805_singleton_saturday_decarboxylation.html">Singleton</a> or <a href="https://www.sciencedirect.com/science/article/abs/pii/S2589597419300103">Houk</a>.)
-</p>
-
-<p>
-This computational picture thus accurately reproduces the experimental observations and explains the initial paradox we posed: selectivity does not arise through competing transition state energies, but through partitioning of a product-committed π complex which is prevented from reacting further by non-instantaneous solvent relaxation. Since similar π complexes can be formed under almost any nitration conditions, this proposal explains the often similar selectivities observed with other reagents or solvents.
-</p>
-
-<p>
-More philosophically, this proposal explains experimental results without invoking any transition states whatsoever. In their introduction, the authors quote Gould as stating:
-</p>
-
-<blockquote>
-If the configuration and energy of each of the intermediates and transition states through which a reacting system passes are known, it is not too much to say that the mechanism of the reaction is understood.
-</blockquote>
-
-<p>
-While this may be true to a first approximation in most cases, Singleton and co-workers have demonstrated here that this is not true in every case. This is an important conceptual point. As our ability to study low-barrier processes and reactive intermediates grows, I expect that we will more clearly appreciate the limitations of transition-state theory, and have to develop new techniques to interpret experimental observations.  
-</p>
-
-<p>
-But perhaps the reason I find this paper most exciting is simply the beautiful match between theory and experiment for such a complex and seemingly intractable system. This work not only predicts the observed reaction outcomes under realistic conditions, but also allows (through AIMD) the complete analysis of the entire reaction landscape in exquisite detail, from approach to post-bond-forming steps. In other words, this is a mechanistic chemist’s dream: a perfect movie of the entire reaction’s progress, from beginning to end. Go and do likewise!
-</p>
-
-<i>Thanks to Daniel Broere and Joe Gair for noticing that "electrophilic aromatic substitution" was erroneously written as "nucleophilic aromatic substitution." This embarassing oversight has been corrected.</i>
-
 </div><div class='previous-link'><a href='blog_p4.html'>previous page</a></div><div class='next-link'><a href='blog_p6.html'>next page</a></div><br>
   </body>
   <br>
