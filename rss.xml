@@ -4,6 +4,12 @@
           <link>https://corinwagen.github.io</link>
           <title>Corin Wagen</title>
           <item>
+              <title>Domain Arbitrage</title>
+              <link>public/blog/20230320_domain_arbitrage.html</link>
+              <description>Taking ideas from one discipline to another for scientific progress.</description>
+              <pubDate>Mon, 20 Mar 2023 00:00:00 +0000</pubDate>
+          </item>
+          <item>
               <title>Computational NMR Prediction: A Microreview</title>
               <link>public/blog/20230314_nmr_microreview.html</link>
               <description>Predicting experimental NMR spectra for fun and profit.</description>
