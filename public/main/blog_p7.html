@@ -34,7 +34,86 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p6.html'>previous page</a></div><div class='next-link'><a href='blog_p8.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220815_rate_determining_span.html'>The Rate-Determining Span</a></h2><i>August 15, 2022</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p6.html'>previous page</a></div><div class='next-link'><a href='blog_p8.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220901_screening_for_generality.html'>Screening for Generality: Reflections</a></h2><i>September 1, 2022</i>
+<p>
+Now that our work on screening for generality has finally been published in <a href="https://www.nature.com/articles/s41586-022-05263-2"><i>Nature</i></a>, I wanted to first share a few personal reflections and then highlight the big conclusions that I gleaned from this project. 
+</p>
+
+<p>
+This project originated from conversations I had with Eugene Kwan back in February 2019, when I was still an undergraduate at MIT. Although at the time our skills were almost completely non-overlapping, we shared both an interest in “big data” and high-throughput experimentation and a conviction that organic chemistry could benefit from more careful thinking about optimization methods. 
+</p>
+
+<p>
+After a few months of work, Eugene and I had settled on the idea of a “catalytic reaction atlas” (in analogy to the <a href="https://www.cancer.gov/about-nci/organization/ccg/research/structural-genomics/tcga">cancer genome atlas</a>) where we would exhaustively investigate catalysts, conditions, substrates, etc. for a single asymmetric reaction and then (virtually) compare different optimization methods to see which algorithms led to the best hits. Even with fairly conservative assumptions, we estimated that this would take on the order of 10<sup>5</sup> reactions, or about a year of continuous HPLC time, meaning that some sort of analytical advance was needed.
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20220901_slide.png" style="width:550px;"/>
+  <figcaption>A slide comparing different optimization strategies, from April 2019.<br>Multi-substrate screening is proposed as one of many different algorithms.</figcaption>
+</figure>
+
+<p>
+When I proposed this project to Eric, he was interested but suggested we focus more narrowly on the question of generality, or how to discover reactions with broad substrate scope. In an excited phone call, Eugene and I had the insight that we could screen lots of substrates at once by using mass spectrometry, thus bypassing our analytical bottleneck and enabling us to access the “big data” regime without needing vast resources to do so.<sup><a href="#fn1">1</a></sup>
+</p>
+
+<p>
+Getting the analytical technology to work took about two years of troubleshooting. We were lucky to be joined by Spencer, an incredible analytical chemist and SFC guru, and eventually were able to get reproducible and accurate data by a combination of experimental insights (running samples at high dilution) and computational tweaks (better peak models and fitting algorithms). To make sure that the method was working properly, we ran validation experiments both on a bunch of scalemic samples and on a varied set of complex pharmaceutical racemates.
+</p>
+
+<p>
+Choosing the proper reaction took a bit of thought, but once we settled on a set of substrates and catalysts the actual experiments were a breeze. Almost all the screening for this project was done in November–December 2021: in only a few hours, I could easily run and analyze hundreds of reactions per week. 
+</p>
+
+<p>
+I want to conclude by sharing three high-level conclusions that I’ve taken away from working on this project; for the precise scientific conclusions of this study, you can read the paper itself.
+</p>
+
+<h3> 1. Chemical space is big, so how you search matters</h3>
+
+<p>
+There are a ton of potential catalysts waiting to be discovered, and it seems likely that almost any hit can be optimized to 90% ee by sufficient graduate-student hours. Indeed, one of the reasons we selected the Pictet–Spengler reaction was the diversity of different catalyst structures capable of giving high enantioselectivity. But just because you can get 90% ee from a given catalyst family doesn’t mean you should: it might be terrible for other substrates, or a different class of catalysts might be much easier to optimize or much more reactive. 
+</p>
+
+<p>
+Understanding how many catalysts are out there to be discovered should make us think more carefully about which hits we pursue, since our time is too valuable to waste performing needless catalyst optimizations. In this study, we showed that screening only one substrate can be misleading when the goal is substrate generality, but one might prefer to screen for other factors: low catalyst loading, tolerance of air or water, or recyclability all come to mind. In all cases, including these considerations in initial screens means that the hits generated are more likely to be relevant to the final goal. Just looking for 90% ee is almost certainly not the best way to find a good reaction.
+</p>
+
+<h3>2. Don’t ignore analytical chemistry</h3>
+
+<p>
+Although assay development is a normal part of many scientific fields, many organic chemists seem to barely consider analytical chemistry in their research. Any ingenuity is applied to developing new catalysts, while the analytical method remains essentially a constant factor in the background. This is true even in cases where the analytical workflow represents a large fraction of the project (e.g. having to remove toluene before NMR for every screen).
+</p>
+
+<p>
+This shouldn’t be the case! Spending time towards the beginning of a project to develop a nice assay is an investment that can yield big returns: this can be as simple as making a GC calibration curve to determine yield from crude reaction mixtures, or as complex as what we undertook here. Time is too valuable to waste running endless columns.
+</p>
+
+<p>
+More broadly, it seems like analytical advances (e.g. NMR and HPLC) have had a much bigger impact on the field than any individual chemical discoveries. Following this trend forward in time would imply that we should be making bigger investments in new analytical technologies now, to increase scientist productivity in the future.
+</p>
+
+<h3>3. A little computer science can go a long way</h3>
+
+<p>
+A key part of this project (mentioned only briefly in the paper) was developing our own peak-fitting software that allowed us to reliably fit overlapped peaks. This was computationally quite simple and relied almost entirely on existing libraries (e.g. <i>scipy</i> and <i>lmfit</i>), but took a certain amount of comfort with signal processing / data science.<sup><a href="#fn2">2</a></sup> We later ended up moving our software pipeline out of unwieldy Jupyter notebooks and into a little Streamlit web app that Eugene wrote, which allowed us to quickly and easily get ee values from larger screens. 
+</p>
+
+<p>
+Neither of these two advances required significant coding skill; rather, just being able to apply some computer science techniques to our chemistry problem unlocked new scientific opportunities and massive time savings (a la <a href="https://en.wikipedia.org/wiki/Pareto_principle#In_computing">Pareto principle</a>). Moving forward, I expect that programming will become a more and more central tool in scientific research, much like Excel is today. Being fluent in both chemistry and CS is currently a rare and valuable combination, and will only grow in importance in the coming decades.
+</p>
+
+<i>Thanks to Eugene Kwan for reading a draft of this post.</i>
+
+<h3>Footnotes</h3>
+<ol class=footnotes>
+  <li id="fn1">
+    I'd like to propose the following principle: any sufficiently clever analytical technique inevitably depends on mass spectrometry. If you don't believe me, just look at the field of proteomics...
+  </li>
+  <li id="fn2">
+    I heavily recommend <a href="https://terpconnect.umd.edu/~toh/spectrum/"><i>A Pragmatic Introduction to Signal Processing</i></a> by Tom O'Haver.
+  </li>
+</ol>
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220815_rate_determining_span.html'>The Rate-Determining Span</a></h2><i>August 15, 2022</i>
 <p>
 One common misconception in mechanistic organic chemistry is that reactions are accelerated by speeding up the rate-determining step. 
 This mistaken belief can lead to an almost monomaniacal focus on determining the nature of the rate-determining step.
@@ -439,90 +518,6 @@ Another conclusion from this area of thinking is that federally funded scientist
     The <a href="https://newscience.org/nih/#aversion-to-high-risk-research">New Science NIH report</a> discusses this phenomenon at length: over the past 20 years, the NIH has changed its standards, such that now new grants are expected to have “clear research goals with obvious practical applications.”
   </li>
 </ol>
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220719_timescales.html'>Timescales</a></h2><i>July 19, 2022</i><p>
-  For many organic chemists, it’s hard to grasp the vast difference between various “fast” units of time. 
-  For instance, if a reactive intermediate has a lifetime of microseconds, does that mean it can escape the solvent shell and react with a substrate? 
-  What about a lifetime of nanoseconds, picoseconds, or femtoseconds?
-</p>
-
-<p>
-  To help answer these questions for myself, I made the following graphic about a year ago, which compares the timescale of various molecular processes on a logarithmic axis.
-  Although someone skilled in Adobe Illustrator could doubtless make a prettier version, 
-  I've still found this to be a useful reference, and frequently use it as a slide in talks or group meetings:
-</p>
-
-<figure>
-  <img class="centered-img" src="../img/20220719_timescales.png" style="width:650px;" alt="illustration of chemical timescales" />
-  <figcaption> Illustration of timescales of chemical processes—open in new tab for higher resolution</figcaption>
-</figure>
-
-<p>
-  Based on this graphic, it becomes easier to think about the interplay between competing fast processes. 
-  Species that persist for less than ~5 ps, for instance, are effectively “frozen” in the solvent configuration they’re formed in, 
-  whereas molecules that persist for longer can sample different solvent configurations. 
-  If a species can persist for 10-100 ps, it can begin to sample the nearby conformational landscape through low-barrier processes (e.g. single-bond rotation), 
-  although larger conformational changes might still be inaccessible.
-</p>
-
-<p>
-  As lifetimes stretch into the nanosecond regime, diffusion and solvent-cage escape become more realistic possibilities: 
-  based on <a href=https://onlinelibrary.wiley.com/doi/abs/10.1002/anie.200503273>Mayr’s value</a> for the “diffusion limit” (2–4e9 M<sup>-1</sup>s<sup>-1</sup>), 
-  we can estimate that bimolecular association with a 1.0 M reactant will take 200-400 ps, while association with a 100 mM reactant will take 2-4 ns. 
-  On the far right of the graph, being able to distinguish different species by NMR (e.g. amide methyl groups in DMF) means that these species have a very long lifetime indeed.
-</p>
-
-<p>
-  Framed in these terms, then, it becomes obvious why the 10-100 ps timescales currently accessible by <i>ab initio</i> molecular dynamics (AIMD) are unable to model many important 
-  molecular processes.  Indeed, <a href=https://pubs.acs.org/doi/10.1021/acs.jctc.0c00833>work from Grossman and coworkers</a> 
-  has shown that the results of AIMD simulations can be very dependent on the pre-AIMD equilibration method used, 
-  since the actual solvent environment is unable to fully relax over the timescale of the simulation. 
-  For AIMD to become a truly useful alternative to forcefield molecular dynamics, much faster <i>ab initio</i> methods will be needed!
-<p>
-
-<h3>
-  Sources:
-</h3>
-<ul>
-  <li>
-    intramolecular vibrational redistribution: <a href=http://www.cchem.berkeley.edu/millergrp/pdf/237.pdf>ref</a>
-  </li>
-  <li>
-    hydrogen bonding: <a href=https://web.stanford.edu/group/fayer/articles/351.pdf>ref</a>
-  </li>
-  <li>
-    NMR: <a href= http://www.satyensaha.com/pdf%20files/literature/SS-NMR-timescale.pdf>ref</a>
-  </li>
-  <li>
-    bond rotation: <a href=https://pubs.rsc.org/en/content/articlelanding/2015/an/c5an00558b>ref</a>, 
-    <a href=https://web.stanford.edu/group/fayer/articles/350.pdf>ref</a>
-  </li>
-  <li>
-    carbocation lifetimes: <a href=https://catalogimages.wiley.com/images/db/pdf/0471233242.01.pdf>ref</a>, 
-    <a href=https://www.sciencedirect.com/science/article/abs/pii/S0301010408000050?via%3Dihub>ref</a>
-  </li>
-  <li>
-    excited state lifetimes: <a href=https://pubs.acs.org/doi/10.1021/acs.chemrev.6b00057>ref</a>, 
-    <a href=https://pubs.rsc.org/en/content/articlelanding/2019/cc/c9cc01047e>ref</a>, 
-    <a href=https://pubs.acs.org/doi/10.1021/cr300503r>ref</a>, 
-    <a href=https://pubs.rsc.org/en/content/articlelanding/2016/cp/c6cp01635a>ref</a>
-  </li>
-</ul>
-
-<i>Thanks to Richard Liu and Eugene Kwan for feedback on this figure.</i>
-
-<h3>Corrections (updated 7/25/2022):</h3>
-  <ul>
-    <li>
-      The lifetime given for benzophenone is for the singlet excited state, not the triplet excited state 
-      (which has a much longer lifetime, explaining why benzophenone can be used as a triplet sensitizer).
-      Thanks to <a href="https://twitter.com/DanielEFalvey/status/1549868458673901568">Daniel Falvey</a> for pointing this out.
-    </li>
-    <li>
-      The illustration of "NMR timescale" refers only to the timescale in which different peaks can be distinguished in a 1D NMR experiment.
-      More sophisticated NMR experiments can probe much faster processes, such as molecular tumbling, so the use of the phrase "NMR timescale" is misleading.
-      Thanks to <a href="https://twitter.com/DominikJKubicki/status/1549809467247689728">Dominik Kubicki</a> for pointing this out.
-    </li>
-  </ul>
 </div><div class='previous-link'><a href='blog_p6.html'>previous page</a></div><div class='next-link'><a href='blog_p8.html'>next page</a></div><br>
   </body>
   <br>
