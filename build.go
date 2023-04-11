@@ -45,10 +45,14 @@ type Page struct {
     DateObj time.Time
 }
 
+type Cdata struct {
+    Value string `xml:",cdata"`
+}
+
 type RSSItem struct {
     Title       string `xml:"title"`
     Link        string `xml:"link"`
-    Description string `xml:"description"`
+    Description Cdata  `xml:"description"`
     PubDate     string `xml:"pubDate"`
 }
 
@@ -81,13 +85,16 @@ func write_rss(pages []Page) {
     for idx := 0; idx < len(blog_posts); idx++ {
         post := blog_posts[idx]
 
-        var rss_post = RSSItem{post.Title, post.Path, post.Summary, post.DateObj.Format(time.RFC1123Z)}
+        var desc Cdata
+        desc.Value = post.Content
+
+        var rss_post = RSSItem{post.Title, post.Path, desc, post.DateObj.Format(time.RFC1123Z)}
         rss_posts = append(rss_posts, rss_post)
     }
 
     feed := &rss{
         Version:     "2.0",
-        Description: "My personal blog, mainly focusing on issues of chemistry and metascience.",
+        Description: "My personal blog, mainly focusing on issues of chemistry and metascience, unified by trying to answer the question \"how can we make science better\"?",
         Link:        "https://corinwagen.github.io",
         Title:       "Corin Wagen",
         Item:        rss_posts,
