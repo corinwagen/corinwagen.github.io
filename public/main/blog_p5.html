@@ -34,7 +34,296 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p4.html'>previous page</a></div><div class='next-link'><a href='blog_p6.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20221121_business_card_lennard_jones.html'>Business Card Lennard–Jones Simulation</a></h2><i>November 21, 2022</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p4.html'>previous page</a></div><div class='next-link'><a href='blog_p6.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20221128_business_card_explained.html'>Business Card Lennard–Jones Simulation, Explained</a></h2><i>November 28, 2022</i>
+<p>
+Last week, I posted a simple Lennard–Jones simulation, written in C++, that models the behavior of liquid Ar in only 1561 characters.
+By popular request, I'm now posting a breakdown/explanation of this program, both to explain the underlying algorithm and illustrate how it can be compressed.
+</p>
+
+<p>
+Here's the most current version of the program, now condensed even further to 1295 characters:
+</p>
+
+<pre class=code-block>
+#include &lt;iostream&gt;
+#include &lt;random&gt;
+#define H return
+typedef double d;typedef int i;using namespace std;i N=860;d B=8.314e-7;d S=1544
+.8;d q(d x){if(x&gt;17)x-=34;if(x&lt;-17)x+=34;H x;}d rd(){H 34*drand48()-17;}struct v
+{d x,y,z;v(d a=0,d b=0,d c=0):x(a),y(b),z(c){}d n(){H x*x+y*y+z*z;}v p(){H v(q(x
+),q(y),q(z));}};v operator+(v a,v b){H v(a.x+b.x,a.y+b.y,a.z+b.z);}v operator*(d
+ a,v b){H v(a*b.x,a*b.y,a*b.z);}struct p{v r,q,a,b;vector&lt;i&gt; W;p(v l):r(l){}void
+ F(v f){b=0.025*f+b;}};vector&lt;p&gt; P;void w(){cout&lt;&lt;N&lt;&lt;"\n\n";for(p l:P)cout&lt;&lt;"Ar
+"&lt;&lt;l.r.x&lt;&lt;" "&lt;&lt;l.r.y&lt;&lt;" "&lt;&lt;l.r.z&lt;&lt;"\n";cout&lt;&lt;"\n";}void E(){for(i j=N;j--;){for(
+i k:P[j].W){v R=(P[j].r+-1*P[k].r).p();d r=R.n();if(r&lt;70){d O=r*r*r;R=2880*B*(2*
+S*S/O/O-S/O)/r*R;P[j].F(R);P[k].F(-1*R);}}}}void e(){for(i j=0;j&lt;N;j++){P[j].W.c
+lear();for(i k=j+1;k&lt;N;k++)if((P[j].r+-1*P[k].r).p().n()&lt;90)P[j].W.push_back(k);
+}}i main(){i A=1e3;i Y=5e3;for(i j=N;j--;){for(i a=999;a--;){v r=v(rd(),rd(),rd(
+));i c=0;for(p X:P){d D=(r+-1*X.r).p().n();if(D&lt;6.8)c=1;}if(!c){P.push_back(p(r)
+);break;}}}for(i t=0;t&lt;=3e4;t++){for(p&amp; I:P)I.r=(I.r+I.q+0.5*I.a).p();if(t%20==0
+)e();E();d K=0;for(p&amp; I:P){I.q=I.q+0.5*(I.b+I.a);I.a=I.b;I.b=v();K+=20*I.q.n();}
+d T=2*K/(3*B*N);if(t&lt;2*Y){d C=75;if(t&lt;Y)C=75*t/Y+(A-75)*(Y-t)/Y;for(p&amp; I:P)I.q=s
+qrt(C/T)*I.q;}if(t%100==0&amp;&amp;t&gt;2*Y)w();}}
+</pre>
+
+<p>
+Let's add some whitespace and break this down, line by line:
+</p>
+
+<pre class=code-block>
+#include &lt;iostream&gt;
+#include &lt;random&gt;
+
+// some abbreviations
+#define H return
+typedef double d;
+typedef int i;
+using namespace std;
+
+// constants
+i N=860;        // number of particles
+d B=8.314e-7;   // boltzmann's constant
+d S=1544.8;     // the minimum of the Lennard-Jones potential, 3.4 Å, to the 6th power
+</pre>
+
+<p>
+The program begins by importing the necessary packages, defining abbreviations, and declaring some constants. 
+Redefining <span class=code>double</span> and <span class=code>int</span> saves a ton of space, as we'll see.
+(This is standard practice in the code abbreviation world.)
+</p>
+
+<pre class=code-block>
+// given a 1d coordinate, scale it to within [-17,17].
+// (this only works for numbers within [-51,51] but that's fine for this application)
+d q(d x){
+    if(x&gt;17)
+        x-=34;
+    if(x&lt;-17)
+        x+=34;
+    H x;
+}
+
+// returns a uniform random number in [-17,17]
+d rd(){
+    H 34*drand48()-17;
+}
+</pre>
+
+<p>
+We now define a helper function to keep coordinates within the boundaries of our cubical box, and create another function to "randomly" initialize particles' positions.
+(<span class=code>drand48</span> is not a particularly good random-number generator, but it has a short name and works well enough.)
+</p>
+
+<pre class=code-block>
+// vector class
+struct v{
+    d x,y,z;
+    v(d a=0,d b=0,d c=0):x(a),y(b),z(c){}
+
+    // return the squared length of the vector
+    d n(){
+        H x*x+y*y+z*z;
+    }
+   
+    // return a vector with periodic boundary conditions applied
+    v p(){
+        H v(q(x),q(y),q(z));
+    }
+};
+
+// vector addition
+v operator+(v a,v b){
+    H v(a.x+b.x,a.y+b.y,a.z+b.z);
+}
+
+// multiplication by a scalar
+v operator*(d a,v b){
+    H v(a*b.x,a*b.y,a*b.z);
+}
+
+</pre>
+
+<p>
+Here, we define a vector class to store positions, velocities, and accelerations, and define addition and multiplication by a scalar.
+(It would be better to pass <span class=code>const</span> references to the operators, but it takes too many characters.)
+</p>
+
+<pre class=code-block>
+// particle class
+struct p{
+    // r is position, q is velocity, a is acceleration, b is acceleration in the next timestep
+    v r,q,a,b;
+    // neighbor list, the list of particles close enough to consider computing interactions with
+    vector&lt;i&gt; W;
+
+    p(v l):r(l){}
+   
+    // apply a force to this particle. 
+    // 0.025 = 1/40 = 1/(Ar mass)
+    void F(v f){
+        b=0.025*f+b;
+    }
+};
+
+// global vector of all particles
+vector&lt;p&gt; P;
+
+// write current coordinates to stdout
+void w(){
+    cout&lt;&lt;N&lt;&lt;"\n\n";
+    for(p l:P)
+        cout&lt;&lt;"Ar "&lt;&lt;l.r.x&lt;&lt;" "&lt;&lt;l.r.y&lt;&lt;" "&lt;&lt;l.r.z&lt;&lt;"\n";
+    cout&lt;&lt;"\n";
+}
+
+</pre>
+
+<p>
+Now, we define a class that represents a single argon atom. 
+Each atom has an associated position, velocity, and acceleration, as well as <span class=code>b</span>, which accumulates acceleration for the next timestep.
+Atoms also have a "neighbor list", or a list of all the particles close enough to be considered in force calculations. 
+(To prevent double counting, each neighbor list only contains the particles with index larger than the current particle's index.)
+</p>
+
+<p>
+We create a global variable to store all of the particles, and create a function to report the current state of this variable.
+</p>
+
+<pre class=code-block>
+// compute forces between all particles
+void E(){
+    for(i j=N;j--;){
+        for(i k:P[j].W){
+            // compute distance between particles
+            v R=(P[j].r+-1*P[k].r).p();
+            d r=R.n();
+
+            // if squared distance less than 70 (approximately 6 * 3.4Å**2), the interaction will be non-negligible
+            if(r&lt;70){
+                d O=r*r*r;
+                // this is the expression for the lennard–jones force.
+                // the second lennard–jones parameter, the depth of the potential well (120 kB), is factored in here.
+                R=2880*B*(2*S*S/O/O-S/O)/r*R;
+
+                // apply force to each particle
+                P[j].F(R);
+                P[k].F(-1*R);
+            }
+        }
+    }
+}
+</pre>
+
+<p>
+Now, we create a function to calculate the forces between all pairs of particles. 
+For each particle, we loop over the neighbor list and see if the distance is within six minima of the adjacent particle, 
+using squared distance to avoid the expensive square-root calculation.
+If so, we calculate the force and apply it to each particle.
+</p>
+
+<pre class=code-block>
+// build neighbor lists
+void e(){
+    for(i j=0;j&lt;N;j++){
+        // clear the old lists
+        P[j].W.clear();
+        for(i k=j+1;k&lt;N;k++)
+            // if squared distance between particles less than 90 (e.g. close to above cutoff), add to neighbor list
+            if((P[j].r+-1*P[k].r).p().n()&lt;90)
+                P[j].W.push_back(k);
+    }
+}
+</pre>
+
+<p>
+Finally, we create a function to build the neighbor lists, which is a straightforward double loop.
+We add every particle which might conceivably be close enough to factor into the force calculations within 10–20 frames.
+</p>
+
+<pre class=code-block>
+i main(){
+    i A=1e3;    // initial temperature (1000 K)
+    i Y=5e3;    // time to reach final temperature (5000 fs)
+
+    // initialize the system. each particle will be randomly placed until it isn't too close to other particles.
+    for(i j=N;j--;){
+        for(i a=999;a--;){
+            // generate random position
+            v r=v(rd(),rd(),rd());
+            i c=0;
+
+            // check for clashes with each extant particle
+            for(p X:P){
+                d D=(r+-1*X.r).p().n();
+                if(D&lt;6.8)
+                    c=1;
+            }
+
+            // if no clashes, add particle to list
+            if(!c){
+                P.push_back(p(r));
+                break;
+            }
+        }
+    }
+</pre>
+
+<p>
+To begin the program, we randomly initialize each particle and test if we're too close to any other particles. 
+If not, we save the position and move on to the next particle. This is crude but works well enough for such a simple system.
+</p>
+   
+<pre class=code-block>
+    // run MD! this is basically just the velocity verlet algorithm.
+    for(i t=0;t&lt;=3e4;t++){
+        // update position
+        for(p&amp; I:P)
+            I.r=(I.r+I.q+0.5*I.a).p();
+        
+        // every 20 timesteps (20 fs), update neighbor lists
+        if(t%20==0)
+            e();
+
+        // compute forces
+        E();
+
+        // finish velocity verlet, and sum up the kinetic energy.
+        d K=0;  // kinetic energy
+        for(p&amp; I:P){
+            I.q=I.q+0.5*(I.b+I.a);
+            I.a=I.b;
+            I.b=v();
+            K+=20*I.q.n();
+        }
+        
+        d T=2*K/(3*B*N); // temperature
+
+        // in the first 10 ps, apply berendsen thermostat to control temperature
+        if(t&lt;2*Y){
+            d C=75; // target temperature
+            if(t&lt;Y)
+                C=75*t/Y+(A-75)*(Y-t)/Y;
+            for(p&amp; I:P)
+                I.q=sqrt(C/T)*I.q;
+        }
+       
+        // every 100 fs after the first 10 ps, write the configuration to stdout
+        if(t%100==0&amp;&amp;t&gt;2*Y)
+            w();
+    }
+}
+</pre>
+
+<p>
+Finally, we simply have to run the simulation. We use the velocity Verlet algorithm with a 1 fs timestep, 
+updating neighbor lists and writing to <span class=code>stdout</span> periodically.
+The temperature is gradually lowered from 1000 K to 75 K over 5 ps, and temperature is controlled for the first 10 ps.
+</p>
+
+<p>
+Hopefully this helps to shed some light on how simple a molecular dynamics simulation can be, and highlights the wonders of obfuscated C++!
+</p>
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20221121_business_card_lennard_jones.html'>Business Card Lennard–Jones Simulation</a></h2><i>November 21, 2022</i>
 <p>
 An (in)famous code challenge in computer graphics is to write a complete ray tracer small enough to fit onto a business card.
 I've really enjoyed reading through some of the submissions over the years (e.g. 
@@ -385,205 +674,6 @@ In the absence of good gas-phase estimates of the free energy surface, it's toug
 <em>
 Thanks to Richard Liu and Eugene Kwan for insightful discussions about these issues.
 </em>
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220928_talent.html'>Book Review: Talent</a></h2><i>September 28, 2022</i>
-<p>
-<i>Talent</i>, by Tyler Cowen and Daniel Gross, is a book about talent selection—in other words, a book about hiring. Although I confess this sounded very boring to me initially, the authors address this concern right away:
-</p>
-
-<blockquote>
-Talent search is one of the most important activities in virtually all human lives. Elon Musk personally interviewed the first <i>three thousand</i> employees at SpaceX because he wanted to make sure the company was hiring the right people. Don’t think of talent search as a problem faced by “the boss” or by human resource departments… Just about everyone is on a quest to find talent in others or to show off their own.
-(emphasis original)
-</blockquote>
-
-<p>
-Not only is finding talented people a necessary prerequisite for any great endeavor, but “excess credentialism and highly bureaucratic hiring procedures” means that existing protocols for finding excellence are at best inefficient and at worst counterproductive. This problem is everywhere, the authors assert: venture capital is full of money looking for people to fund, discrimination against women and minorities means that talented people don’t get the resources they deserve, and increasing globalization means that ever-larger pool of potential talent are entering the global market. The authors summarize by stating that “the world’s inability to find and mobilize enough talent [is] one of the most significant failures of our time,” and hope that this book can be the first of many seeking to address this problem.
-</p>
-
-<p>
-How, then, do we do better at identifying talent?
-</p>
-
-<h2>Interviewing</h2>
-
-<p>
-Interviewing, although oft-derided, remains one of the best ways to learn about someone. The authors devote considerable time to the question of how best to interview someone, and especially how to gain useful, non-scripted information about personality:
-</p>
-
-<blockquote>
-The best interviews are not formal interviews at all. We’re sure you can think of other creative ways to take the candidate out of interview mode and into their everyday self. This is important, because the everyday self is what you’ll get if you hire them.
-</blockquote>
-
-<p>
-Many potential questions are discussed: some memorable examples focus on examining someone’s self-conception of their past and their current habits (e.g. “what are the open tabs on your browser right now?”). The best questions prompt authentic, off-the-cuff answers that give insight not into what the candidate wants to tell you but into who they really are. (There’s a fundamental pessimism about people’s self-deception that permeates this section.)
-</p>
-
-<p>
-The authors close by emphasizing the importance of being a good conversationalist, a skill underrated by many technical people:
-</p>
-
-<blockquote>
-Conversing well with potential hires or award winners is one of the most important things that you can do. Keep in mind that it not only brings you talent, but it helps you retain talent and mobilize those individuals to use their skills better. If you cannot relate to your talent at a conversational level, you will learn less, you will build less trust, and you will end up relying too heavily on direct monetary incentives to motivate people.
-</blockquote>
-
-<h2>Zoom Interviews</h2>
-
-<p>
-Cowen and Gross devote an entire chapter specifically to Zoom interviews, which they feel are underrated and can be just as useful as in-person interviews. Although many people find Zoom uncomfortable, this may actually be an advantage of the medium:
-</p>
-
-<blockquote>
-Many women have remarked on Twitter that they feel on more equal footing on a Zoom call… A lot of people used to coming across as high-status and charismatic in person will feel a bit lost through the screen. Witty repartee also can be hard to pull off over an internet call, and that too may diminish the stature of those individuals who are used to using clever banter to command a room.
-</blockquote>
-
-<p>
-You might be even one of these people:
-</p>
-
-<blockquote>
-One of the hardest mental adjustments for people to make is to realize how much their positive affect relies on their in-person rejection of high social status. To give a simple example, you might not be as witty as you think! You will do better in the online call if you realize how much your in-person presence relies on a kind of phoniness.
-</blockquote>
-
-<p>
-I also liked this observation about how Zoom interviews can be more equitable:
-</p>
-
-<blockquote>
-The supposed information poverty of the online interview also may help some interviewers overcome potential biases against women and also some minority groups… The online interview, by making everyone less charismatic, may help counter your bias against these individuals.
-</blockquote>
-
-<h2>Intelligence</h2>
-
-<p>
-Cowen and Gross review a variety of data about the importance of intelligence in various careers. The picture they present is complicated; IQ is clearly important for many professions, but perhaps less so than many people think. In general, Cowen and Gross seem to conclude that intelligence is overrated in hiring:
-</p>
-
-<blockquote>
-In what might seem like a paradox, it can be hard to spot intelligence, drive, and other positive qualities at the very, very top. Why? Well, the very, very top of the market usually is underexplored territory, virtually by definition. The most talented people usually are doing something extraordinary and fairly new, and often they are so unbelievably talented that most of us just don’t have the ability to appreciate their talents, at least not until their final achievements are on full display.
-</blockquote>
-
-<p>
-Cowen and Gross also reference Marc Andressen’s essay <a href="https://fictivekin.github.io/pmarchive-jekyll/how_to_hire_the_best_people.html">“How To Hire the Best People You’ve Ever Worked With,”</a> which argues that drive, self-motivation, curiosity, and ethics are more important considerations than raw intelligence. Furthermore, they point out that intelligence is already priced into the market—everyone knows smart employees are good, and so “the obviously smart people are not always the obvious bargains.”
-</p>
-
-<p>
-(It strikes me that humanities PhDs might be an underutilized pool of high-IQ workers, albeit with little technical training. Perhaps a business with an acute need for raw intelligence and few required technical skills might capitalize on this… this probably already exists.)
-</p>
-
-<h2>Personality</h2>
-
-<p>
-Much as they did for intelligence, Cowen and Gross analyze the five-factor personality model with an eye towards finding good hires at the margin. Their literature review finds that high conscientiousness is “the single best predictor of overall job performance” (other factors being poorly predictive), but they note that certain fields may benefit from a less responsible approach: 
-</p>
-
-<blockquote>
-Sometimes leaders of organizations can have too much rather than too little conscientiousness…. leadership skills often involve a mix of creativity and daring and ability to reimagine the risky future, and those are not necessarily the traits found in the people who punch the time clock promptly every day. Elon Musk would have gotten in less trouble had he not smoked a joint on the live video stream of Joe Rogan’s podcast, but a more sedate Elon Musk probably would not have built SpaceX and Tesla with the same fervor.”
-</blockquote>
-
-<p>
-(Additionally, the authors note that conscientiousness, like intelligence, is already priced into the market.)
-</p>
-
-<p>
-The authors go on to contrast conscientiousness with stamina, which they call “one of the great underrated concepts for talent search, especially when you are looking for top performers and leaders and major achievers.” Stamina refers to perseverance of effort, or a person’s ability to keep working diligently for long periods of time: since returns to learning and improvement compound over time, high stamina ends up making a huge difference in the long run. The authors continue: 
-</p>
-
-<blockquote>
-Don’t just think in terms of levels of current ability, because over time, rates of change very often prove to be more important. Think in terms of trajectories. When it comes to a job or fellowship candidate, think about the person’s developmental curve and whether the candidate is truly committed to consistent, perpetual self-improvement, as you might expect from a top athlete or musician…. If a person doesn’t seem to think much about self-improvement, they still might be a good hire, but then you had better be pretty content with their currently demonstrated level of expertise.
-</blockquote>
-
-<p>
-Other “more exotic” traits, both good and bad, that the authors discuss are:
-</p>
-
-<ul>
-<li>
-<b>Morlockism</b>, the capacity to lock oneself “in a cave” and work very hard for several days. 
-</li>
-<li>
-<b>Sturdiness</b>, “the quality of getting work done every day, with extreme regularity.” (Sturdiness and Morlockism appear to be substitutionary traits.) 
-</li>
-<li>
-<b>Generativeness</b>, a capacity of people to “talk quickly, move quickly, and in general seem to be enthralled with life.” (Balaji Srinivasan is cited as an example.)
-</li>
-<li>
-<b>Insecure overachievement</b>, the quality of “never quite feeling comfortable with your output despite knowing at a deep level that it <i>is</i> good” (emphasis original), which often results in high output but problematic psychology. Closely related, but more negative, is <b>pessimistic perfectionism</b>, exhibited by people who “believe that their work is never good enough” and “don’t have the ongoing drive and impetus of insecure overachievers.”
-</li>
-<li>
-<b>Clutteredness</b>, a trait of otherwise smart people who are unable to express their thoughts in a coherent or intelligible manner. Perhaps obviously, such individuals ought not to be put in positions that emphasize clear communication.
-</li>
-<li>
-The distinct trait of <b>vagueness</b>, where someone thinks in “mushy concepts and unspecific terms… not really drawing any conceptual distinctions at all.” This is problematic for strongly analytical roles.
-</li>
-<li>
-<b>Precocity</b>, how young a person first displayed aptitude. Probably more important for fluid intelligence than for skills that require long accumulation of knowledge.
-</li>
-<li>
-<b>Adhesiveness</b>, or the ability to be a good team player and fix problems (related to high social intelligence). This seems largely orthogonal to many other skills discussed, and may be crucial for some jobs and largely irrelevant for others.
-</li>
-<li>
-<b>Ability to perceive and climb the right hierarchy</b>, which lacks a catchy moniker. Many promising and highly skilled people manage to waste time focusing on the wrong problems. Cowen references chess players who never consider the world outside chess, and Gross describes potential founders who focus more on prestige than actually building their company. (To quote Peter Thiel: “be long substance, short status.”) I’m reminded of incredibly brilliant quiz bowl players I knew who never managed to translate their skills into success outside academic competitions.
-</li>
-<li>
-Another interesting trait is <b>how many conceptual frameworks one possesses</b>. A person with many frameworks can put themselves into the mind of an engineer, a salesperson, a regulator, or a user, whereas more limited people struggle to escape their own viewpoint.
-</li>
-</ul>
-
-<p>
-The discussion of these traits was one of my favorite parts of the book. I found it very useful to imagine various personalities and dissect what their strengths and flaws might be; except in rare cases, it seems that every strength has a corresponding flaw. As the authors write, “skill in spotting flaws in other people can lead to very positive matching outcomes, and that is another reason the dialectical perspective of seeing both the good and bad sides of talent is highly useful.”
-</p>
-
-<h2>Overcoming Bias</h2>
-
-<p>
-The authors first discuss disabilities, observing that often disability can augment talent through either “redirection of effort” or “compensation and adaptation.” The first case is typified by Richard Branson (founder of Virgin Galactic), who recounts how his dyslexia made it difficult for him to focus on details and pushed him towards important big-picture thinking. In contrast, the second case is typified by blind lawyers, who frequently know the law better than their sighted counterparts because they are unable to look it up as quickly. In either case, what appears to be purely a disadvantage in fact leads to subtle advantages which might be easily overlooked: “disability is a highly complex notion and by no means always negative on the whole.”
-</p>
-
-<p>
-The subsequent section focuses on women and minorities. As alluded to in the section on Zoom interviewing, the authors observe that there are a “fairly limited range of behaviors allowed” for women in the workplace, and as a result that many women’s talents are not fairly assessed. In particular, aggression is viewed as a positive for high-status men but a negative for high-status women. The authors then summarize a variety of literature which supports “the notion of a <i>confidence gap</i> as one of the main differences between men and women in the workplace” (emphasis added). In light of this finding, Cowen and Gross make three points:
-</p>
-
-<ol>
-<li>
-Favor women for jobs where low confidence is advantageous; “for many jobs, including in politics, diplomacy, and prudential supervision, epistemic humility is more important than risk-taking.”
-</li>
-<li>
-Look extra-hard for confident women, because their skills are likely undervalued by the market; you can “gain from the world’s statistical discrimination and in the process rectify an injustice.”
-</li>
-<li>
-Be mindful that risk-taking and competitiveness are often viewed as key values in male-dominated organizations, even when they needn’t be, and that this faulty institutional self-image may lead to unnecessary barriers to the advancement of women.
-</li>
-</ol>
-
-<p>
-The authors conclude this section by citing work that suggests women are better at talent spotting, both “better at assessing the intelligence of both men and women” and “better than men at detecting deceit”; so good talent selection should involve women!
-</p>
-
-<p>
-Cowen and Gross then discuss hiring minorities. As with women, the main challenge is perceiving the real talents of the people you talk to; cultural differences often lead to more awkward and formal conversations that struggle to escape “interview mode.” It’s hard to overcome this, but the authors propose the exercise of putting oneself into a situation where you feel culturally uncomfortable and observing how you struggle to present yourself and convey your ideas naturally. Emotionally internalizing this feeling can help you while interviewing those from different backgrounds. If nothing else, realizing that you struggle to perceive the abilities of minorities accurately can help you consciously compensate in the other direction. 
-</p>
-
-<h2>Conclusion</h2>
-
-<p>
-One of my key takeaways from <i>Talent</i> is this: every job requires aptitude along certain dimensions and is relatively insensitive to variation along other dimensions. The key to intelligent recruiting is to attune yourself to evaluating people only along important dimensions of talent while ignoring unimportant dimensions. Everyone has shortcomings; the most efficient hiring strategy is not to hire people without shortcomings, but to make sure their shortcomings are well-tolerated in the job you’re hiring for. (For instance, disagreeability is often viewed as positive for startup founders, but would certainly be deleterious for a salesperson. A disorganized chemist would do better in exploratory synthesis than in a job that required precise kinetic measurements.)
-</p>
-
-<p>
-Another nice thought I got from <i>Talent</i> was a fundamental positivity about the ability of intelligent hiring to alleviate bias or prejudice. Cowen and Gross point out that if you believe a certain group of people is fundamentally overlooked or discriminated against by the market, the logical implication of that belief is that you should hire from that group: if you’re right, you’re not only helping yourself but also your hires. This little bit of free-market thinking turns the issue of bias from a negative one (“how is society mistreating people?”) to a positive one (“how can my talent search benefit by avoiding existing prejudice?”), which I found helpful.
-</p>
-
-<p>
-But perhaps the most fundamental conclusion is simply that finding talent is an important, and underrated, skill for many areas of life. In the authors’ own words:
-</p>
-
-<blockquote>
-The vision that talent search is ‘a thing,’ that it is an art that can be learned and improved on, and that it can be taught and communicated to others—that is the fundamental point of this presentation.
-</blockquote>
-
-<p>
-I’d recommend this book both for people looking for talent (professors, founders, leaders) and for those hoping to display their own talent accurately to the world. 
-</p>
-
 </div><div class='previous-link'><a href='blog_p4.html'>previous page</a></div><div class='next-link'><a href='blog_p6.html'>next page</a></div><br>
   </body>
   <br>

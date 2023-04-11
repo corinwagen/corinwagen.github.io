@@ -34,7 +34,198 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p1.html'>previous page</a></div><div class='next-link'><a href='blog_p3.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230228_gilliam_and_girard.html'>Gilliam and Girard on Scientific Innovation</a></h2><i>February 28, 2023</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p1.html'>previous page</a></div><div class='next-link'><a href='blog_p3.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230309_optimizing_python.html'>Optimizing Python</a></h2><i>March 9, 2023</i>
+<p>
+Python is an easy language to write, but it’s also <a href=https://benchmarksgame-team.pages.debian.net/benchmarksgame/index.html>very</a> <a href=https://programming-language-benchmarks.vercel.app/problem/nbody>slow</a>. Since it’s a dynamically typed and interpreted language, every Python operation is much slower than the corresponding operation would be in C or FORTRAN—every line of Python must be interpreted, type checked, and so forth (see this <a href=https://www.codingdojo.com/blog/interpreters-run-python-code>little overview</a> of what the Python interpreter does).
+</p>
+
+<p>
+Fortunately for those of us who like programming in Python, there are a number of different ways to make Python code faster. The simplest way is just to use NumPy, the <i>de facto</i> standard for any sort of array-based computation in Python; NumPy functions are written in C/C++, and so are much faster than the corresponding native Python functions.
+</p>
+
+<p>
+Another strategy is to use a just-in-time compiler to accelerate Python code, like Jax or Numba. This approach incurs a substantial <i>O</i>(1) cost (compilation) but makes all subsequent calls orders of magnitude faster. Unfortunately, these libraries don’t support all possible Python functions or external libraries, meaning that sometimes it’s difficult to write JIT-compilable code.
+</p>
+
+<p>
+How do these strategies fare on a real-world problem? I selected pairwise distance calculations for a list of points as a test case; this problem is pretty common in a lot of scientific contexts, including calculating electrostatic interactions in molecular dynamics or quantum mechanics.
+</p>
+
+<p>
+We can start by importing the necessary libraries and writing two functions. The first function is the “naïve” Python approach, and the second uses <span class=code>scipy.spatial.distance.cdist</span>, one of the most <a href=https://github.com/ekwan/cctk/blob/master/cctk/molecule.py#L170>overpowered</a> functions I’ve encountered in any Python library.
+</p>
+
+<pre class=code-block>
+import numpy as np
+import numba
+import cctk
+import scipy
+
+mol = cctk.XYZFile.read_file("30_dcm.xyz").get_molecule()
+points = mol.geometry.view(np.ndarray)
+
+def naive_get_distance(points):
+    N = points.shape[0]
+    distances = np.zeros(shape=(N,N))
+    for i, A in enumerate(points):
+        for j, B in enumerate(points):
+            distances[i,j] = np.linalg.norm(A-B)
+    return distances
+
+def scipy_get_distance(points):
+    return scipy.spatial.distance.cdist(points,points)
+</pre>
+
+<p>
+If we score these functions in Jupyter, we can see that <span class=code>cdist</span> is almost 2000 times faster than the pure Python function!
+</p>
+
+<pre class=code-block>
+%%timeit
+naive_get_distance(points)
+
+103 ms ± 981 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+</pre>
+
+<pre class=code-block>
+%%timeit
+scipy_get_distance(points)
+
+55.2 µs ± 2.57 µs per loop (mean ± std. dev. of 7 runs, 10000 loops each)
+</pre>
+
+<p>
+In this case, it’s pretty obvious that we should just use <span class=code>cdist</span>. But what if there wasn’t a magic built-in function for this task—how close can we get to the performance of <span class=code>cdist</span> with other performance optimizations?
+</p>
+
+<p>
+The first and most obvious optimization is simply to take advantage of the symmetry of the matrix, and not compute entries below the diagonal. (Note that this is sort of cheating, since <span class=code>cdist</span> doesn’t know that both arguments are the same.)
+</p>
+
+<pre class=code-block>
+def triangle_get_distance(points):
+    N = points.shape[0]
+    distances = np.zeros(shape=(N,N))
+    for i in range(N):
+        for j in range(i,N):
+            distances[i,j] = np.linalg.norm(points[i]-points[j])
+            distances[j,i] = distances[i,j]
+    return distances
+</pre>
+
+<p>
+As expected, this roughly halves our time:
+</p>
+
+<pre class=code-block>
+%%timeit
+triangle_get_distance(points)
+
+57.6 ms ± 409 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+</pre>
+
+<p>
+Next, we can use Numba to compile this function. This yields roughly a 10-fold speedup, bringing us to about two orders of magnitude slower than <span class=code>cdist</span>.
+</p>
+
+<pre class=code-block>
+numba_triangle_get_distance = numba.njit(triangle_get_distance)
+</pre>
+
+<pre class=code-block>
+%%timeit
+numba_triangle_get_distance(points)
+
+5.74 ms ± 36.2 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+</pre>
+
+<p>
+Defining our own norm with Numba, instead of using <span class=code>np.linalg.norm</span>, gives us another nice boost:
+</p>
+
+<pre class=code-block>
+def custom_norm(AB):
+    return np.sqrt(AB[0]*AB[0] + AB[1]*AB[1] + AB[2]*AB[2])
+
+numba_custom_norm = numba.njit(custom_norm)
+
+def cn_triangle_get_distance(points):
+    N = points.shape[0]
+    distances = np.zeros(shape=(N,N))
+    for i in range(N):
+        for j in range(i,N):
+            distances[i,j] = numba_custom_norm(points[i] - points[j])
+            distances[j,i] = distances[i,j]
+    return distances
+
+numba_cn_triangle_get_distance = numba.njit(cn_triangle_get_distance)
+</pre>
+
+<pre class=code-block>
+%%timeit
+numba_cn_triangle_get_distance(points)
+
+1.35 ms ± 21.6 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)
+</pre>
+
+<p>
+What about trying to write this program using only vectorized NumPy functions? This takes a bit more creativity; I came up with the following function, which is a bit memory-inefficient but still runs quite quickly:
+</p>
+
+<pre class=code-block>
+def numpy_get_distance(points):
+    N = points.shape[0]
+
+    points_row = np.repeat(np.expand_dims(points,1), N, axis=1)
+    points_col = np.repeat(np.expand_dims(points,0), N, axis=0)
+
+    sq_diff = np.square(np.subtract(points_row, points_col))
+    return np.sqrt(np.sum(sq_diff, axis=2))
+</pre>
+
+<pre class=code-block>
+%%timeit
+numpy_get_distance(points)
+
+426 µs ± 6.34 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)
+</pre>
+
+<p>
+Unfortunately, calling <span class=code>np.repeat</span> with arguments <a href=https://numba.pydata.org/numba-doc/dev/reference/numpysupported.html>isn’t supported by Numba</a>, meaning that I had to get a bit more creative to write a Numba-compilable version of the previous program. The best solution that I found involved a few array reshaping operations, which are (presumably) pretty inefficient, and the final code only runs a little bit faster than the Numpy-only version.
+</p>
+
+<pre class=code-block>
+def numpy_get_distance2(points):
+    N = points.shape[0]
+
+    points_row = np.swapaxes(points.repeat(N).reshape((N,3,N)),1,2)
+    points_col = np.swapaxes(points_row,0,1)
+
+    sq_diff = np.square(np.subtract(points_row, points_col))
+    return np.sqrt(np.sum(sq_diff, axis=2))
+
+numba_np_get_distance2 = numba.njit(numpy_get_distance2)
+</pre>
+
+<pre class=code-block>
+%%timeit
+numba_np_get_distance2(points)
+
+338 µs ± 4.11 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)
+</pre>
+
+<p>
+I tried a few other approaches, but ultimately wasn’t able to find anything better; in theory, splitting the loops into chunks could improve cache utilization, but in practice anything clever I tried just made things slower.
+</p>
+
+<p>
+In the end, we were able to accelerate our code about 250x by using a combination of NumPy and Numba, but were unable to match the speed of an optimized low-level implementation. Maybe in a future post I’ll drop into C or C++ and see how close I can get to the reference—until then, I hope you found this useful.
+</p>
+
+<p>
+(I’m sure that there are ways that even this Python version could be improved; I did not even look at any other libraries, like Jax, Cython, or PyPy. Let me know if you think of anything clever!)
+</p>
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230228_gilliam_and_girard.html'>Gilliam and Girard on Scientific Innovation</a></h2><i>February 28, 2023</i>
 <p>
 Eric Gilliam, whose work on the history of MIT I highlighted before, has <a href=https://freaktakes.substack.com/p/irving-langmuir-the-general-electric>a nice piece</a> looking at Irving Langmuir’s time at the General Electric Research Laboratory and how applied science can lead to advances in basic research.
 </p>
@@ -414,91 +605,6 @@ Also a really cool program: I liked <a href=https://chemrxiv.org/engage/chemrxiv
 
 <li><a href=https://aip.scitation.org/doi/full/10.1063/5.0133026>wB97X-3c, the latest “composite method”</a> (Grimme). If the reported speed and accuracy are true “in the wild,” every computational chemist ought to use this method. <b>Pick 5/5.</b></li>
 </ul>
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230123_integral_screening.html'>The Importance of Integral Screening</a></h2><i>January 23, 2023</i>
-<p>
-For almost all Hartree–Fock-based computational methods, including density-functional theory, the rate-limiting step is calculating electron–electron repulsion. (This isn’t true for semiempirical methods, where matrix diagonalization is generally rate-limiting, or for <a href=https://pubs.acs.org/doi/10.1021/acs.jctc.2c00876>calculations on very large systems</a>.)
-</p>
-
-<p>
-When isolated single molecules are the subject of calculations (as opposed to solids or periodic systems), most programs describe electronic structure in terms of atom-centered basis sets, which reduces the electron–electron repulsion problem to one of calculating electron repulsion integrals (ERIs) over quartets of basis shells. Framed this way, it becomes obvious why ERIs are the bottleneck: the number of ERIs will scale as O(N<sup>4</sup>), meaning that millions of these integrals must be calculated even for relatively small molecules.
-</p>
-
-<figure>
-  <img class="centered-img" src="../img/20230125_dalle.png" style="width:350px;" />
-  <figcaption> 
-  I tried to get DALL-E to make a visual representation of integral screening; this was the best I got.
-  </figcaption>
-</figure>
-
-<p>
-One big advance in electronic structure calculations was the development of integral screening techniques, the most popular of which is the “Schwartz inequality” (derived from the <a href=https://en.wikipedia.org/wiki/Cauchy%E2%80%93Schwarz_inequality>Cauchy–Schwartz inequality</a>, but actually developed by <a href=https://onlinelibrary.wiley.com/doi/10.1002/jcc.540100111>Mario Häser and Reinhart Ahlrichs</a>). If we denote an ERI over shells A, B, C, and D as (AB|CD), then the Schwartz inequality says:
-</p>
-
-<p>
-(AB|CD) ≤ (AB|AB)<sup>0.5</sup> (CD|CD)<sup>0.5</sup>
-</p>
-
-<p>
-This is pretty intuitive: each shell pair will interact with itself most, since it has perfect overlap with itself, and so the geometric mean of the interaction of each shell pair with itself is an upper bound for the interaction between the two shell pairs. (Why would (AB|AB) ever be a small value? Well, A and B might be super far away from each other, and so the “shell pair” has very little overlap is just negligible.)
-</p>
-
-<p>
-This result is very useful. Since there are many fewer integrals of the form (AB|AB), we can start by calculating all of those, and then use the resulting values to “screen” each shell quartet. If the predicted value is less than some predefined cutoff, the integral is skipped. While these screening methods don’t help much with small molecules, where all of the shells are pretty close to each other, they become crucial for medium-sized molecules and above.
-</p>
-
-<p>
-(What’s the cutoff value? Orca defaults to 10<sup>-8</sup>, <a href=https://gaussian.com/integral/>Gaussian</a> to 10<sup>-12</sup>, <a href=https://psicode.org/psi4manual/master/autodir_options_c/module__scf.html>Psi4</a> to 10<sup>-12</sup>, and <a href=https://manual.q-chem.com/5.2/Ch4.S3.SS2.html>QChem</a> to 10<sup>-8</sup>–10<sup>-10</sup> depending on the type of calculation.)
-</p>
-
-<p>
-The Schwartz inequality neglects, however, another way in which (AB|CD) might be very small: if (AB| and |CD) aren’t independently negligible, but are just really far away from each other. One elegant way to address this (out of many) comes from recent-ish work by <a href=https://aip.scitation.org/doi/10.1063/1.4994190>Travis Thompson and Christian Ochsenfeld</a>. They define an intermediate quantity M for each pair of shells, derived from different high-symmetry integrals:
-</p>
-
-<p>
-M<sub>AC</sub> := (AA|CC) /  ( (AA|AA)<sup>0.5</sup> (CC|CC)<sup>0.5</sup> )
-</p>
-
-<p>
-M<sub>AC</sub> intuitively represents the distance between the two shells, and is guaranteed to be in the range [0,1]. Thompson and Ochsenfeld then use this quantity to propose an estimate of a shell quartet’s value:
-</p>
-
-<p>
-(AB|CD) ≈ (AB|AB)<sup>0.5</sup> (CD|CD)<sup>0.5</sup> max(M<sub>AC</sub>M<sub>BD</sub>, M<sub>AD</sub>M<sub>BC</sub>)
-</p>
-
-<p>
-This is no longer a rigorous upper bound like the Schwartz inequality, but it’s a pretty good estimate of the size of the integral.
-</p>
-
-How much of a difference does this make in practice? To test this, I ran HF/STO-3G calculations on dodecane in the fully linear configuration. As shown by <a href=https://onlinelibrary.wiley.com/doi/10.1002/jcc.540030314>Almlöf, Faegri, and Korsell</a>, linear molecules benefit the most from integral screening (since the shells are on average farther apart), so I hoped to see a sizable effect without having to study particularly large molecules.
-</p>
-
-<figure>
-  <img class="centered-img" src="../img/20230125_graph.png" style="width:450px;" />
-  <figcaption> 
-  Almlöf, Faegri, and Korsell, Figure 5. This paper is terrific.
-  </figcaption>
-</figure>
-
-<p>
-I compared both the Schwartz (“QQ”) bound and Ochsenfeld’s CSAM bound for integral thresholds ranging from 10<sup>-9</sup> to 10<sup>-13</sup>, and compared the result to a calculation without any integral screening. The total time for the calculation, as a percent of the unscreened time, is plotted below against the error in µHartree (for the organic chemists out there, 1 µH = 0.00063 kcal/mol):
-</p>
-
-<figure>
-  <img class="centered-img" src="../img/20230125_graph2.png" style="width:400px;" />
-  <figcaption> 
-  Comparing CSAM and QQ.
-  </figcaption>
-</figure>
-
-<p>
-A few things are apparent for this data. First, even tight thresholds lead to dramatic speedups relative to the unscreened calculation—and with minimal errors. Secondly, the CSAM bound really does work better than the QQ bound (especially if you ignore the high-error 10<sup>-9</sup> threshold data point). For most threshold values, using CSAM leads to about a 20% increase in speed, at the cost of a 3-fold increase in an already small error. Viewed visually, we can see that the Pareto frontier for CSAM (blue) is just closer to the optimal bottom-left corner than the corresponding frontier for QQ (black).
-</p>
-
-<p>
-I hope this post serves to explain some of the magic that goes on behind the scenes to make “routine” QM calculations possible. (If you thought these tricks were sneaky, wait until you hear how the integrals that aren’t screened out are calculated!)
-</p>
-
 </div><div class='previous-link'><a href='blog_p1.html'>previous page</a></div><div class='next-link'><a href='blog_p3.html'>next page</a></div><br>
   </body>
   <br>
