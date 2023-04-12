@@ -59,7 +59,7 @@ When isolated single molecules are the subject of calculations (as opposed to so
 </figure>
 
 <p>
-One big advance in electronic structure calculations was the development of integral screening techniques, the most popular of which is the “Schwartz inequality” (derived from the <a href=https://en.wikipedia.org/wiki/Cauchy%E2%80%93Schwarz_inequality>Cauchy–Schwartz inequality</a>, but actually developed by <a href=https://onlinelibrary.wiley.com/doi/10.1002/jcc.540100111>Mario Häser and Reinhart Ahlrichs</a>). If we denote an ERI over shells A, B, C, and D as (AB|CD), then the Schwartz inequality says:
+One big advance in electronic structure calculations was the development of integral screening techniques, the most popular of which is the “Schwartz inequality” (derived from the <a href=https://en.wikipedia.org/wiki/Cauchy%E2%80%93Schwarz_inequality>Cauchy–Schwartz inequality</a>, but actually developed by <a href=https://onlinelibrary.wiley.com/doi/10.1002/jcc.540100111>Mario Häser and Reinhart Ahlrichs</a> [<b>EDIT: This is wrong, see correction at end!</b>]). If we denote an ERI over shells A, B, C, and D as (AB|CD), then the Schwartz inequality says:
 </p>
 
 <p>
@@ -127,6 +127,17 @@ A few things are apparent for this data. First, even tight thresholds lead to dr
 I hope this post serves to explain some of the magic that goes on behind the scenes to make “routine” QM calculations possible. (If you thought these tricks were sneaky, wait until you hear how the integrals that aren’t screened out are calculated!)
 </p>
 
+<p>
+<i>
+<b>CORRECTION</b>: In this post, I credited Mario Häser and Reinhart Ahlrichs with developing the Cauchy–Schwartz method for integral screening. A (famous) theoretical chemist who shall remain nameless reached out to me to correct the record—in fact, Almlöf included an overlap-based screening method in <a href=https://onlinelibrary.wiley.com/doi/10.1002/jcc.540030314>his landmark 1982 paper</a>. To the untrained eye, this appears unrelated to ERI-based screening, but we are using Gaussian basis sets and so “one can therefore write the integrals in terms of overlaps,” meaning that what looked like a different expression is actually the same thing. (Section 9.12 of Helgaker/Jorgensen/Olsen's textbook </i>Molecular Electronic Structure Theory<i>, a book I sadly do not own, apparently discusses this more.) 
+</i>
+</p>
+
+<p>
+<i>
+The professor traced this back to <a href=https://aip.scitation.org/doi/abs/10.1063/1.1681647?journalCode=jcp>Wilhite and Eumena</a> in 1974, and ultimately back to the work of Witten in the 1960s. It is a pleasure to get corrected by those you respect, and I welcome any readers who find errors in my writing to reach out; I will do my best to respond and take blame as appropriate.
+</i>
+</p>
 
   </body>
   <br>

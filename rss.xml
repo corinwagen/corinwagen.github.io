@@ -12,7 +12,7 @@ This Easter week, I’ve been thinking about why new ventures are so important. 
 </p>
 
 <p>
-One explanation is the <a href=https://www.nber.org/system/files/chapters/c2144/c2144.pdf>Arrow replacement effect</a> (named after <a href=https://en.wikipedia.org/wiki/Kenneth_Arrow>Kenneth Arrow</a>), which states that “preinvention monopoly power acts as a strong disincentive to further innovation.” Arrow’s argument goes like this: suppose there’s an organization that is earning profit <i>P<sub>old</sub></i>, and there is some innovation that will increase profit to <i>P<sub>new</sub></i> (<i>P<sub>new</sub></i> &lt; <i>P<sub>old</sub></i>). If the existing organization pursues the innovation, their profits will thus increase by <i>∆P</i> := <i>P<sub>new</sub></i> - <i>P<sub>old</sub></i>. But a new organization will see its profits increase by <i>P<sub>new</sub></i>: since the startup has no existing profit to replace, the rewards to innovation are higher. Thus innovation is more appealing for those without any economic stake in the status quo.<sup><a href="#fn1">1</a></sup>
+One explanation is the <a href=https://www.nber.org/system/files/chapters/c2144/c2144.pdf>Arrow replacement effect</a> (named after <a href=https://en.wikipedia.org/wiki/Kenneth_Arrow>Kenneth Arrow</a>), which states that “preinvention monopoly power acts as a strong disincentive to further innovation.” Arrow’s argument goes like this: suppose there’s an organization that is earning profit <i>P<sub>old</sub></i>, and there is some innovation that will increase profit to <i>P<sub>new</sub></i> (<i>P<sub>new</sub></i> &gt; <i>P<sub>old</sub></i>). If the existing organization pursues the innovation, their profits will thus increase by <i>∆P</i> := <i>P<sub>new</sub></i> - <i>P<sub>old</sub></i>. But a new organization will see its profits increase by <i>P<sub>new</sub></i>: since the startup has no existing profit to replace, the rewards to innovation are higher. Thus innovation is more appealing for those without any economic stake in the status quo.<sup><a href="#fn1">1</a></sup>
 </p>
 
 <p>
@@ -147,7 +147,7 @@ I typically check Feedly many times a day on my phone; I can look at the TOC gra
 </p>
 
 <figure>
-  <img class="centered-img" src="../img/20230329_email.png" style="width:550px;" />
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20230329_email.png" style="width:550px;" />
   <figcaption> 
   “Inbox Zero” often proves elusive.
   </figcaption>
@@ -228,7 +228,7 @@ There are many examples of domain arbitrage,<sup><a href="#fn2">2</a></sup> but 
 
 
 <figure>
-  <img class="centered-img" src="../img/20230320_black_hole.jpg" style="width:350px;" />
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20230320_black_hole.jpg" style="width:350px;" />
   <figcaption> 
   The black hole picture, extracted from noisy radio telescope data by Bouman’s new algorithms.
   </figcaption>
@@ -629,7 +629,7 @@ This might seem a little silly. Innovation, “the introduction of new things, i
 </p>
 
 <figure>
-  <img class="centered-img" src="../img/20230228_tweet.png" style="width:500px;" />
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20230228_tweet.png" style="width:500px;" />
   <figcaption> 
   When innovation, devoid of context, becomes the highest virtue... (I added this to the post a few hours late, sorry.)
   </figcaption>
@@ -670,7 +670,7 @@ This isn’t bad! Perhaps the most striking example of the utility of models is 
 </p>
 
 <figure>
-  <img class="centered-img" src="../img/20230221_tolman.png" style="width:350px;" />
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20230221_tolman.png" style="width:350px;" />
   <figcaption> 
   Figure 1, from Tolman’s paper.
   </figcaption>
@@ -681,7 +681,7 @@ In contrast, an oracle bestows new insights or ideas upon a petitioner—think <
 </p>
 
 <figure>
-  <img class="centered-img" src="../img/20230221_miola.jpeg" style="width:450px;" />
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20230221_miola.jpeg" style="width:450px;" />
   <figcaption> 
   <i>The Oracle</i>, by Camille Miola (1880). Picture from Wikimedia Commons.
   </figcaption>
@@ -701,7 +701,7 @@ Finally, this piece would be incomplete if I didn’t highlight Jan Jensen and c
 <p>
 
 <figure>
-  <img class="centered-img" src="../img/20230221_jensen.png" style="width:450px;" />
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20230221_jensen.png" style="width:450px;" />
   <figcaption> 
   Figure 3 from the paper, illustrating discovery of new catalysts.
   </figcaption>
@@ -982,14 +982,14 @@ When isolated single molecules are the subject of calculations (as opposed to so
 </p>
 
 <figure>
-  <img class="centered-img" src="../img/20230125_dalle.png" style="width:350px;" />
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20230125_dalle.png" style="width:350px;" />
   <figcaption> 
   I tried to get DALL-E to make a visual representation of integral screening; this was the best I got.
   </figcaption>
 </figure>
 
 <p>
-One big advance in electronic structure calculations was the development of integral screening techniques, the most popular of which is the “Schwartz inequality” (derived from the <a href=https://en.wikipedia.org/wiki/Cauchy%E2%80%93Schwarz_inequality>Cauchy–Schwartz inequality</a>, but actually developed by <a href=https://onlinelibrary.wiley.com/doi/10.1002/jcc.540100111>Mario Häser and Reinhart Ahlrichs</a>). If we denote an ERI over shells A, B, C, and D as (AB|CD), then the Schwartz inequality says:
+One big advance in electronic structure calculations was the development of integral screening techniques, the most popular of which is the “Schwartz inequality” (derived from the <a href=https://en.wikipedia.org/wiki/Cauchy%E2%80%93Schwarz_inequality>Cauchy–Schwartz inequality</a>, but actually developed by <a href=https://onlinelibrary.wiley.com/doi/10.1002/jcc.540100111>Mario Häser and Reinhart Ahlrichs</a> [<b>EDIT: This is wrong, see correction at end!</b>]). If we denote an ERI over shells A, B, C, and D as (AB|CD), then the Schwartz inequality says:
 </p>
 
 <p>
@@ -1032,7 +1032,7 @@ How much of a difference does this make in practice? To test this, I ran HF/STO-
 </p>
 
 <figure>
-  <img class="centered-img" src="../img/20230125_graph.png" style="width:450px;" />
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20230125_graph.png" style="width:450px;" />
   <figcaption> 
   Almlöf, Faegri, and Korsell, Figure 5. This paper is terrific.
   </figcaption>
@@ -1043,7 +1043,7 @@ I compared both the Schwartz (“QQ”) bound and Ochsenfeld’s CSAM bound for 
 </p>
 
 <figure>
-  <img class="centered-img" src="../img/20230125_graph2.png" style="width:400px;" />
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20230125_graph2.png" style="width:400px;" />
   <figcaption> 
   Comparing CSAM and QQ.
   </figcaption>
@@ -1057,6 +1057,17 @@ A few things are apparent for this data. First, even tight thresholds lead to dr
 I hope this post serves to explain some of the magic that goes on behind the scenes to make “routine” QM calculations possible. (If you thought these tricks were sneaky, wait until you hear how the integrals that aren’t screened out are calculated!)
 </p>
 
+<p>
+<i>
+<b>CORRECTION</b>: In this post, I credited Mario Häser and Reinhart Ahlrichs with developing the Cauchy–Schwartz method for integral screening. A (famous) theoretical chemist who shall remain nameless reached out to me to correct the record—in fact, Almlöf included an overlap-based screening method in <a href=https://onlinelibrary.wiley.com/doi/10.1002/jcc.540030314>his landmark 1982 paper</a>. To the untrained eye, this appears unrelated to ERI-based screening, but we are using Gaussian basis sets and so “one can therefore write the integrals in terms of overlaps,” meaning that what looked like a different expression is actually the same thing. (Section 9.12 of Helgaker/Jorgensen/Olsen's textbook </i>Molecular Electronic Structure Theory<i>, a book I sadly do not own, apparently discusses this more.) 
+</i>
+</p>
+
+<p>
+<i>
+The professor traced this back to <a href=https://aip.scitation.org/doi/abs/10.1063/1.1681647?journalCode=jcp>Wilhite and Eumena</a> in 1974, and ultimately back to the work of Witten in the 1960s. It is a pleasure to get corrected by those you respect, and I welcome any readers who find errors in my writing to reach out; I will do my best to respond and take blame as appropriate.
+</i>
+</p>
 ]]></description>
               <pubDate>Mon, 23 Jan 2023 00:00:00 +0000</pubDate>
           </item>
@@ -1070,7 +1081,7 @@ While looking over papers from the past year, one theme in particular stood out 
 </p>
 
 <figure>
-  <img class="centered-img" src="../img/20230118_algo.png" style="width:450px;" />
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20230118_algo.png" style="width:450px;" />
   <figcaption> 
   A generic optimization (image credit to <a href="https://mpalaourg.me/project/optimization-algorithms/">Georgios Balaouras</a>).
   </figcaption>
@@ -1115,7 +1126,7 @@ With continuous descriptors for formally discrete variables in hand, a natural n
 </p>
 
 <figure>
-  <img class="centered-img" src="../img/20230118_merck_informer.png" style="width:600px;" />
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20230118_merck_informer.png" style="width:600px;" />
   <figcaption> 
   Illustration of the Merck informer library (yellow) in chemical space, compared to drugs (grey) and compounds from recent literature (blue).
   </figcaption>
@@ -1148,7 +1159,7 @@ In total, 50 expert chemists and engineers from academia and industry played the
 </blockquote>
 
 <figure>
-  <img class="centered-img" src="../img/20230118_bayesian_optimization.png" style="width:300px;" />
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20230118_bayesian_optimization.png" style="width:300px;" />
   <figcaption> 
   Average yield per batch from Bayesian optimization (black) vs. humans (blue), showing how Bayesian optimization outcompetes humans despite a worse start.
   </figcaption>
@@ -1198,7 +1209,7 @@ Consider the following reaction, which could conceivably proceed via an S<sub>N<
 </p>
 
 <figure>
-  <img class="centered-img" src="../img/20230103_structures.png" style="width:550px;" />
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20230103_structures.png" style="width:550px;" />
   <figcaption> 
     This is a bit of a silly reaction, admittedly. The intermolecular version or the <i>endo</i> version would have been better.
   </figcaption>
@@ -1216,7 +1227,7 @@ Unfortunately this is not true. Instead, all mechanistic possibilities give seco
 
 <!--
 <figure>
-  <img class="centered-img" src="../img/20230103_energy.png" style="width:500px;" />
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20230103_energy.png" style="width:500px;" />
   <figcaption> 
     Some of the grid points didn't finish, which explains the scattered gaps. I've also excluded anything with energy more than 30 kcal/mol above the ground state.
   </figcaption>
@@ -1224,7 +1235,7 @@ Unfortunately this is not true. Instead, all mechanistic possibilities give seco
 -->
 
 <figure>
-  <img class="centered-img" src="../img/20230103_kie.png" style="width:550px;" />
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20230103_kie.png" style="width:550px;" />
   <figcaption> 
     The raw data from PyQuiver is a little fuzzy, so I applied a convolution to smooth the data. Details later on. 
   </figcaption>
@@ -1239,7 +1250,7 @@ Why is this? Both ionization and addition proceed through iminium-like structure
 </p>
 
 <figure>
-  <img class="centered-img" src="../img/20230103_structures2.png" style="width:300px;" />
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20230103_structures2.png" style="width:300px;" />
   <figcaption>
   These both look pretty much like iminium ions.
   </figcaption>
@@ -1272,7 +1283,7 @@ Putting this together, then, what experimental results would be conclusive? A ve
 </p>
 
 <figure>
-  <img class="centered-img" src="../img/20230103_sn2_plot.png" style="width:470px;" />
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20230103_sn2_plot.png" style="width:470px;" />
   <figcaption> 
   Any TS in the red zone is consistent with a moderately large KIE (say, 15%).
   </figcaption>
@@ -1501,7 +1512,7 @@ Since relative energies of conformers are usually calculated with only middling 
 </p>
 
 <figure>
-  <img class=centered-img src=../img/20221228_xkcd.png style="width:375px;" />
+  <img class=centered-img src=https://corinwagen.github.io/public/img/20221228_xkcd.png style="width:375px;" />
   <figcaption>
   Excerpt from <a href="https://xkcd.com/2295/">xkcd</a>, on error propagation (line #3 is what's relevant here).
   </figcaption>
@@ -1529,7 +1540,7 @@ To test this, I drew a random flexible-looking molecule with a few functional gr
 </p>
 
 <figure>
-  <img class=centered-img src=../img/20221228_cylview.png style="width:350px;" />
+  <img class=centered-img src=https://corinwagen.github.io/public/img/20221228_cylview.png style="width:350px;" />
   <figcaption>
   The lowest energy conformer of the molecule I drew (3-fluorohex-5-enal).
   </figcaption>
@@ -1578,7 +1589,7 @@ But, what if we just got lucky in this case? The relative energies are off by 0.
 </p>
 
 <figure>
-  <img class=centered-img src=../img/20221228_randomShifts.png style="width:400px;" />
+  <img class=centered-img src=https://corinwagen.github.io/public/img/20221228_randomShifts.png style="width:400px;" />
   <figcaption>
   Shifts from 100,000 simulations with random error added to CCSD(T) energies.
   </figcaption>
@@ -1589,7 +1600,7 @@ The above image shows the predicted shift from 100,000 different randomly genera
 </p>
 
 <figure>
-  <img class=centered-img src=../img/20221228_randomWeights.png style="width:400px;" />
+  <img class=centered-img src=https://corinwagen.github.io/public/img/20221228_randomWeights.png style="width:400px;" />
   <figcaption>
   Major conformer weights from 100,000 simulations with random error added to CCSD(T) energies.
   </figcaption>
@@ -1623,7 +1634,7 @@ Failure to identify the correct conformer can lead to completely incorrect resul
 </p>
 
 <figure>
-  <img class=centered-img src=../img/20221219_neese_csearch.gif style="width:450px;" />
+  <img class=centered-img src=https://corinwagen.github.io/public/img/20221219_neese_csearch.gif style="width:450px;" />
   <figcaption>
   Figure 1 from the paper; the previously reported conformers are shown in green.
   </figcaption>
@@ -1754,7 +1765,7 @@ This point was also made by a number of people
 perhaps most succinctly by <a href="https://twitter.com/OscarErlenmeyer/status/1603521689635414019">“Chris Farley”</a>:
 
 <figure>
-  <img class=centered-img src=../img/20221216_chris_farley.png style="width:450px;" />
+  <img class=centered-img src=https://corinwagen.github.io/public/img/20221216_chris_farley.png style="width:450px;" />
   <figcaption>
   Never meet your heroes.
   </figcaption>
@@ -1779,7 +1790,7 @@ Both <a href="https://twitter.com/VT_Chemist/status/1603153621511806979">@VT_Che
 </p>
 
 <figure>
-  <img class=centered-img src=../img/20221216_steve_fletcher.png style="width:450px;" />
+  <img class=centered-img src=https://corinwagen.github.io/public/img/20221216_steve_fletcher.png style="width:450px;" />
   <figcaption>
   (cue flashbacks to undergraduate me trying to dissolve enough of some tetracyclic monster in pyridine-d5 to see my last quat)
   </figcaption>
@@ -1814,7 +1825,7 @@ I'm going to highlight <a href="https://twitter.com/dasingleton/status/160344134
 </p>
 
 <figure>
-  <img class=centered-img src=../img/20221216_dan_singleton.png style="width:450px;" />
+  <img class=centered-img src=https://corinwagen.github.io/public/img/20221216_dan_singleton.png style="width:450px;" />
   <figcaption>
   The thread goes on, obviously, and is worth reading.
   </figcaption>
@@ -1888,7 +1899,7 @@ Boyle maintained that it was possible to base all knowledge of nature on persona
 </p>
 
 <figure>
-  <img class=centered-img src=../img/20221214_royal_society.jpeg style="width:450px;" />
+  <img class=centered-img src=https://corinwagen.github.io/public/img/20221214_royal_society.jpeg style="width:450px;" />
   <figcaption>
   The Royal Society—a group of folks who definitely didn't take <sup>13</sup>C NMR spectra.
   </figcaption>
@@ -2036,7 +2047,7 @@ Here's one such example:
 </p>
 
 <figure>
-  <img class=centered-img src=../img/20221205_exp_vs_fuoss.png style="width:450px;" />
+  <img class=centered-img src=https://corinwagen.github.io/public/img/20221205_exp_vs_fuoss.png style="width:450px;" />
   <figcaption>
   Comparison of experimental ∆G<sub>diss</sub> for tetraisoamylammonium nitrate in various dioxane–water blends vs. Fuoss-calculated ∆G values.
   (Data taken from <a href="https://pubs.acs.org/doi/10.1021/ja01330a023">Fuoss, <i>J. Am. Chem. Soc.</i>, <b>1933</b></a>, Table II.)
@@ -2410,7 +2421,7 @@ of liquid argon could reproduce experimental X-ray scattering results for the ra
 </p>
 
 <figure>
-  <img class=centered-img src=../img/20221121_rahman_rdf.png style="width:350px;" />
+  <img class=centered-img src=https://corinwagen.github.io/public/img/20221121_rahman_rdf.png style="width:350px;" />
   <figcaption>
   Figure 2 from Rahman, showing the radial distribution function of liquid argon with clear first, second, and third solvation shells.
   </figcaption>
@@ -2465,7 +2476,7 @@ Analysis of the resulting file in <i>cctk</i> results in the following radial di
 </p>
 
 <figure>
-  <img class=centered-img src=../img/20221121_rdf.png style="width:450px;" />
+  <img class=centered-img src=https://corinwagen.github.io/public/img/20221121_rdf.png style="width:450px;" />
   <figcaption>
   Radial distribution function generated by the above code.
   </figcaption>
@@ -2716,7 +2727,7 @@ While this isn't a huge issue in most cases, since most processes are associated
 </p>
 
 <figure>
-  <img class=centered-img src=../img/20221006_baik.png style="width:500px;" />
+  <img class=centered-img src=https://corinwagen.github.io/public/img/20221006_baik.png style="width:500px;" />
   <figcaption>
   Figure 11 from Baik's review.
   </figcaption>
@@ -2739,7 +2750,7 @@ The results are shown below (error bars from the AIMD simulation are derived fro
 </p>
 
 <figure>
-  <img class=centered-img src=../img/20221006_PES.png style="width:550px;" />
+  <img class=centered-img src=https://corinwagen.github.io/public/img/20221006_PES.png style="width:550px;" />
   <figcaption>
   Comparison of different approaches for studying dissociation of the water dimer.
   </figcaption>
@@ -3085,7 +3096,7 @@ This code generates the following image:
 </p>
 
 <figure>
-  <img class=centered-img src=../img/20220926_umap.png style="width:400px;" />
+  <img class=centered-img src=https://corinwagen.github.io/public/img/20220926_umap.png style="width:400px;" />
   <figcaption>
     A 2D plot of the molecules shown above. Colors represent different substitution on the indole ring.
   </figcaption>
@@ -3106,8 +3117,8 @@ In the course of preparing a literature meeting on post-Hartree–Fock computati
 </p>
 
 <figure>
-  <a href="../img/20220919_report_card.pdf">
-  <img class="centered-img" src="../img/20220919_report_card.png" style="width:700px;" />
+  <a href="https://corinwagen.github.io/public/img/20220919_report_card.pdf">
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20220919_report_card.png" style="width:700px;" />
   </a>
   <figcaption> Illustration of the accuracy of various computational methods for various model reactions</figcaption>
 </figure>
@@ -3383,7 +3394,7 @@ Today I want to discuss one of my favorite papers, a detailed study of the nitra
 </p>
 
 <figure>
-<img class=centered-img src="../img/20220910_exp_regiochem.png" style="width:450px;" />
+<img class=centered-img src="https://corinwagen.github.io/public/img/20220910_exp_regiochem.png" style="width:450px;" />
 <figcaption>
 Regiochemistry of the nitration of toluene with nitronium tetrafluoroborate in dichloromethane.
 </figcaption>
@@ -3410,7 +3421,7 @@ His conclusion, summarized in the last sentence of the above quote, was that two
 </p>
 
 <figure>
-<img class=centered-img src="../img/20220910_olah_mech.png" style="width:425px;" />
+<img class=centered-img src="https://corinwagen.github.io/public/img/20220910_olah_mech.png" style="width:425px;" />
 <figcaption>A summary of Olah’s proposed resolution, featuring π- and σ-complexes.</figcaption>
 </figure>
 
@@ -3423,7 +3434,7 @@ In the absence of BF<sub>4</sub><sup>-</sup>, naïve calculations predict entire
 </p>
 
 <figure>
-<img class=centered-img src="../img/20220910_implicit.png" style="width:550px;" />
+<img class=centered-img src="https://corinwagen.github.io/public/img/20220910_implicit.png" style="width:550px;" />
 <figcaption>Illustration of transition states and post-TS bifurcations for traditional DFT calculations.</figcaption>
 </figure>
 
@@ -3448,7 +3459,7 @@ With this support for the validity of the computational model in hand, the autho
 </p>
 
 <figure>
-<img class=centered-img src="../img/20220910_explicit.png" style="width:550px;" />
+<img class=centered-img src="https://corinwagen.github.io/public/img/20220910_explicit.png" style="width:550px;" />
 <figcaption>
   Nitronium roams within the π complex, sampling different carbons before ultimately forming product.
 </figcaption>
@@ -3691,7 +3702,7 @@ The output looks like this:
 </p>
 
 <figure>
-  <img class="centered-img" src="../img/20220905_pes.png" style="width:550px;"/>
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20220905_pes.png" style="width:550px;"/>
   <figcaption>The potential energy surface generated by the above code.</figcaption>
 </figure>
 
@@ -3718,7 +3729,7 @@ After a few months of work, Eugene and I had settled on the idea of a “catalyt
 </p>
 
 <figure>
-  <img class="centered-img" src="../img/20220901_slide.png" style="width:550px;"/>
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20220901_slide.png" style="width:550px;"/>
   <figcaption>A slide comparing different optimization strategies, from April 2019.<br>Multi-substrate screening is proposed as one of many different algorithms.</figcaption>
 </figure>
 
@@ -3802,7 +3813,7 @@ In this post, I hope to demonstrate the veracity of this concept by showing that
 </p>
 
 <figure>
-  <img class="centered-img" src="../img/20220815_scheme.png" style="width:375px;" />
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20220815_scheme.png" style="width:375px;" />
   <figcaption> Concerted and stepwise mechanisms. </figcaption>
 </figure>
 
@@ -3811,7 +3822,7 @@ We can imagine plotting these two mechanisms on a potential energy surface:
 </p>
 
 <figure>
-  <img class="centered-img" src="../img/20220815_rds.png" style="width:450px;" />
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20220815_rds.png" style="width:450px;" />
   <figcaption> Concerted and stepwise mechanisms, on a PES. </figcaption>
 </figure>
 
@@ -3877,7 +3888,7 @@ This method of thinking is particularly useful for rationalizing tricky Hammett 
 </p>
 
 <figure>
-  <img class="centered-img" src="../img/20220815_ps.png" style="width:650px;" />
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20220815_ps.png" style="width:650px;" />
   <figcaption> Brønsted-acid-catalyzed Pictet–Spengler reactions. </figcaption>
 </figure>
 
@@ -3966,7 +3977,7 @@ A central theme in mechanistic chemistry is the question of concertedness: if tw
 </p>
 
 <figure>
-  <img class="centered-img" src="../img/20220805_moj.png" style="width:450px;" alt="generic MOJ plot" />
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20220805_moj.png" style="width:450px;" alt="generic MOJ plot" />
   <figcaption> Generic More O'Ferrall–Jencks plot for general- and specific-acid catalysis (Figure 1 in the paper) </figcaption>
 </figure>
 
@@ -3989,7 +4000,7 @@ In <a href="https://pubs.acs.org/doi/full/10.1021/jacs.7b02148">this week's pape
 </p>
 
 <figure>
-  <img class="centered-img" src="../img/20220805_mech.png" style="width:450px;" alt="mechanistic possibilities" />
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20220805_mech.png" style="width:450px;" alt="mechanistic possibilities" />
   <figcaption> Concerted vs. stepwise mechanisms for decarboxylation of benzoylacetic acid (taken from the paper)</figcaption>
 </figure>
 
@@ -4003,7 +4014,7 @@ In this case, the authors measured the <sup>12</sup>C/<sup>13</sup>C kinetic iso
 </p>
 
 <figure>
-  <img class="centered-img" src="../img/20220805_kies.png" style="width:450px;"/>
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20220805_kies.png" style="width:450px;"/>
   <figcaption> Kinetic isotope effects for decarboxylation of benzoylacetic acid (Figure 2 from the paper)</figcaption>
 </figure>
 
@@ -4012,7 +4023,7 @@ These KIEs match the computed structure shown below nicely, which shows that pro
 </p>
 
 <figure>
-  <img class="centered-img" src="../img/20220805_ts.png" style="width:400px;"/>
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20220805_ts.png" style="width:400px;"/>
   <figcaption> Transition state for decarboxylation of benzoylacetic acid (M06-2X/6-311+G**) (taken from the paper)</figcaption>
 </figure>
 
@@ -4021,7 +4032,7 @@ To probe the stepwise/concerted nature of this reaction, the authors conducted q
 </p>
 
 <figure>
-  <img class="centered-img" src="../img/20220805_trajs.png" style="width:450px;"/>
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20220805_trajs.png" style="width:450px;"/>
   <figcaption> Results of quasiclassical trajectories showing the existence of a dynamic intermediate (<b>6</b>) before C–C bond breakage occurs (Figure 4a from the paper)</figcaption>
 </figure>
 
@@ -4231,7 +4242,7 @@ Another conclusion from this area of thinking is that federally funded scientist
 </p>
 
 <figure>
-  <img class="centered-img" src="../img/20220719_timescales.png" style="width:650px;" alt="illustration of chemical timescales" />
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20220719_timescales.png" style="width:650px;" alt="illustration of chemical timescales" />
   <figcaption> Illustration of timescales of chemical processes—open in new tab for higher resolution</figcaption>
 </figure>
 
@@ -4325,7 +4336,7 @@ Another conclusion from this area of thinking is that federally funded scientist
 </p>
 
 <figure>
-  <img class="centered-img" src="../img/20220708_1d_ir.png" style="width:400px;" alt="IR spectrum of phenol in benzene/CCl4" />
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20220708_1d_ir.png" style="width:400px;" alt="IR spectrum of phenol in benzene/CCl4" />
   <figcaption> IR spectrum of phenol in benzene/CCl<sub>4</sub> (Fayer Figure 2). </figcaption>
 </figure>
 
@@ -4340,7 +4351,7 @@ Another conclusion from this area of thinking is that federally funded scientist
 </p>
 
 <figure>
-  <img class="centered-img" src="../img/20220708_2d_ir.png" style="width:320px;" alt="2D IR spectrum of phenol in benzene/CCl4" />
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20220708_2d_ir.png" style="width:320px;" alt="2D IR spectrum of phenol in benzene/CCl4" />
   <figcaption> 2D IR spectrum of phenol in benzene/CCl<sub>4</sub> (Fayer Figure 3). </figcaption>
 </figure>
 
@@ -4363,7 +4374,7 @@ Another conclusion from this area of thinking is that federally funded scientist
 </p>
 
 <figure>
-  <img class="centered-img" src="../img/20220708_transport_mechs.png" style="width:450px;" alt="different transport mechanisms" />
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20220708_transport_mechs.png" style="width:450px;" alt="different transport mechanisms" />
   <figcaption> Illustration of different transport mechanisms (Tokmakoff Figure 8). </figcaption>
 </figure>
 
@@ -4378,7 +4389,7 @@ Another conclusion from this area of thinking is that federally funded scientist
 </p>
 
 <figure>
-  <img class="centered-img" src="../img/20220708_2d_ir_tokmakoff.png" style="width:600px;" alt="2D IR of electrolyte" />
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20220708_2d_ir_tokmakoff.png" style="width:600px;" alt="2D IR of electrolyte" />
   <figcaption> 2D IR measurement of 1.9 M LiTFSI in acetonitrile (Tokmakoff Figure 5). </figcaption>
 </figure>
 
@@ -4480,7 +4491,7 @@ Another conclusion from this area of thinking is that federally funded scientist
 </p>
 
 <figure>
-  <img class="centered-img" src="../img/20220628_electrophile.png" style="width:400px;" alt="rates of reactions with electrophiles" />
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20220628_electrophile.png" style="width:400px;" alt="rates of reactions with electrophiles" />
   <figcaption> Rates of reaction between methanol and various cations (page 77). </figcaption>
 </figure>
 
@@ -4497,7 +4508,7 @@ Another conclusion from this area of thinking is that federally funded scientist
 </p>
 
 <figure>
-  <img class="centered-img" src="../img/20220628_nucleophile.png" style="width:350px;" alt="rates of reactions with nucleophiles" />
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20220628_nucleophile.png" style="width:350px;" alt="rates of reactions with nucleophiles" />
   <figcaption> Rates of reaction between mfp(Ph)CH<sup>+</sup> and various alcohols (page 75). </figcaption>
 </figure>
 
@@ -4594,7 +4605,7 @@ which meant only the thioureas and the “northern” amide (which acts as a gen
 </p>
 
 <figure>
-  <img class="centered-img" src="../img/20220620_presto.png" style="width:450px;" alt="picture of a solvated complex" />
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20220620_presto.png" style="width:450px;" alt="picture of a solvated complex" />
   <figcaption> CYLView visualization of the solvated complex </figcaption>
 </figure>
 

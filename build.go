@@ -85,8 +85,9 @@ func write_rss(pages []Page) {
     for idx := 0; idx < len(blog_posts); idx++ {
         post := blog_posts[idx]
 
+        // we want the full page text, so we need to put it all as XHTML CDATA
         var desc Cdata
-        desc.Value = post.Content
+        desc.Value = strings.Replace(post.Content, "../img", "https://corinwagen.github.io/public/img", -1)
 
         var rss_post = RSSItem{post.Title, post.Path, desc, post.DateObj.Format(time.RFC1123Z)}
         rss_posts = append(rss_posts, rss_post)
@@ -117,6 +118,8 @@ func write_rss(pages []Page) {
     if err := enc.Encode(feed); err != nil {
         fmt.Printf("error: %feed\n", err)
     }
+
+    fmt.Println("Built RSS feed!")
 }
 
 // Build a given ``.html`` file with appropriate FrontMatter into a proper web page.
