@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      Isotope Effects in Aldehyde Protonation
+    </title>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="language" content="en">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--twitter-->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@github" />
+    <meta name="twitter:title" content="Isotope Effects in Aldehyde Protonation" />
+    <meta name="twitter:description" content="A literature study discovers a curious result, and I try to get to the bottom of it." />
+    <meta name="twitter:image" content="https://corinwagen.github.io/public/img/20230508_aldehyde_nores.png" />
+
+    <link rel="stylesheet" href="../../static/style.css">
+
+    <link rel="alternate" type="application/rss+xml" title="RSS feed for the blog" href="/rss.xml">
+
+    <!--google-->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MTNZ0ZSG3W"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MTNZ0ZSG3W');
+    </script>
+
+  </head>
+  <body>
+    <ul class="menu-list">
+      <li class="menu-item"><a href="../main/index.html" class="menu-link menu-title">Corin Wagen</a></li>
+      <li class="menu-item"><a href="../main/index.html#about" class="menu-link">About</a></li>
+      <li class="menu-item"><a href="../main/index.html#projects" class="menu-link">Projects</a></li>
+      <!--<li class="menu-item"><a href="../main/index.html#past_work" class="menu-link">Past Work</a></li>-->
+      <li class="menu-item">
+        <a href="../main/blog_p1.html" class="menu-link">Blog</a>
+        <a href='../main/archive.html' class="menu-link">(Archive)</a>
+      </li>   
+    </ul>
+    <h1> Isotope Effects in Aldehyde Protonation </h1>
+    <i>May 8, 2023</i>
+    
+<p>
+I’m writing my dissertation right now, and as a result I’m going back through a lot of old slides and references to fill in details that I left out for publication.
+</p>
+
+<p>
+One interesting question that I’m revisiting is the following: when protonating benzaldehyde, what is the H/D equilibrium isotope effect at the aldehyde proton? This question was relevant for the H/D KIE experiments we conducted in <a href=https://pubs.acs.org/doi/full/10.1021/jacs.2c06688>our study of the asymmetric Prins cyclization</a>. (The paper hasn’t gotten much attention, but it’s probably the most “classic” organic chemistry paper I’ve worked on, with a minimum of weird computational details or bizarre analytical techniques.)
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20230508_aldehyde_nores.png" style="width:375px;" />
+</figure>
+
+<p>
+Since the H/D bond isn’t involved in the reaction, we won’t see a primary effect; so we know we have to be thinking in terms of secondary effects. The most common reason to observe a secondary isotope effect is changes in hybridization: sp<sup>3</sup> to sp<sup>2</sup> gives a normal effect, whereas sp<sup>2</sup> to sp<sup>3</sup> gives an inverse effect. From this perspective, it looks like the effect should be unity, since the carbon in question is sp<sup>2</sup> in both structures.
+</p>
+
+<p>
+Reality, however, disagrees. <a href=https://www.sciencedirect.com/science/article/abs/pii/0040403976800573>Hall and Milosevich</a> report a EIE of 0.94 for benzaldehyde in aq. sulfuric acid, and <a href=https://pubs.acs.org/doi/pdf/10.1021/ja982504r>Gajewski and co-authors</a> compute an EIE of 0.83 for acetaldehyde at the MP2/6-31G(d,p) level of theory. I performed my own calculations at the M06-2X/jun-cc-pVTZ level of theory and obtained an EIE of 0.851 with <a href=https://github.com/ekwan/PyQuiver>PyQuiver</a>, qualitatively consistent with the above results.
+</p>
+
+<p>
+Where does this EIE come from? It’s helpful to think of benzaldehyde as possessing multiple resonance forms:
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20230508_aldehyde_res.png" style="width:400px;" />
+</figure>
+
+<p>
+We typically think of the neutral resonance form on the top left, but you can also imagine putting a positive charge on carbon and a negative charge on oxygen to create a zwitterion with a C–O single bond (bottom left). In neutral benzaldehyde, this resonance form is substantially disfavored, but in protonated benzaldehyde it doesn’t look any worse than the “normal” top resonance form!
+</p>
+
+<p>
+If this is true, we’d expect the C–O bond order to decrease from 2 in neutral benzaldehyde to ~1.5 in protonated benzaldehyde. Indeed, in my calculations the bond length increases from 1.20 Å to 1.28 Å upon protonation—so it seems the double bond character is decreasing! It’s not quite the same as going from sp<sup>2</sup> to sp<sup>3</sup>, but the inverse KIE begins to make sense.
+</p>
+
+<p>
+(This is purely guesswork, but my guess would be that the differences between the two structures are attenuated in a polar solvent like water. The zwitterionic resonance form of the neutral structure will be stabilized and thus the neutral aldehyde will be more polar, making the change to the oxocarbenium less drastic. This might explain why the measured EIE in water is smaller—although this might also be due to counterion effects, or something completely unrelated.)
+</p>
+
+<p>
+Let’s go a level deeper. According to <a href=https://pubs.acs.org/doi/abs/10.1021/ja01542a075>Streitwieser</a>, secondary KIEs associated with hyperconjugation originate from the creation or destruction of the c. 800 cm<sup>-1</sup> out-of-plane bending vibrations of Csp<sup>2</sup>–H hydrogens, which are markedly lower in frequency than the c. 1350 cm<sup>-1</sup> bending vibrations associated with Csp<sup>3</sup>–H hydrogens.
+</p>
+
+<p>
+Raising the frequency of a mode increases the energy required to inhabit the ground vibrational state (the “zero-point energy”)—but deuterium is heavier and vibrates more slowly, meaning that it possesses less ZPE and is less affected by these changes. So when an 800 cm<sup>-1</sup> sp<sup>2</sup> mode transforms to a 1350 cm<sup>-1</sup> sp<sup>3</sup> mode, the ZPE increases, but less for D than for H, so D is favored. Conversely, when a 1350 cm<sup>-1</sup> sp<sup>3</sup> mode transforms to a 800 cm<sup>-1</sup> sp<sup>2</sup> mode, the ZPE decreases, but less for D than for H, so H is favored. (For a more complete explanation, see <a href=https://macmillan.princeton.edu/wp-content/uploads/RRK-KIE.pdf>this presentation by Rob Knowles</a>.)
+</p>
+
+<p>
+This effect is complicated for benzaldehyde by the fact that the out-of-plane bend of the aldehyde couples to the out-of-plane bend of the phenyl ring, so there are several modes involving out-of-plane vibration of the aldehyde proton. When I compared the out-of-plane bend of the aldehyde H in both structures, I saw only minimal differences: 771, 963, 1040, and 1051 cm<sup>-1</sup> for the neutral species, as compared to 790, 1003, and 1061 cm<sup>-1</sup> for the protonated species. These small differences can’t be responsible for the observed effect.
+</p>
+
+<p>
+In contrast, the in-plane C–H bend shows a big change—1430 cm<sup>-1</sup> for benzaldehyde, but 1644 cm<sup>-1</sup> for the oxocarbenium (it seems to couple to the C–O stretch; the reduced mass increases from 1.26 amu to 3.52 amu). Applying Streitweiser’s formula for estimating the isotope effect for a specific mode gives a pretty good match:
+</p>
+
+<p>
+kH/kD ≈ exp(0.187/T * ∆ν) = exp(0.187/298 * (-214)) = 0.87
+</p>
+
+<p>
+I don’t understand this area well enough to comment on why there’s a change in the in-plane vibrational frequency and not the out-of-plane vibrational frequency, nor do I understand how to deconvolute the effects of mode-to-mode coupling. Nevertheless, this provides a tentative physical rationale for the observation.
+</p>
+
+<p>
+On a more abstract level, this case study illustrates why isotope effects are such a good tool. Any transformation that perturbs the vibrational frequencies of a given molecule can, in principle, be monitored by isotope effects without affecting the electronic energy surface at all. So, although the precise nature and magnitude of the effect might be hard to predict <i>a priori</i>, it’s not surprising that a transformation as dramatic as protonating a functional group produces a sizable isotope effect.
+</p>
+
+    <br>
+    <br>
+    <i>If you want email updates when I write new posts, you can subscribe <a href=https://cwagen.substack.com/>on Substack.</a></i>
+  </body>
+  <br>
+  <br>
+  <footer>
+    <a href="mailto:cwagen@g.harvard.edu">email</a>
+    <a href="https://github.com/corinwagen">github</a>
+    <a href="https://twitter.com/CorinWagen">twitter</a>
+    <div style="float:right;">
+      <a href="/rss.xml">rss</a>
+      <a href="https://cwagen.substack.com">substack</a>
+    </div>
+  </footer>
+</html>
