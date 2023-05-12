@@ -34,7 +34,69 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p1.html'>previous page</a></div><div class='next-link'><a href='blog_p3.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230411_newcomers.html'>Why New Ventures Are So Important</a></h2><i>April 11, 2023</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p1.html'>previous page</a></div><div class='next-link'><a href='blog_p3.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230413_new_ways.html'>New Ways To Read The Blog: RSS and Substack</a></h2><i>April 13, 2023</i>
+<p>
+<i>
+(This is more of a housekeeping post than an actual post with content; apologies.)
+</i>
+</p>
+
+<p>
+Up until now, my blogging strategy has been to write new posts about once a week and publicize them on Twitter, which works great for people who are on Twitter but (obviously) fails for people who aren’t on Twitter. I’m frequently asked if there are non-Twitter ways to subscribe to the blog updates: given that I myself don’t love relying on Twitter to bring me content, and that Twitter itself feels increasingly dicey, I feel bad saying no every time.
+</p>
+
+<p>
+I’m happy to announce that there are now two additional ways to read the blog: RSS and Substack. 
+</p>
+
+<h2>
+RSS
+</h2>
+
+<p>
+RSS is a lovely way to get updates from sites, which is sadly limited by the fact that nobody uses it anymore. (Half the people I talk to these days don’t even know what it is.) You can use an RSS aggregator like <a href=https://feedly.com/>Feedly</a>, and simply subscribe to various sites, so that they’ll dependably show up in your feed. This is the main way I get <a href=https://corinwagen.github.io/public/blog/20230329_literature.html>journal updates</a> and my news. 
+</p>
+
+<p>
+So, if you like using RSS, you can simply search “corinwagen.github.io” in Feedly, and the blog will come up:
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20230413_feedly.jpg" style="width:300px;" />
+  <figcaption> 
+  What it looks like on Feedly. The Twitter preview images sadly don't display.
+  </figcaption>
+</figure>
+
+<h2>
+Substack
+</h2>
+
+<p>
+Substack is a platform that helps people write and manage newsletters. It essentially solves the problem of “how do I create an email list”/“how do I manage subscriptions” for people who would rather not take care of hosting a web service and handling payments themselves, like me.
+</p>
+
+<p>
+I initially didn’t want to use Substack because (1) I wanted the blog to be part of my website, (2) I liked being able to control every aspect of the design, and (3) I wasn’t sure if anyone would read the blog, and there’s nothing sadder than an empty Substack. As things stand, (3) is a non-issue, so the question is whether the added convenience of Substack outweighs my own personal design and website preferences.
+I suspect that it may, so I’ve capitulated and copied all existing posts over to <a href=https://cwagen.substack.com>my new Substack</a>. (There are a few formatting issues in old posts, but otherwise things copied pretty well.)
+</p>
+
+<p>
+For now, I plan to continue posting everything on the blog, and manually copying each post over to Substack (I write in plain HTML so this is not too hard). If Substack ends up totally outperforming the blog in terms of views, then I’ll probably switch to Substack entirely for blogging and just leave my website up as a sort of virtual CV. 
+</p>
+
+<p>
+(I have no plans to enable subscriptions at this point; that being said, if for some bizarre reason there’s sufficient demand I’ll probably try to think of something to reward subscribers.)
+</p>
+
+<p>
+If you’d like to receive updates on Substack, you can subscribe below: 
+</p>
+
+<br>
+<iframe src="https://cwagen.substack.com/embed" width="480" height="320" style="display:block; border:1px solid #EEE; background:white; margin:auto;" frameborder="0" scrolling="no"></iframe>
+
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230411_newcomers.html'>Why New Ventures Are So Important</a></h2><i>April 11, 2023</i>
 <p>
 This Easter week, I’ve been thinking about why new ventures are so important. Whether in private industry, where startups are the most consistent source of innovative ideas, or in academia, where new assistant professors are hired each year, newcomers are often the most consistent source of innovation. Why is this?
 </p>
@@ -301,72 +363,6 @@ Thanks to Shlomo Klapper and Darren Zhu for helpful discussions. Thanks also to 
   </li>
   <li id="fn4">
   <a href=https://twitter.com/Stephen_Curry/status/1637496308935057409>This tweet</a>, quoting the Nielsen/Qiu metascience essay <a href=https://corinwagen.github.io/public/blog/20221026_structural_diversity.html>which I wrote about before</a>, seems relevant.
-  </li>
-</ol>
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230314_nmr_microreview.html'>Computational NMR Prediction: A Microreview</a></h2><i>March 14, 2023</i>
-<p>
-Recently, I’ve been working to assign the relative configuration of some tricky diastereomers, which has led me to do a bit of a deep dive into the world of computational NMR prediction. Having spent the last week or so researching the current state-of-the-art in simulating experimental <sup>1</sup>H NMR spectra, I’m excited to share some of my findings.
-</p>
-
-<p>
-My main resource in this quest has been <a href=https://www.mdpi.com/1420-3049/28/6/2449>a new NMR benchmarking paper</a>, published on March 7th by authors from Merck (and a few other places). Why this paper in particular? Although there have been many NMR benchmarks, not all of these papers are as useful as they seem. Broadly speaking, there are two ways to benchmark NMR shifts: (1) against high-level computed results or (2) against experimental NMR shifts.
-</p>
-
-<p>
-The first strategy seems to be popular with theoretical chemists: NMR shifts at a very high level of theory are presumably very accurate, and so if we can just reproduce those values with a cheap method, we will have solved the NMR prediction problem. Of course, effects due to solvation and vibrational motion will be ignored, but these effects can always be corrected for later. In contrast, the second strategy is more useful for experimental chemists: if the calculation is going to be compared to experimental NMR spectra in CDCl<sub>3</sub> solution, the match with experiment is much more important than the gas-phase accuracy of the functional employed.
-</p>
-
-<p>
-Not only are these two approaches different in theory, they yield vastly different results in practice, as is nicely illustrated by the case of the double-hybrid functional DSD-PBEP86. DSD-PBEP86 was <a href=https://pubs.acs.org/doi/full/10.1021/acs.jctc.8b00624>first reported in 2018</a> by Frank Neese and coworkers, who found it to be much superior to regular DFT methods or MP2-type wavefunction methods at reproducing CCSD(T) reference data.<sup><a href=#fn1>1</a></sup> <a href=https://pubs.acs.org/doi/full/10.1021/acs.jctc.1c00919>A subsequent benchmark</a> by Kaupp and coworkers looked at a much larger set of compounds and confirmed that DSD-PBEP86 was indeed superior at reproducing CCSD(T) data, with a mean absolute error (MAE) for <sup>1</sup>H of 0.06 ppm. In contrast, <a href=https://pubs.acs.org/doi/full/10.1021/acs.jctc.1c00604>de Oliveira and coworkers</a> found that DSD-PBEP86 and related double-hybrid methods were much worse at predicting experimental <sup>1</sup>H NMR shifts, with a MAE of 0.20 ppm, making them no better than conventional DFT approaches.
-</p>
-
-</p>
-The difference between these two mindsets is nicely demonstrated by Kaupp’s paper, which dismisses de Oliveira’s work as suffering from “methodological inadequacies” and states:
-</p>
-
-<blockquote>
-[Benchmarking] can be done by comparing approximative calculations to experimental data or to data computed using high-level ab initio methodologies. The latter helps to eliminate a number of factors that often complicate the direct comparison against experiment, such as environmental, ro-vibrational, or thermal contributions (possibly also relativistic effects, see below).
-</blockquote>
-
-<p>
-While Kaupp is correct that using gas-phase CCSD(T) data does eliminate “environmental” effects (e.g. from solvent), it’s not clear that these effects always ought to be eliminated! Although directly optimizing a computational method to reproduce a bunch of ill-defined environmental effects is perhaps inelegant, it’s certainly pragmatic.
-</p>
-
-<p>
-The authors of the 2023 benchmark create a new set of well-behaved reference compounds that avoid troublesome heavy-atom effects (poorly handled by most conventional calculations) or low-lying conformational equilibria, and re-acquire experimental spectra (in chloroform) for every compound in the set. They then score a wide variety of computational methods against this dataset: functionals, basis sets, implicit solvent methods, and more.
-</p>
-
-<p>
-In the end, <a href=https://pubs.acs.org/doi/10.1021/ct6001016>Cramer’s WP04 functional</a> is found to be best, which is perhaps unsurprising given that it was specifically optimized for the prediction of <sup>1</sup>H shifts in chloroform.<sup><a href="#fn2">2</a></sup> The WP04/6-311++G(2d,p)/PCM(chloroform) level of theory is optima, giving an MAE of 0.08 ppm against experiment, but WP04/jul-CC-PVDZ/PCM(chloroform) is cheaper and not much worse. B3LYP-D3/6-31G(d) works fine for geometry optimization, as do wB97X-D/6-31G(d) and M06-2X/6-31G(d).
-</p>
-
-<p>
-Based on these results, my final workflow for predicting experimental proton spectra is:
-</p>
-
-<ol>
-<li><a href=https://corinwagen.github.io/public/blog/20221219_low_code_csearch.html>Run a conformational search using <i>crest</i></a>.</li>
-<li>Optimize each conformer using B3LYP-D3BJ/6-31G(d).</li>
-<li>Remove duplicate conformers with <span class=code>cctk.ConformationalEnsemble.eliminate_redundant()</span>.</li>
-<li>Predict NMR shifts for each conformer using WP04/6-311++G(2d,p)/PCM(chloroform).</li>
-<li>Combine conformer predictions through <a href=https://corinwagen.github.io/public/blog/20221228_boltzmann_error.html>Boltzmann weighting</a>, and apply a linear correction.</li>
-</ol>
-
-<p>
-For small molecules, this workflow runs extremely quickly (just a few hours from start to finish), and has produced good-quality results that solved the problem I was trying to solve.
-</p>
-
-<p>
-Nevertheless, the theoreticians have a point—although WP04 can account for a lot of environmental effects (essentially by overfitting to experimental data), there are plenty of systems for which this pragmatic approach cannot succeed. For instance, the DELTA50 dataset intentionally excludes molecules which might exhibit concentration-dependent aggregation behavior, which includes basically anything capable of hydrogen bonding or π–π stacking! If we hope to get beyond a certain level of accuracy, it seems likely that physically correct models of NMR shieldings, solvent effects, and aggregation will be necessary.
-</p>
-
-<h3>Footnotes</h3>
-<ol class=footnotes>
-  <li id="fn1">
-  CCSD(T) NMR shifts have to be computed in <a href=https://cfour.uni-mainz.de/cfour/>CFOUR</a>.
-  </li>
-  <li id="fn2">
-  The WP04 functional is not technically in Gaussian, but can be employed with the following route card: <span class=code>#p nmr=giao BLYP IOp(3/ 76=1000001189,3/77=0961409999,3/78=0000109999) 6-311++G(2d,p) scrf=(pcm,solvent=chloroform)</span>.
   </li>
 </ol>
 </div><div class='previous-link'><a href='blog_p1.html'>previous page</a></div><div class='next-link'><a href='blog_p3.html'>next page</a></div><br>

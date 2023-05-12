@@ -4,6 +4,66 @@
           <link>https://corinwagen.github.io</link>
           <title>Corin Wagen</title>
           <item>
+              <title>What Happened to IRMS?</title>
+              <link>public/blog/20230512_irms.html</link>
+              <description><![CDATA[
+<p>
+A few days ago, <a href=https://corinwagen.github.io/public/blog/20230508_aldehyde_eie.html>I wrote</a> about kinetic isotope effects (KIEs), probably my favorite way to study the mechanism of organic reactions. To summarize at a high level: if the bonding around a given atom changes over the course of a reaction, then different isotopes of that atom will react at different rates. The exact magnitude of the effect depends on the vibrational modes involved, but is often quite different for different mechanisms, meaning that you can computationally predict isotope effects for a lot of mechanisms and then use KIE measurements to figure out which one is actually happening.
+</p>
+
+<p>
+The trouble is that the magnitude of the effect depends on the difference in the mass of the two isotopologues. <sup>1</sup>H/<sup>2</sup>H isotope effects are quite large: H reacts up to 7x faster than D (more for mechanisms that involve quantum tunneling), meaning that it’s not too hard to measure the value accurately. But as the atom gets heavier, the effects get smaller. For the next most common pair of isotopomers,<sup>12</sup>C/<sup>13</sup>C, the effect is usually 5% or less.
+</p>
+
+<p>
+Small KIEs are usually measured by one-pot competition experiments: a mixture of the two isomers is reacted to partial conversion, and then the isotopic composition of either the starting material or the product is determined. The product will be enriched in the isotope that reacts more quickly, and the starting material will be enriched in the isotope that reacts more slowly. If you know the starting ratio of isotopes, the conversion, and the ratio of isotopes at partial conversion, then you can use the Bigeleisen−Mayer equation to figure out the KIE.
+(<a href=https://pubs.acs.org/doi/pdf/10.1021/jacs.1c07351>This</a> is a really good review on isotope effects in general, if you want more than this cursory summary.)
+</p>
+
+<p>
+The accuracy of the KIE measurement is thus limited by (1) how accurately you can determine conversion and (2) how accurately you can measure the isotopic composition of a sample. Although conversion can be annoying, the second is the more serious limitation—<i>a priori</i> it’s not obvious how to figure out what the relative abundance of various isotopes is.
+</p>
+
+<p>
+Today, most people use approaches based on NMR spectroscopy: since <sup>1</sup>H and <sup>13</sup>C are both NMR-active nuclei, you can just integrate the peak of interest against another peak to figure out how much there is. (Quantitative <sup>13</sup>C NMR is super slow, so <a href=https://pubs.acs.org/doi/10.1021/jacs.6b10621>various</a> <a href=https://www.nature.com/articles/s41557-018-0079-7>tricks</a> can be employed to speed things up.)
+</p>
+
+<p>
+But there was an age before the advent of accurate NMR spectroscopy where people measured isotope effects differently. I was awestruck by <a href=https://pubs.acs.org/doi/pdf/10.1021/ja00834a064>this 1975 paper</a> from Cromartie and Swain reporting the measurement of a <sup>35</sup>Cl/<sup>37</sup>Cl isotope effect in the cyclization of 4-chlorobutanol: they report an isotope effect of 1.000757 ± 0.00015 using hydroxide as base, which they differentiate from an isotope effect of 1.000796 ± 0.00013 using water as base by Student’s <i>t</i> test. These numbers are way, way smaller and more precise than any isotope effect I’ve seen measured in the last few decades.
+</p>
+
+<p>
+Digging a little deeper reveals a <a href=https://pubs.acs.org/doi/pdf/10.1021/ja00418a038>whole</a> <a href=https://pubs.acs.org/doi/pdf/10.1021/ja00426a047>wealth</a> of papers using <sup>35</sup>Cl/<sup>37</sup>Cl isotope effects to study various mechanistic phenomena. The instrument Swain and others use (described <a href=https://pubs.acs.org/doi/pdf/10.1021/jo00972a016>here</a>) is an isotope-ratio mass spectrometer, which as the name implies is a special sort of mass spectrometer designed specifically to measure isotopic composition. These instruments, although a little obscure from my point of view, are <a href=https://www.thermofisher.com/us/en/home/industrial/mass-spectrometry/isotope-ratio-mass-spectrometry-irms.html>commercial</a>!
+</p>
+
+<p>
+So, why isn’t IRMS used more frequently in organic chemistry today? I think it’s for a few reasons. IRMS, at least historically, only works on gases, meaning that you have to either use gaseous reactants or convert your analytes to gases, both of which are pretty annoying. In the Swain work, they (i) incinerate their samples with nitric acid, (ii) precipitate out silver chloride by adding silver nitrate, and then (iii) convert silver chloride to gaseous methyl chloride by <a href=https://pubs.acs.org/doi/abs/10.1021/ja00873a025>heating with methyl iodide</a> in a sealed tube. This is certainly a lot of hassle to put up with for a single measurement—and you generally want to get a good number of replicates.
+</p>
+
+<p>
+(There are some <a href=https://www.thermofisher.com/order/catalog/product/11206175>all-in-one solutions</a> available for sale, which automatically combust samples à la elemental analysis, but they don’t seem to work on non-standard isotopes like chlorine.)
+</p>
+
+<p>
+Another reason why IRMS might have fallen out of favor is that it requires a dedicated instrument, whereas NMR-based methods can be done using the NMR spectrometers that any university already has. Most labs only have budgets for a handful of instruments—is an IRMS really worth the investment? (Owing to the typical aura of secrecy around instrument prices, I’m not sure how much one costs, but I’m guessing it’s a few hundred thousand dollars or so.)
+</p>
+
+<p>
+These downsides notwithstanding, I think there is a lot of good science that could be done if a mechanistic group decided to make IRMS a core part of their program. In particular, <sup>35</sup>Cl/<sup>37</sup>Cl KIEs seem really powerful: there are a growing number of organometallic reactions which involve chlorine atoms in the key step(s), and for which Cl KIEs might be complementary or superior to more conventional KIEs. I’m envisioning studying <a href=https://www.science.org/doi/10.1126/science.aad6981>transmetallation from Pd(II) chlorides</a>, or <a href=https://pubs.acs.org/doi/10.1021/jacs.1c13333>chlorine radical-mediated C–H activation</a>, or <a href=https://pubs.acs.org/doi/10.1021/jacs.2c01356>photolysis of Ni(II) chlorides</a>.
+</p>
+
+<p>
+(And why stop at Cl? According to ThermoFisher, thermal ionization mass spectrometry lets you analyze the isotopic composition of metals with really high accuracy [five decimal places, per their <a href=https://assets.thermofisher.com/TFS-Assets/CMD/brochures/br-30537-triton-xt-tims-br30537-en.pdf>brochure</a>]. Would a <sup>58</sup>Ni/<sup>60</sup>Ni isotope effect be possible to measure? This might provide a handle on some mechanistically ambiguous Ni(III) scenarios, like those reported <a href=https://pubs.acs.org/doi/10.1021/jacs.5b13211>here</a>: is radical trapping or reductive elimination rate- and enantioselectivity-determining?)
+</p>
+
+<p>
+It doesn’t seem like it’s that easy to start a purely mechanistic research group these days, so maybe this is an unfundable idea. But it seems sad that a technique as powerful for physical (in)organic chemists as IRMS could just fade into obscurity, and I hope somebody finds the time and resources to apply it to modern mechanistic problems.
+</p>
+
+]]></description>
+              <pubDate>Fri, 12 May 2023 00:00:00 +0000</pubDate>
+          </item>
+          <item>
               <title>Isotope Effects in Aldehyde Protonation</title>
               <link>public/blog/20230508_aldehyde_eie.html</link>
               <description><![CDATA[
