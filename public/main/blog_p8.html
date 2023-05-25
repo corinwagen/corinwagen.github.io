@@ -34,7 +34,45 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p7.html'>previous page</a></div><div class='next-link'><a href='blog_p9.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220914_zero_to_one.html'>Book Review: Zero to One</a></h2><i>September 14, 2022</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p7.html'>previous page</a></div><div class='next-link'><a href='blog_p9.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220919_report_cards.html'>Computational Report Cards</a></h2><i>September 19, 2022</i>
+<p>
+In the course of preparing a literature meeting on post-Hartree–Fock computational methods last year, I found myself wishing that there was a quick and simple way to illustrate the relative error of different approximations on some familiar model reactions, like a "report card" for different levels of theory. I couldn't find any such graphic online, so I decided to make one (click image to view high-res PDF):
+</p>
+
+<figure>
+  <a href="../img/20220919_report_card.pdf">
+  <img class="centered-img" src="../img/20220919_report_card.png" style="width:700px;" />
+  </a>
+  <figcaption> Illustration of the accuracy of various computational methods for various model reactions</figcaption>
+</figure>
+
+<p>
+All values are in kcal/mol, and the colors encode the error of the computed value: green values are within 10% or 1 kcal/mol of the truth, while yellow values are within 50% or 5 kcal/mol and red values are outside that range. (In each case the more restrictive cutoff was used.) Where possible, values have been benchmarked to experimental data; in the remaining cases, coupled-cluster calculations were employed.
+</p>
+
+<p>
+While small relative to <a href="https://pubs.rsc.org/en/content/articlelanding/2011/cp/c0cp02984j">more professional benchmarks</a>, these data nicely illustrate a few important trends:
+</p>
+
+<ul>
+<li>
+    Dispersion corrections are badly needed for density-functional theory, but beyond that there isn't a clear "best" DFT method.
+</li>
+<li>
+    Hartree–Fock theory consistently predicts electron-dense species to be less stable than they are, owing to the neglect of electron correlation: so anions are too basic/nucleophilic, bonds are too weak, and the aromatic Cope transition state is far too high in energy.
+</li>
+<li>
+    Second-order Møller–Plesset perturbation theory (MP2) overcorrects the Hartree–Fock error, MP3 overcorrects the MP2 error, and MP4 overcorrects the MP3 error. The result is that HF and MP3 tend to "zig" where MP2 and MP4 tend to "zag." (The crude solution of just averaging MP2 and MP3 is <a href="https://chemistry-europe.onlinelibrary.wiley.com/doi/10.1002/cphc.201200850">surprisingly effective</a>.) 
+</li>
+<li>
+    <a href="https://pubs.acs.org/doi/10.1021/acs.jpca.9b05734">DLPNO-CCSD(T)</a>, from Neese and co-workers, really is a magical combination of speed and accuracy!
+</li>
+</ul>
+
+<p>
+  Hopefully this overview, while simple, helps to build intuition about how good or bad computational predictions at a given level of theory are.
+</p>
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220914_zero_to_one.html'>Book Review: Zero to One</a></h2><i>September 14, 2022</i>
 <p>
 Who is Peter Thiel? <a href="https://conversationswithtyler.com/episodes/peter-thiel/">Tyler Cowen</a> calls him one of the most important public intellectuals of our era. <a href="https://www.bloomberg.com/news/features/2021-09-15/peter-thiel-gamed-silicon-valley-tech-trump-taxes-and-politics">Bloomberg</a> called him responsible for the ideology of Silicon Valley “more than any other living Silicon Valley investor or entrepreneur.” Depending on who you ask, he’s either a shadowy plutocratic genius or a visionary forward-thinking genius: but everyone seems to at least agree that he’s a genius.
 </p>
@@ -570,85 +608,6 @@ The output looks like this:
 <p>
 If you like how this looks, feel free to use this code; if not, modify it and make it better! I'm sure this isn't the last word in potential-energy-surface creation, but it's good enough for me.
 </p>
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220901_screening_for_generality.html'>Screening for Generality: Reflections</a></h2><i>September 1, 2022</i>
-<p>
-Now that our work on screening for generality has finally been published in <a href="https://www.nature.com/articles/s41586-022-05263-2"><i>Nature</i></a>, I wanted to first share a few personal reflections and then highlight the big conclusions that I gleaned from this project. 
-</p>
-
-<p>
-This project originated from conversations I had with Eugene Kwan back in February 2019, when I was still an undergraduate at MIT. Although at the time our skills were almost completely non-overlapping, we shared both an interest in “big data” and high-throughput experimentation and a conviction that organic chemistry could benefit from more careful thinking about optimization methods. 
-</p>
-
-<p>
-After a few months of work, Eugene and I had settled on the idea of a “catalytic reaction atlas” (in analogy to the <a href="https://www.cancer.gov/about-nci/organization/ccg/research/structural-genomics/tcga">cancer genome atlas</a>) where we would exhaustively investigate catalysts, conditions, substrates, etc. for a single asymmetric reaction and then (virtually) compare different optimization methods to see which algorithms led to the best hits. Even with fairly conservative assumptions, we estimated that this would take on the order of 10<sup>5</sup> reactions, or about a year of continuous HPLC time, meaning that some sort of analytical advance was needed.
-</p>
-
-<figure>
-  <img class="centered-img" src="../img/20220901_slide.png" style="width:550px;"/>
-  <figcaption>A slide comparing different optimization strategies, from April 2019.<br>Multi-substrate screening is proposed as one of many different algorithms.</figcaption>
-</figure>
-
-<p>
-When I proposed this project to Eric, he was interested but suggested we focus more narrowly on the question of generality, or how to discover reactions with broad substrate scope. In an excited phone call, Eugene and I had the insight that we could screen lots of substrates at once by using mass spectrometry, thus bypassing our analytical bottleneck and enabling us to access the “big data” regime without needing vast resources to do so.<sup><a href="#fn1">1</a></sup>
-</p>
-
-<p>
-Getting the analytical technology to work took about two years of troubleshooting. We were lucky to be joined by Spencer, an incredible analytical chemist and SFC guru, and eventually were able to get reproducible and accurate data by a combination of experimental insights (running samples at high dilution) and computational tweaks (better peak models and fitting algorithms). To make sure that the method was working properly, we ran validation experiments both on a bunch of scalemic samples and on a varied set of complex pharmaceutical racemates.
-</p>
-
-<p>
-Choosing the proper reaction took a bit of thought, but once we settled on a set of substrates and catalysts the actual experiments were a breeze. Almost all the screening for this project was done in November–December 2021: in only a few hours, I could easily run and analyze hundreds of reactions per week. 
-</p>
-
-<p>
-I want to conclude by sharing three high-level conclusions that I’ve taken away from working on this project; for the precise scientific conclusions of this study, you can read the paper itself.
-</p>
-
-<h3> 1. Chemical space is big, so how you search matters</h3>
-
-<p>
-There are a ton of potential catalysts waiting to be discovered, and it seems likely that almost any hit can be optimized to 90% ee by sufficient graduate-student hours. Indeed, one of the reasons we selected the Pictet–Spengler reaction was the diversity of different catalyst structures capable of giving high enantioselectivity. But just because you can get 90% ee from a given catalyst family doesn’t mean you should: it might be terrible for other substrates, or a different class of catalysts might be much easier to optimize or much more reactive. 
-</p>
-
-<p>
-Understanding how many catalysts are out there to be discovered should make us think more carefully about which hits we pursue, since our time is too valuable to waste performing needless catalyst optimizations. In this study, we showed that screening only one substrate can be misleading when the goal is substrate generality, but one might prefer to screen for other factors: low catalyst loading, tolerance of air or water, or recyclability all come to mind. In all cases, including these considerations in initial screens means that the hits generated are more likely to be relevant to the final goal. Just looking for 90% ee is almost certainly not the best way to find a good reaction.
-</p>
-
-<h3>2. Don’t ignore analytical chemistry</h3>
-
-<p>
-Although assay development is a normal part of many scientific fields, many organic chemists seem to barely consider analytical chemistry in their research. Any ingenuity is applied to developing new catalysts, while the analytical method remains essentially a constant factor in the background. This is true even in cases where the analytical workflow represents a large fraction of the project (e.g. having to remove toluene before NMR for every screen).
-</p>
-
-<p>
-This shouldn’t be the case! Spending time towards the beginning of a project to develop a nice assay is an investment that can yield big returns: this can be as simple as making a GC calibration curve to determine yield from crude reaction mixtures, or as complex as what we undertook here. Time is too valuable to waste running endless columns.
-</p>
-
-<p>
-More broadly, it seems like analytical advances (e.g. NMR and HPLC) have had a much bigger impact on the field than any individual chemical discoveries. Following this trend forward in time would imply that we should be making bigger investments in new analytical technologies now, to increase scientist productivity in the future.
-</p>
-
-<h3>3. A little computer science can go a long way</h3>
-
-<p>
-A key part of this project (mentioned only briefly in the paper) was developing our own peak-fitting software that allowed us to reliably fit overlapped peaks. This was computationally quite simple and relied almost entirely on existing libraries (e.g. <i>scipy</i> and <i>lmfit</i>), but took a certain amount of comfort with signal processing / data science.<sup><a href="#fn2">2</a></sup> We later ended up moving our software pipeline out of unwieldy Jupyter notebooks and into a little Streamlit web app that Eugene wrote, which allowed us to quickly and easily get ee values from larger screens. 
-</p>
-
-<p>
-Neither of these two advances required significant coding skill; rather, just being able to apply some computer science techniques to our chemistry problem unlocked new scientific opportunities and massive time savings (a la <a href="https://en.wikipedia.org/wiki/Pareto_principle#In_computing">Pareto principle</a>). Moving forward, I expect that programming will become a more and more central tool in scientific research, much like Excel is today. Being fluent in both chemistry and CS is currently a rare and valuable combination, and will only grow in importance in the coming decades.
-</p>
-
-<i>Thanks to Eugene Kwan for reading a draft of this post.</i>
-
-<h3>Footnotes</h3>
-<ol class=footnotes>
-  <li id="fn1">
-    I'd like to propose the following principle: any sufficiently clever analytical technique inevitably depends on mass spectrometry. If you don't believe me, just look at the field of proteomics...
-  </li>
-  <li id="fn2">
-    I heavily recommend <a href="https://terpconnect.umd.edu/~toh/spectrum/"><i>A Pragmatic Introduction to Signal Processing</i></a> by Tom O'Haver.
-  </li>
-</ol>
 </div><div class='previous-link'><a href='blog_p7.html'>previous page</a></div><div class='next-link'><a href='blog_p9.html'>next page</a></div><br>
   </body>
   <br>
