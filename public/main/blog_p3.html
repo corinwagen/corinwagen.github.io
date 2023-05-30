@@ -34,7 +34,40 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p2.html'>previous page</a></div><div class='next-link'><a href='blog_p4.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230329_literature.html'>You Should Read The Literature More</a></h2><i>March 29, 2023</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p2.html'>previous page</a></div><div class='next-link'><a href='blog_p4.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230403_industry.html'>Industry Research Seems Underrated</a></h2><i>April 3, 2023</i>
+<p>
+While scientific companies frequently publish their research in academic journals, it seems broadly true that publication is not incentivized for companies the same way it is for academic groups. Professors need publications to get tenure, graduate students need publications to graduate, postdocs need publications to get jobs, and research groups need publications to win grants. So the incentives of everyone in the academic system are aligned towards publishing papers, and lots of papers get published.
+</p>
+
+<p>
+In contrast, the success or failure of a private company is—to a first approximation—unrelated to its publication record. Indeed, publication might even be harmful for companies, insofar as time spent preparing manuscripts and acquiring data <a href=https://corinwagen.github.io/public/blog/20221214_against_carbon_nmr.html>only needed for publication</a> is time that could be spent on more mission-critical activities.
+</p>
+
+<p>
+That’s why I generally believe industry publications, especially those where no academic co-authors are involved, are underrated, and are probably better than the journal they’re in might indicate. Getting a publication into a prestigious journal like <i>Science</i> or <i>Nature</i> is pretty random, requires a lot of effort, and frequently has a slow turnaround time, whereas lower-tier journals are likely to accept your work, and typically review and publish papers much, much faster. (In particular, ACS is <a href=https://scholarlykitchen.sspnet.org/2022/11/08/guest-post-publishing-fast-and-slow-a-review-of-publishing-speed-in-the-last-decade/>among the fastest of all scientific publishers</a>, and is generally a pleasure to work with.)
+</p>
+
+<p>
+The above reflections were prompted by reading <a href=https://pubs.acs.org/doi/full/10.1021/acs.jmedchem.0c00452>an absolute gem of a paper</a> in <i>J. Med. Chem.</i>, a collaboration between X-Chem, ZebiAI, and Google Research. The paper is entitled “Machine Learning on DNA-Encoded Libraries: A New Paradigm for Hit Finding” and describes how data from DNA-encoded libraries (DELs) can be used to train ML models to predict commercially available compounds with activity against a given target. This is a really, really big deal. As the authors put it in their conclusion:
+</p>
+
+<blockquote>
+[Our approach] avoids the time-consuming and expensive process of building new chemical matter into a DEL library and performing new selections or incorporating new molecules into a HTS screening library. This ability to consider compounds outside of the DEL is the biggest advantage of our approach; notably, this approach can be used at a fraction of the cost of a traditional DEL screening follow-up, driven primarily by the large difference in synthesis cost.
+</blockquote>
+
+<p>
+Now, the precise impact of this discovery will of course be determined in the years to come; Derek Lowe raises some fair concerns <a href=https://www.science.org/content/blog-post/machine-learning-top-dna-encoded-libraries>on his blog</a>, pointing out that the targets chosen are relatively easy to drug, and so probably wouldn’t be the subject of a high-tech DEL screen anyway, and it’s entirely possible that there will be other unforeseen complications with this technology that are only revealed in the context of a real-world discovery pipeline. (Given that Relay <a href=https://www.biopharmadive.com/news/relay-acquire-zebiai-ai-drug-discovery/598550/>acquired ZebiAI</a> for $85M in 2021 essentially on the strength of this paper alone, I’m guessing plenty of real-world testing is already underway.)
+</p>
+
+<p>
+The point I want to make is that if this paper had come from an academic group, I would be very, very surprised to see it in <i>J. Med Chem</i>. This project has everything that one expects in a <i>Science</i> paper: a flashy new piece of technology, a problem that’s understandable to a broad audience, clear clincal relevance, even a domain arbitrage angle. Yet this paper is not in <i>Science</i>, nor <i>ACS Central Science</i>, nor even <i>JACS</i>, but in <i>J. Med. Chem.</i>, a journal I don’t even read regularly.
+</p>
+
+<p>
+My conclusions from this are (1) to remember that not everyone is incentivized to market their own findings as strongly as academics are and (2) to try and look out for less-hyped industry results that I might neglect otherwise.
+</p>
+
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230329_literature.html'>You Should Read The Literature More</a></h2><i>March 29, 2023</i>
 <p>
 If you are a scientist, odds are you should be reading the literature more. This might not be true in every case—one can certainly imagine someone who reads the literature too much and never does any actual work—but as a heuristic, my experience has been that most people would benefit from reading more than they do, and often much more. Despite the somewhat aggressive title, my hope in writing this is to encourage you to read the literature more: to make you excited about reading the literature, not to guilt you into it or provoke anxiety.
 <p>
@@ -479,88 +512,6 @@ In the end, we were able to accelerate our code about 250x by using a combinatio
 <p>
 (I’m sure that there are ways that even this Python version could be improved; I did not even look at any other libraries, like Jax, Cython, or PyPy. Let me know if you think of anything clever!)
 </p>
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230228_gilliam_and_girard.html'>Gilliam and Girard on Scientific Innovation</a></h2><i>February 28, 2023</i>
-<p>
-Eric Gilliam, whose work on the history of MIT I highlighted before, has <a href=https://freaktakes.substack.com/p/irving-langmuir-the-general-electric>a nice piece</a> looking at Irving Langmuir’s time at the General Electric Research Laboratory and how applied science can lead to advances in basic research.
-</p>
-
-<p>
-Gilliam recounts how Langmuir started working on a question of incredible economic significance to GE—how to make lightbulbs last longer without burning out—and after embarking on a years-long study of high-temperature metals under vacuum, not only managed to solve the lightbulb problem (by adding an inert gas to decrease evaporation and coiling the filament to prevent heat loss), but also starting working on the problems he would later become famous for studying. In <a href=https://www.jstor.org/stable/16349>Langmuir’s own words</a>:
-</p>
-
-<blockquote>
-The work with tungsten filaments and gases done prior to 1915 [at the GE laboratory] had led me to recognize the importance of single layers of atoms on the surface of tungsten filaments in determining the properties of these filaments.
-</blockquote>
-
-<p>
-Indeed, Langmuir was awarded the <a href=https://www.nobelprize.org/prizes/chemistry/1932/summary/>1932 Nobel Prize in Chemistry</a> “for his discoveries and investigations in surface chemistry.”
-</p>
-
-<figure>
-  <img class="centered-img" src=https://upload.wikimedia.org/wikipedia/commons/4/4d/Irving_Langmuir_and_Guglielmo_Marconi_in_lab.jpg style="width:350px;" />
-  <figcaption> 
-  Langmuir in the GE Research Laboratory.
-  </figcaption>
-</figure>
-
-<p>
-Nor were lightbulbs the only thing Langmuir studied at GE: he invented a greatly improved form of vacuum pump, invented a hydrogen welding process used to construct vacuum-tight seals, and employed thin films of molecules on water to determine accurate molecular sizes with unprecedented accuracy. Gilliam argues that this tremendous productivity can in part be attributed to the fact that Langmuir’s work was in constant contact with practical problems, which served as a source of scientific inspiration:
-</p>
-
-<blockquote>
-In a developed world that is not exactly beset by scarcity and hardship anymore, it is hard to come up with the best areas to explore out of thin air. Pain points are not often obvious. Fundamental researchers can benefit massively from going to a lab mostly dedicated to making practical improvements to things like light bulbs and pumps and observing/asking questions. It is, frankly, odd that we normalized a system in which so many of our fundamental STEM researchers are allowed to grow so disjoint from the applied aspects of their field in the first place.
-</blockquote>
-
-<p>
-And <a href=https://www.jstor.org/stable/16349>Langmuir himself</a> seems to agree:
-</p>
-
-<blockquote>
-As [the GE] laboratory developed it was soon recognized that it was not practicable nor desirable that such a laboratory should be engaged wholly in fundamental scientific research. It was found that at least 75 per cent of the laboratory must be devoted to the development of the practical applications. It is stimulating to the men engaged in fundamental science to be in contact with those primarily interested in the practical applications.
-</blockquote>
-
-<p>
-Let’s bring in our second thinker. Last weekend, I had the privilege of attending a lecture by Johnathan Bi on Rene Girard and the philosophy of innovation, which discussed (among other things) how a desire for “disruption” above all else actually makes innovation more difficult. To quote Girard’s <a href=https://www.jstor.org/stable/3684663>“Innovation and Repetition,”</a> which Bi discussed at length:
-</p>
-
-<blockquote> 
-The main prerequisite for real innovation is a minimal respect for the past and the mastery of its achievements, i.e., mimesis. To expect novelty to cleanse itself of imitation is to expect a plant to grow with its roots up in the air. In the long run, the obligation always to rebel may be more destructive of novelty than the obligation never to rebel.
-</blockquote>
-
-<p>
-What does this mean? Girard is describing two ways in which innovation can fail. The first is quite intuitive—if we hew to tradition too much, if we have an excessive respect for the past and not a “minimal respect,” we’ll be afraid to innovate. This is the oft-derided state of stagnation.
-</p>
-
-<p>
-The second way in which we can fail to innovate, however, is a bit more subtle. Girard is saying that innovation also requires a mastery of the past’s achievements; we can’t simply ignore tradition, we have to understand what exists before we can innovate on top of it. Otherwise we will be, in Girard’s words, like a plant “with its roots up in the air.” All innovation has to occur within its proper context—to quote Tyler Cowen, <a href=https://marginalrevolution.com/marginalrevolution/2022/02/context-is-that-which-is-scarce-2.html>“context is that which is scarce.”</a>
-</p>
-
-<p>
-This might seem a little silly. Innovation, “the introduction of new things, ideas or ways of doing something” (<a href=https://www.oxfordlearnersdictionaries.com/us/definition/english/innovation>Oxford</a>), at first inspection seems not to depend on tradition at all. But novelty with no hope of improvement over the status quo is simply a cry for attention; wearing one’s shoes on the wrong feet may be unusual, but is unlikely to win one renown as a great innovator. 
-</p>
-
-<figure>
-  <img class="centered-img" src="../img/20230228_tweet.png" style="width:500px;" />
-  <figcaption> 
-  When innovation, devoid of context, becomes the highest virtue... (I added this to the post a few hours late, sorry.)
-  </figcaption>
-</figure>
-
-<p>
-What does this mean for scientific innovation, and how does this connect to Gilliam’s thoughts about Langmuir and the GE Research Laboratory? I’d argue that much of our fundamental research today, even that which is novel, lacks the context necessary to be transformatively innovative. Often the most impactful discoveries aren’t those which self-consciously aim to be <i>Science</i> or <i>Nature</i> papers, but those which simply aim to address outstanding problems or investigate anomalies. For instance, our own lab’s interest in hydrogen-bond-donor organocatalysis <a href=https://pubs.acs.org/doi/pdf/10.1021/ja980139y>was initiated</a> by the unexpected discovery that omitting the metal from an ostensibly metal-catalyzed Strecker reaction increased the enantioselectivity. Girard again:
-</p>
-
-<blockquote>
-The principle of originality at all costs leads to paralysis. The more we celebrate "creative and enriching" innovations, the fewer of them there are.
-</blockquote>
-
-<p>
-Langmuir’s example shows us a different path towards innovation. If we set out to investigate and address real-world problems of known practical import, without innovation in mind, Gilliam and Girard argue that we’ll be more innovative than if we make innovation our explicit goal. I don’t have a concrete policy recommendation to share here, but some of my other blog posts on <a href=https://corinwagen.github.io/public/blog/20220907_mit_elegy.html>applied research at MIT</a> and <a href=https://corinwagen.github.io/public/blog/20230215_science_engineering.html>the importance of engineering</a> perhaps hint at what positive change might look like.
-</p>
-
-<em>
-In accordance with the themes of this piece, my interpretation of Girard pretty much comes straight from Johnathan Bi. He has a lecture on Youtube where he discusses these ideas: <a href=https://youtu.be/qdWHcBBCaww?t=3906>here’s a link</a> to the relevant segment, which is the only part I’ve watched.
-</em>
 </div><div class='previous-link'><a href='blog_p2.html'>previous page</a></div><div class='next-link'><a href='blog_p4.html'>next page</a></div><br>
   </body>
   <br>
