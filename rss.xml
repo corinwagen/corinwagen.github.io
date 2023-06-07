@@ -4,6 +4,57 @@
           <link>https://corinwagen.github.io</link>
           <title>Corin Wagen</title>
           <item>
+              <title>Seven Degrees of Screening for Generality</title>
+              <link>public/blog/20230607_degrees.html</link>
+              <description><![CDATA[
+<p>
+<i>
+(with apologies to <a href=https://www.chabad.org/library/article_cdo/aid/45907/jewish/Eight-Levels-of-Charity.htm>Maimonides</a> and <a href=https://rintintin.colorado.edu/~vancecd/phil215/Nozick.pdf>Nozick</a>)
+</i>
+</p>
+
+<ol type="I">
+<li>
+Screening on only one substrate before assessing the substrate scope. This is the “ordinary means” in methods development. 
+</li>
+
+<li>
+Screening on one substrate, but choosing a substrate that worked poorly in a previous study (<a href=https://onlinelibrary.wiley.com/doi/10.1002/anie.201705525>e.g.</a>). This can be thought of as serial multi-substrate screening, where each substrate is a separate project, but the body of work achieves greater generality over time.
+</li>
+
+<li>
+Screening on one substrate at a time, but rescreening catalysts when you find problematic substrates (<a href=https://www.nature.com/articles/s41557-022-00895-3>e.g.</a>). This amounts to serial multi-substrate screening within a single project.
+</li>
+
+<li>
+Intentionally choosing a variety of catalysts up front and screening this set of catalysts for each new substrate class (<a href=https://pubs.acs.org/doi/10.1021/jacs.3c03182>e.g.</a>), thus achieving a high degree of generality with a family of catalysts, but without attempting to systematically quantify the generality of each catalyst in this set.
+</li>
+
+<li>
+Choosing a handful of model substrates instead of just one, but otherwise doing everything the same as one would normally (<a href=https://pubs.acs.org/doi/full/10.1021/jacs.0c06139>e.g.</a>, pages S24–S29).
+</li>
+
+<li>
+Intentionally choosing a large, diverse panel of substrates and screening against this panel to quantify catalyst generality over a given region of chemical space. This is essentially what <a href=https://www.nature.com/articles/s41586-022-05263-2>we</a> and <a href=https://www.science.org/doi/10.1126/science.adf6177>the Miller group</a> did recently (and others, etc). 
+</li>
+
+<li>
+The same, but incorporating robotics, fancy analytical methods, generative AI, or whatever else.
+</li>
+</ol>
+
+<p>
+When I present the “screening for generality” work, I often get the response “this is cool, but my reaction doesn’t work in 96-well plates/I don’t have an SFC-MS/my substrates are hard to make.” The point of this taxonomy is to illustrate that there are a lot of ways to move towards “screening for generality” that don’t involve 96-well plates. 
+</p>
+
+<p>
+If you have the time and resources for robotics or SFC-MS, that’s great—you’ll be able to screen more quickly and cover more ground. But you can still start to consider more than a single model substrate even without any specialized equipment. It’s a mindset, not a recipe.
+</p>
+
+]]></description>
+              <pubDate>Wed, 07 Jun 2023 00:00:00 +0000</pubDate>
+          </item>
+          <item>
               <title>Data Are Getting Cheaper</title>
               <link>public/blog/20230602_data_cheaper.html</link>
               <description><![CDATA[

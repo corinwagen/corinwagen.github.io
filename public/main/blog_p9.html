@@ -34,7 +34,116 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p8.html'>previous page</a></div><div class='next-link'><a href='blog_p10.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220907_mit_elegy.html'>Elegy for the MIT of Yesteryear</a></h2><i>September 7, 2022</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p8.html'>previous page</a></div><div class='next-link'><a href='blog_p10.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220909_nitration_of_toluene.html'>Singleton Saturday: Nitration of Toluene</a></h2><i>September 10, 2022</i>
+<p>
+<i>
+This is the second in what will hopefully become a series of blog posts (<a href="https://corinwagen.github.io/public/blog/20220805_singleton_saturday_decarboxylation.html">previously</a>) focusing on the fascinating work of Dan Singleton (professor at Texas A&amp;M). My goal is to provide concise and accessible summaries of his work and highlight conclusions relevant to the mechanistic or computational chemist. 
+</i>
+</p>
+
+<p>
+Today I want to discuss one of my favorite papers, a detailed study of the nitration of toluene by Singleton lab at Texas A&amp;M. 
+</p>
+
+<figure>
+<img class=centered-img src="../img/20220910_exp_regiochem.png" style="width:450px;" />
+<figcaption>
+Regiochemistry of the nitration of toluene with nitronium tetrafluoroborate in dichloromethane.
+</figcaption>
+</figure>
+
+<p>
+This reaction, a textbook example of electrophilic aromatic substitution, has long puzzled organic chemists. The central paradox is that intermolecular selectivity is typically quite poor between different arenes, but positional selectivity is high—implying that NO<sub>2</sub><sup>+</sup> is unable to recognize more electron-rich arenes but somehow still able to recognize more electron-rich sites within a given arene. 
+</p>
+
+<p>
+George Olah devoted considerable effort to studying this paradox:
+</p>
+
+<blockquote>
+Kuhn and I have subsequently developed a new efficient nitration method by using stable nitronium salts (like tetrafluoroborate) as nitrating agents. Nitronium salt nitrations are also too fast to measure their absolute rates, but the use of the competition method showed in our work low substrate selectivity, e.g., k<sub>t</sub>/k<sub>b</sub> of 1-2. <i>[In other words, competition experiments show at most a 2-fold preference for toluene.]</i> <u>On the basis of the Brown selectivity rules, if these fast reactions followed σ-complex routes they would also have a predictably low positional selectivity (with high meta isomer content).</u> However, the observed low substrate selectivities were all accompanied by high discrimination between available positions (typical isomer distributions of nitrotoluenes were (%) ortho:meta:para = 66:3:31). Consequently, a meta position would seem to be sevenfold deactivated compared to a benzene position, giving a partial rate factor of m<sub>f</sub> = 0.14. These observations are inconsistent with any mechanism in which the individual nuclear positions compete for the reagent (in the σ-complex step).
+<br>
+<br>
+In explanation, we suggested the formation of a π complex in the first step of the reactions followed by conversion into σ complexes (which are of course separate for the individual ortho, para, and meta positions), allowing discrimination in orientation of products. 
+(<a href=https://pubs.acs.org/doi/pdf/10.1021/ar50043a002>ref</a>, emphasis added)
+</blockquote>
+
+<p>
+His conclusion, summarized in the last sentence of the above quote, was that two different sets of complexes were involved: π complexes which controlled arene–arene selectivity, and σ complexes which controlled positional selectivity. Thus, the paradox could be resolved simply by invoking different ∆∆G<sup>‡</sup> values for the transition states leading to π- and σ-complex formation. The somewhat epicyclic nature of this proposal led to pushback from the community, and (as Singleton summarizes) no cogent explanation for this reactivity had yet been advanced at the time of writing. 
+</p>
+
+<figure>
+<img class=centered-img src="../img/20220910_olah_mech.png" style="width:425px;" />
+<figcaption>A summary of Olah’s proposed resolution, featuring π- and σ-complexes.</figcaption>
+</figure>
+
+<p>
+The authors of this paper initiated their studies of this reaction by performing an extensive series of “traditional” DFT calculations in implicit solvent. M06-2X/6-311G(d) was chosen by benchmarking against coupled-cluster calculations, and the regiochemistry was examined with a variety of computational methods. 
+</p>
+
+<p>
+In the absence of BF<sub>4</sub><sup>-</sup>, naïve calculations predict entirely the wrong result: the <i>para</i> product is predicted to be more favorable than the <i>ortho</i> product, and no <i>meta</i> product is predicted to form at all. However, closer examination of the transition states reveals post-transition-state bifurcation in each case: for instance, the “<i>para</i>” transition state actually leads to <i>para</i>/<i>meta</i> in a 89:11 ratio. When all possible bifurcations for all transition states are taken into account in a Boltzmann-weighted way, the results remain wrong: <i>para</i> is still incorrectly favored over <i>ortho</i>, and <i>meta</i> is now predicted to form in a much higher proportion than observed.
+</p>
+
+<figure>
+<img class=centered-img src="../img/20220910_implicit.png" style="width:550px;" />
+<figcaption>Illustration of transition states and post-TS bifurcations for traditional DFT calculations.</figcaption>
+</figure>
+
+<p>
+The authors examine various potential resolutions of this problem, including inclusion of BF<sub>4</sub><sup>-</sup>, use of explicit solvent within an ONIOM scheme, and other nitration systems which might lead to more dissociated counterions. These methods lead to different, but equally wrong, conclusions. 
+</p>
+
+<p>
+They then perform free energy calculations to determine the energetics of nitronium approach to toluene (in dichloromethane). Surprisingly, no barrier exists to NO<sub>2</sub><sup>+</sup> attack: once nitronium comes within 4.5 Å of the arene, it is “destined to form some isomer” of product (in the authors’ words). Singleton and Nieves-Quinones dryly note:
+</p>
+
+<blockquote>
+…The apparent absence of transition states (more on this later) after formation of the encounter complex has never previously been suggested. This absence is in fact counter to basic ideas in all previous explanations of the selectivity.
+</blockquote>
+
+<p>
+This observation explains one horn of the dilemma—why selectivity between different arenes is low—but leaves unanswered why positional selectivity is so high. To examine this question, the authors then directly run reactions <i>in silico</i> by using unconstrained <i>ab initio</i> molecular dynamics (AIMD) and observe the product ratio. The product ratio (45:2:53 <i>o</i>/<i>m</i>/<i>p</i>) they observe matches the experimental values (41:2:57 <i>o</i>/<i>m</i>/<i>p</i>) almost perfectly!
+</p>
+
+<p>
+With this support for the validity of the computational model in hand, the authors then examine the productive trajectories in great detail. Surprisingly, they find that although no barrier exists to nitronium attack, the reaction is relatively slow to proceed, taking on average of 3.1 ps to form the product. Trajectories lacking either explicit solvent or tetrafluoroborate lack both this recalcitrance and the observed selectivity: instead, nitronium opportunistically reacts with the first carbon it approaches. This suggests that selectivity is only possible when the nitronium–toluene complex is sufficiently persistent.
+</p>
+
+<figure>
+<img class=centered-img src="../img/20220910_explicit.png" style="width:550px;" />
+<figcaption>
+  Nitronium roams within the π complex, sampling different carbons before ultimately forming product.
+</figcaption>
+</figure>
+
+<p>
+The authors attribute the long life of the NO<sub>2</sub><sup>+</sup>—toluene complex to the fact that the explicit solvent cage must reorganize to stabilize formation of the Wheland intermediate. This requires both reorientation of the dichloromethane molecules and repositioning of the tetrafluoroborate anion, which both occur on the timescale of the trajectories (<a href=https://corinwagen.github.io/public/blog/20220719_timescales.html>ref</a>). Accordingly, the reaction is put on hold while cage reorganization occurs, giving NO<sub>2</sub><sup>+</sup> time to preferentially attack the <i>ortho</i> and <i>para</i> carbons. (I would be tempted to call the π complex a dynamic/entropic intermediate, in the language of either <a href="https://corinwagen.github.io/public/blog/20220805_singleton_saturday_decarboxylation.html">Singleton</a> or <a href="https://www.sciencedirect.com/science/article/abs/pii/S2589597419300103">Houk</a>.)
+</p>
+
+<p>
+This computational picture thus accurately reproduces the experimental observations and explains the initial paradox we posed: selectivity does not arise through competing transition state energies, but through partitioning of a product-committed π complex which is prevented from reacting further by non-instantaneous solvent relaxation. Since similar π complexes can be formed under almost any nitration conditions, this proposal explains the often similar selectivities observed with other reagents or solvents.
+</p>
+
+<p>
+More philosophically, this proposal explains experimental results without invoking any transition states whatsoever. In their introduction, the authors quote Gould as stating:
+</p>
+
+<blockquote>
+If the configuration and energy of each of the intermediates and transition states through which a reacting system passes are known, it is not too much to say that the mechanism of the reaction is understood.
+</blockquote>
+
+<p>
+While this may be true to a first approximation in most cases, Singleton and co-workers have demonstrated here that this is not true in every case. This is an important conceptual point. As our ability to study low-barrier processes and reactive intermediates grows, I expect that we will more clearly appreciate the limitations of transition-state theory, and have to develop new techniques to interpret experimental observations.  
+</p>
+
+<p>
+But perhaps the reason I find this paper most exciting is simply the beautiful match between theory and experiment for such a complex and seemingly intractable system. This work not only predicts the observed reaction outcomes under realistic conditions, but also allows (through AIMD) the complete analysis of the entire reaction landscape in exquisite detail, from approach to post-bond-forming steps. In other words, this is a mechanistic chemist’s dream: a perfect movie of the entire reaction’s progress, from beginning to end. Go and do likewise!
+</p>
+
+<i>Thanks to Daniel Broere and Joe Gair for noticing that "electrophilic aromatic substitution" was erroneously written as "nucleophilic aromatic substitution." This embarassing oversight has been corrected.</i>
+
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220907_mit_elegy.html'>Elegy for the MIT of Yesteryear</a></h2><i>September 7, 2022</i>
 <figure>
 <img class=centered-img src=https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Old_drawing_of_MIT.JPG/800px-Old_drawing_of_MIT.JPG style="width:550px;" />
 <figcaption>Old image of MIT, c/o <a href="https://commons.wikimedia.org/wiki/File:Old_drawing_of_MIT.JPG">Wikimedia Commons</a></figcaption>
@@ -415,63 +524,6 @@ This method of thinking is particularly useful for rationalizing tricky Hammett 
 However, if we ignore the intermediate, it's clear that the transition state contains much more carbocationic character than the ground state, and so electron-donating groups will stabilize the transition state relative to the ground state and thereby accelerate the reaction. Thinking about intermediates is a great way to get confused; to understand trends in reactivity, all you need to consider is the transition state and the ground state.
 </p>
 
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220810_viewpoints_on_simulation.html'>Combating Computational Nihilism</a></h2><i>August 10, 2022</i>
-<p>
-The growing accessibility of computational chemistry has, unfortunately, led to a preponderance of papers with bad computations. Organic chemists are all too familiar with the “DFT section” of an otherwise high-quality publication which typically contains a transition-state structure or two, some sort of enigmatic cartoon purporting to explain the observed selectivity, and perhaps an uninterpretable NCIPLOT cited as evidence for the preceding claims.<sup><a href="#fn1">1</a></sup>
-</p>
-
-<p>
-Faced with this sort of landscape, experimental chemists typically adopt one of two faulty heuristics: excessive credulity or universal skepticism. Being too trusting is dangerous, as evidenced by <a href="https://pubs.acs.org/doi/abs/10.1021/acs.organomet.8b00456">work</a> showcasing the manifold ways that simulations can deceive the unwary scientist. Almost anyone who’s made a catalyst predicted to be better by computations knows this well (even when the computations are your own).
-</p>
-
-<p>
-However, equally dangerous—and, in my view, less appreciated—is the creeping ennui that diminishes the entire field. This is exemplified by statements like “I don’t believe computations can ever be predictive,” “You can make DFT say anything you want to,” or, more delicately, “Computations are more for generating hypotheses, not being physically correct.” Although most people may be too polite to admit this to their computational collaborators, this nihilism is pervasive—just listen to the conversations as students walk back from a departmental seminar.
-</p>
-
-<p>
-This viewpoint is wrong. The existence of bad computational models does not mean that all models are bad, nor does it imply that the task of creating models is inherently futile. Examples from other scientific fields, like orbital mechanics and fluid dynamics, indicate that computations can achieve impressive degrees of accuracy and become pivotal and trustworthy components of the scientific process. Closer to home, even the most skeptical chemists would admit that for e.g. calculating IR frequencies in the ground state, DFT shows impressive predictive accuracy (modulo the usual systematic error). There’s no intrinsic reason why accurately modeling chemical systems, even prospectively, ought to be impossible; chemistry is not a social science.
-</p>
-
-<p>
-Why, then, is this variety of skepticism so common? Part of the problem comes from the bewildering milieu of options available to practitioners in the field. While a seasoned expert can quickly assess the relative merits of BYLP/MIDI! and DSD-PBEP86/def2-TZVP, to the layperson it’s tough to guess which might be superior. Without transparent heuristics by which to judge the quality of computational results, it’s no surprise that zeroth-order approximations (“DFT good” or “DFT bad”) have become so common among non-experts.<sup><a href="#fn2">2</a></sup>
-</p>
-
-<p>
-Another issue is the generally optimistic demeanor of computational chemists towards their field. While the temptation to emphasize the potential upside of one’s research area is understandable, overestimating the capabilities of state-of-the-art technology inevitably leads to a reckoning when the truth becomes obvious. Except in certain circumscribed cases, we are still far from any predictive models of reactivity or selectivity for typical solution-phase reactions, various purported “breakthroughs” notwithstanding. Based on questions I’ve heard in talks, this uncomfortable truth is not universally understood by experimental audiences.
-</p>
-
-<p>
-What, then, are the practical conclusions for computational chemists? Firstly, we should not be afraid to be our field’s own harshest critics. Allowing low-quality work into the literature erodes trust in our field; although raising our standards may be difficult and unpopular in the short term (kinetics), in the long run it will benefit the field (thermodynamics). You never get a second chance at a first impression; every bad paper published causes good papers to get that much less attention.
-</p>
-
-<p>
-Secondly, we should work to develop consistent standards and workflows by which one can obtain reliable computational results. Just like there are accepted means by which new compounds are characterized (<sup>1</sup>H NMR, <sup>13</sup>C NMR, HRMS, IR), there ought to be transparent methods by which transition states can reliably be found and studied. The manifold diversity of parameters employed today is a sign of the field’s immaturity—in truly mature fields, there’s an accepted right way to do things.<sup><a href="#fn3">3</a></sup> The growing popularity of tools like <a href=https://xtb-docs.readthedocs.io/en/latest/crest.html><i>crest</i></a> is an important step in this direction, as is the ability to to use high-level post-Hartree–Fock wavefunction methods like DLPNO-CCSD(T) to refine single-point energies.
-</p>
-
-<p>
-Finally, we must be honest about the limitations of our techniques and our results. So much about the chemical world remains mysterious and far beyond our understanding, let alone our ability to reproduce <i>in silico</i>. Far from being a failure for the field, however, this is something to be acknowledged and celebrated; science is only possible when there remain secrets to be found.
-</p>
-
-<p>
-Between the Scylla of gullible credulity and the Charybdis of defensive nihilism, we must chart a middle way.
-</p>
-
-<i>
-Thanks to Hayden Sharma for reading a draft of this post.
-</i>
-
-<h3>Footnotes</h3>
-<ol class=footnotes>
-  <li id="fn1">
-    <a href="https://pubs.acs.org/doi/10.1021/ct100641a">NCIPLOT</a> is a program which allows one to visualize non-covalent interactions; although the output can be useful, for large molecules it's also very overwhelming.
-  </li>
-  <li id="fn2">
-    A related idea is "<a href="https://slatestarcodex.com/2019/06/03/repost-epistemic-learned-helplessness/">epistemic learned helplessness</a>", where people unable to evaluate the quality of a certain kind of argument resolve not to be persuaded by this argument one way or the other.
-  </li>
-  <li id="fn3">
-    I want to thank Frank Neese and coworkers for <a href="https://pubs.rsc.org/en/Content/ArticleLanding/2022/SC/D2SC02274E">publishing</a> their entire transition-state-finding workflow in detail, which I've found very useful and is certainly a step in the right direction.
-  </li>
-</ol>
 </div><div class='previous-link'><a href='blog_p8.html'>previous page</a></div><div class='next-link'><a href='blog_p10.html'>next page</a></div><br>
   </body>
   <br>
