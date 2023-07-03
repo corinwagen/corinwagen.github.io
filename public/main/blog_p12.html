@@ -34,7 +34,54 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p11.html'>previous page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220628_plenty_of_room_at_the_bottom.html'>Plenty of Room at the Bottom</a></h2><i>June 28, 2022</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p11.html'>previous page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220706_bash_oneliners.html'>Four Handy Bash One-Liners</a></h2><i>July 6, 2022</i>
+<p>
+  In my experience, most computational chemists only know a handful of basic Bash commands, which is a shame because Bash is incredibly powerful.
+  Although I'm far from an expert, here are a few commands I frequently find myself using:
+</p>
+
+<h3> 1. <i>sed</i> For Find-and-Replace.</h3>
+<p class=code-block>
+  $ sed -i “s/b3lyp/m062x/” *.gjf
+</p>
+<p>
+  If you want to resubmit a bunch of transition states at a different level of theory, don't use a complex package like <a href=https://github.com/ekwan/cctk>cctk</a>! 
+  You can easily find and replace text using <a href=https://www.gnu.org/software/sed/manual/sed.html>sed</a>, which runs almost instantly even for hundreds of files. 
+  (Note that the syntax for modifying in-place is <a href=https://stackoverflow.com/questions/4247068/sed-command-with-i-option-failing-on-mac-but-works-on-linux>slightly different</a> on macOS.)
+</p>
+
+<h3> 2. Renaming Lots of Files </h3>
+<p class=code-block>
+  $ for f in *.gjf; do mv $f ${f/.gjf/_resubmit.gjf}; done
+</p>
+<p>
+  Unfortunately, you can't rename lots of files with a single command in Bash, but using a <span class=code>for; do; done</span> loop is almost as easy.
+  Here, we simply use <a href=https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html>parameter expansion</a> to replace the end of the filename, 
+  but the possibilities are endless.
+</p>
+
+<h3> 3. Counting Occurrences in a File</h3>
+<p class=code-block>
+  $ for f in */*.out; do echo $f; grep "SCF Done" $f | wc -l; done
+</p>
+<p>
+  Here we again use a <span class=code>for</span> loop, but in this case we use <i>grep</i> to search for the string "SCF Done". 
+  We then pipe the output of this search to the <i>wc -l</i> command, which counts the number of lines. 
+  Since <i>grep</i> returns each result on a new line, this prints the number of optimization steps completed.
+</p>
+
+<h3> 4. Cancelling Jobs By Matching Name </h3>
+<p class=code-block>
+  $ squeue -u cwagen | grep "g16_ts_scan" | awk '{print $1}' | xargs -n 1 scancel
+</p>
+<p>
+  Although the <i>slurm</i> workload manager allows one to cancel jobs by partition or by user, to my knowledge there isn't a way to cancel jobs that match a certain name.
+  This is a problem if, for instance, you're working on two projects at once and want to resubmit only one set of jobs.
+  Here, we use <i>squeue</i> to get a list of job names, search for the names that match, extract the job number using <a href=https://www.gnu.org/software/gawk/manual/gawk.html>awk</a>,
+  and finally cancel each job by building the <i>scancel</i> commands with <a href=https://www.man7.org/linux/man-pages/man1/xargs.1.html>xargs</a>.
+  (This should be easily modifiable for other workload managers.)
+</p>
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220628_plenty_of_room_at_the_bottom.html'>Plenty of Room at the Bottom</a></h2><i>June 28, 2022</i>
 <p>
   <a href=https://edoc.ub.uni-muenchen.de/15211/1/Sailer_Christian.pdf>This thesis</a>, from Christian Sailer at Ludwig Maximilian University in Munich, 
   is one of the most exciting studies I’ve read this year. 
