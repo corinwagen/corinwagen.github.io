@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      pKa and Nonpolar Media
+    </title>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="language" content="en">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--twitter-->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@github" />
+    <meta name="twitter:title" content="pKa and Nonpolar Media" />
+    <meta name="twitter:description" content="Why the pKa scale stops working in nonpolar solvents, and what it means for practicing organic chemists." />
+    
+
+    <link rel="stylesheet" href="../../static/style.css">
+
+    <link rel="alternate" type="application/rss+xml" title="RSS feed for the blog" href="/rss.xml">
+
+    <!--google-->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MTNZ0ZSG3W"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MTNZ0ZSG3W');
+    </script>
+
+  </head>
+  <body>
+    <ul class="menu-list">
+      <li class="menu-item"><a href="../main/index.html" class="menu-link menu-title">Corin Wagen</a></li>
+      <li class="menu-item"><a href="../main/index.html#about" class="menu-link">About</a></li>
+      <li class="menu-item"><a href="../main/index.html#projects" class="menu-link">Projects</a></li>
+      <!--<li class="menu-item"><a href="../main/index.html#past_work" class="menu-link">Past Work</a></li>-->
+      <li class="menu-item">
+        <a href="../main/blog_p1.html" class="menu-link">Blog</a>
+        <a href='../main/archive.html' class="menu-link">(Archive)</a>
+      </li>   
+    </ul>
+    <h1> pKa and Nonpolar Media </h1>
+    <i>July 10, 2023</i>
+    
+<p>
+The concept of p<i>K</i><sub>a</sub> is introduced so early in the organic chemistry curriculum that it’s easy to overlook what a remarkable idea it is.
+</p>
+
+<p>
+<i>
+Briefly, for the non-chemists reading this: p</i>K<i><sub>a</sub> is defined as the negative base-10 logarithm of the acidity constant of a given acid H–A:
+</i>
+</p>
+
+<p>
+p<i>K</i><sub>a</sub> := -log<sub>10</sub>([HA]/[A-][H+]) 
+</p>
+
+<p>
+<i>
+Unlike pH, which describes the acidity of a bulk solution, p</i>K<i><sub>a</sub> describes the intrinsic proclivity of a molecule to shed a proton—a given molecule in a given solvent will always have the same p</i>K<i><sub>a</sub>, no matter the pH. This makes p</i>K<i><sub>a</sub> a very useful tool for ranking molecules by their acidity (e.g. <a href=http://ccc.chem.pitt.edu/wipf/MechOMs/evans_pKa_table.pdf>the Evans p</i>K<i><sub>a</sub> table</a>).
+</i>
+</p>
+
+<p>
+The claim implicit in the definition of p<i>K</i><sub>a</sub> is that a single parameter suffices to describe the acidity of each molecule.<sup><a href="#fn1">1</a></sup> In general, this isn’t true in chemistry—there’s no single “reactivity” parameter which describes how reactive a given molecule is. For various regions of chemical space a two-parameter model can <a href=https://www.cup.lmu.de/oc/mayr/reaktionsdatenbank/>work</a>, but in general we don’t expect to be able to evaluate the efficacy of a given reaction by looking up the reactivity values of the reactants and seeing if they’re close enough. 
+</p>
+
+<p>
+Instead, structure and reactivity interact with each other in complex, high-dimensional ways. A diene will react with an electron-poor alkene and not an alcohol, while acetyl chloride doesn’t react with alkenes but will readily acetylate alcohols, and a free radical might ignore both the alkene and the alcohol and abstract a hydrogen from somewhere else. Making sense of this confusing morass of different behaviors is, on some level, what organic chemistry is all about. The fact that the reactivity of different functional groups depends on reaction conditions is key to most forms of synthesis!
+</p>
+
+<p>
+But p<i>K</i><sub>a</sub> isn’t so complicated. If I want to know whether acetic acid will protonate pyridine in a given solvent, all I have to do is look up the p<i>K</i><sub>a</sub> values for acetic acid and pyridinium (pyridine’s conjugate acid). If pyridinium has a higher p<i>K</i><sub>a</sub>, protonation will be favored; otherwise, it’ll be disfavored. More generally, one can predict the equilibrium distribution of protons amongst <i>N</i> different sites from a list of the corresponding p<i>K</i><sub>a</sub>s. 
+</p>
+
+<p>
+Why is p<i>K</i><sub>a</sub> so well-behaved? The key assumption underlying the above definition is that ions are free and do not interact with one another. This allows us to neglect any specific ion–ion interactions, and makes the scale universal: if the pyridinium cation and the acetate anion never interact, then I can learn everything I need to about pyridinium acetate just by measuring the p<i>K</i><sub>a</sub>s of pyridine and acetic acid in isolation. 
+</p>
+
+<p>
+This assumption is quite good in solvents like water or DMSO, which excel at stabilizing charged species, but progressively breaks down as one travels to the realm of nonpolar solvents. As ions start to pair with themselves, specific molecule–molecule interactions become important. The relative size of the anions can matter: in a nonpolar solvent, a small anion will be better stabilized by a small cation than by a large, diffuse cation, meaning that e.g. acetate will appear more acidic when protonating smaller molecules. Other more quotidian intermolecular interactions, like hydrogen bonding and π-stacking, can also play a role.
+</p>
+
+<p>
+And the ions aren’t the only thing that can stick together: aggregation of acids is often observed in nonpolar solvents. Benzenesulfonic acid <a href=https://link.springer.com/article/10.2116/analsci.15.303>forms a trimer</a> in benzonitrile solution, which is still pretty polar, and alcohols and carboxylic acids are known to aggregate under a variety of conditions as well.<sup><a href="#fn2">2</a></sup> Even seemingly innocuous species like tetrabutylammonium chloride will aggregate at high concentrations (<a href=https://pubs.acs.org/doi/pdf/10.1021/ja9723139>ref</a>, <a href=https://pubs.rsc.org/en/content/articlelanding/1995/c3/c39950002513>ref</a>).
+</p>
+
+<p>
+To reliably extend p<i>K</i><sub>a</sub> scales to nonpolar solvents, one must thus deliberately choose compounds which resist aggregation. As the dielectric constant drops, so does the number of such compounds. The clearest demonstration of this I’ve found is a series of papers (<a href=https://pubs.acs.org/doi/10.1021/jo9713013>1</a>, <a href=https://pubs.acs.org/doi/10.1021/jo0343477>2</a>) by p<i>K</i><sub>a</sub> guru Ivo Leito measuring the acidity of a series of fluorinated compounds in heptane:
+</p>
+
+<figure>
+  <img class=centered-img src=../img/20230710_leito.png style="width:350px;" />
+  <figcaption>
+  A portion of the scale, showing the compounds employed.
+  </figcaption>
+</figure>
+
+<p>
+This effort, while heroic, demonstrates the futility of measuring p<i>K</i><sub>a</sub> in nonpolar media from the standpoint of the synthetic chemist. If only weird fluoroalkanes engineered not to aggregate can have p<i>K</i><sub>a</sub> values, then the scale may be analytically robust, but it’s hardly useful for designing reactions! 
+</p>
+
+<p>
+The key point here is that the difficulty of measuring p<i>K</i><sub>a</sub> in nonpolar media is not an analytical barrier which can be surmounted by new and improved technologies, but rather a fundamental breakdown in the idea of p<i>K</i><sub>a</sub> itself. Even the best p<i>K</i><sub>a</sub> measurement tool in the world can’t determine the p<i>K</i><sub>a</sub> of HCl in hexanes, because no such value exists—the concept itself is borderline nonsensical. Chloride will ion-pair with everything in hexanes, hydrogen chloride will aggregate with itself, chloride will stick to hydrogen chloride, and so forth. Asking for a p<i>K</i><sub>a</sub> in this context just doesn't make much sense.<sup><a href="#fn3">3</a></sup>
+</p>
+
+<p>
+It’s important to remember, however, that just because the p<i>K</i><sub>a</sub> scale no longer functions in nonpolar solvents doesn’t mean that acids don’t have different acidities. Triflic acid in toluene will still protonate just about <a href=https://pubs.acs.org/doi/abs/10.1021/ol061174+>everything</a>, whereas acetic acid will not. Instead, chemists wishing to think about acidity in nonpolar media have to accept the sad truth that no one-dimensional scale will be forthcoming. The idealized world of p<i>K</i><sub>a</sub> we’re accustomed to may no longer function in nonpolar solvents, but chemistry itself still works just fine.
+</p>
+
+<i>
+Thanks to Ivo Leito for discussing these topics with me over Zoom. 
+</i>
+
+<h3>Footnotes</h3>
+<ol class=footnotes>
+  <li id="fn1">
+    Really, each proton.
+  </li>
+  <li id="fn2">
+   Ivo Leito called carboxylic acids "the world champions of aggregation" when I asked him about these issues.
+  </li>
+  <li id="fn3">
+    Even experimentally nonsensical p<i>K</i><sub>a</sub>s can be simulated, though: Jorgensen <a href=https://pubs.acs.org/doi/10.1021/ja00256a053>famously</a> used free energy perturbation to compute the p<i>K</i><sub>a</sub> of ethane in water.
+  </li>
+</ol>
+
+    <br>
+    <br>
+    <i>If you want email updates when I write new posts, you can subscribe <a href=https://cwagen.substack.com/>on Substack.</a></i>
+  </body>
+  <br>
+  <br>
+  <footer>
+    <a href="mailto:corin.wagen+blog@gmail.com">email</a>
+    <a href="https://github.com/corinwagen">github</a>
+    <a href="https://twitter.com/CorinWagen">twitter</a>
+    <div style="float:right;">
+      <a href="/rss.xml">rss</a>
+      <a href="https://cwagen.substack.com">substack</a>
+    </div>
+  </footer>
+</html>

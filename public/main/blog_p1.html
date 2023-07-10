@@ -34,7 +34,91 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='next-link'><a href='blog_p2.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230703_advice.html'>Opinionated Advice for Incoming Graduate Students</a></h2><i>July 3, 2023</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='next-link'><a href='blog_p2.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230710_pka.html'>pKa and Nonpolar Media</a></h2><i>July 10, 2023</i>
+<p>
+The concept of p<i>K</i><sub>a</sub> is introduced so early in the organic chemistry curriculum that it’s easy to overlook what a remarkable idea it is.
+</p>
+
+<p>
+<i>
+Briefly, for the non-chemists reading this: p</i>K<i><sub>a</sub> is defined as the negative base-10 logarithm of the acidity constant of a given acid H–A:
+</i>
+</p>
+
+<p>
+p<i>K</i><sub>a</sub> := -log<sub>10</sub>([HA]/[A-][H+]) 
+</p>
+
+<p>
+<i>
+Unlike pH, which describes the acidity of a bulk solution, p</i>K<i><sub>a</sub> describes the intrinsic proclivity of a molecule to shed a proton—a given molecule in a given solvent will always have the same p</i>K<i><sub>a</sub>, no matter the pH. This makes p</i>K<i><sub>a</sub> a very useful tool for ranking molecules by their acidity (e.g. <a href=http://ccc.chem.pitt.edu/wipf/MechOMs/evans_pKa_table.pdf>the Evans p</i>K<i><sub>a</sub> table</a>).
+</i>
+</p>
+
+<p>
+The claim implicit in the definition of p<i>K</i><sub>a</sub> is that a single parameter suffices to describe the acidity of each molecule.<sup><a href="#fn1">1</a></sup> In general, this isn’t true in chemistry—there’s no single “reactivity” parameter which describes how reactive a given molecule is. For various regions of chemical space a two-parameter model can <a href=https://www.cup.lmu.de/oc/mayr/reaktionsdatenbank/>work</a>, but in general we don’t expect to be able to evaluate the efficacy of a given reaction by looking up the reactivity values of the reactants and seeing if they’re close enough. 
+</p>
+
+<p>
+Instead, structure and reactivity interact with each other in complex, high-dimensional ways. A diene will react with an electron-poor alkene and not an alcohol, while acetyl chloride doesn’t react with alkenes but will readily acetylate alcohols, and a free radical might ignore both the alkene and the alcohol and abstract a hydrogen from somewhere else. Making sense of this confusing morass of different behaviors is, on some level, what organic chemistry is all about. The fact that the reactivity of different functional groups depends on reaction conditions is key to most forms of synthesis!
+</p>
+
+<p>
+But p<i>K</i><sub>a</sub> isn’t so complicated. If I want to know whether acetic acid will protonate pyridine in a given solvent, all I have to do is look up the p<i>K</i><sub>a</sub> values for acetic acid and pyridinium (pyridine’s conjugate acid). If pyridinium has a higher p<i>K</i><sub>a</sub>, protonation will be favored; otherwise, it’ll be disfavored. More generally, one can predict the equilibrium distribution of protons amongst <i>N</i> different sites from a list of the corresponding p<i>K</i><sub>a</sub>s. 
+</p>
+
+<p>
+Why is p<i>K</i><sub>a</sub> so well-behaved? The key assumption underlying the above definition is that ions are free and do not interact with one another. This allows us to neglect any specific ion–ion interactions, and makes the scale universal: if the pyridinium cation and the acetate anion never interact, then I can learn everything I need to about pyridinium acetate just by measuring the p<i>K</i><sub>a</sub>s of pyridine and acetic acid in isolation. 
+</p>
+
+<p>
+This assumption is quite good in solvents like water or DMSO, which excel at stabilizing charged species, but progressively breaks down as one travels to the realm of nonpolar solvents. As ions start to pair with themselves, specific molecule–molecule interactions become important. The relative size of the anions can matter: in a nonpolar solvent, a small anion will be better stabilized by a small cation than by a large, diffuse cation, meaning that e.g. acetate will appear more acidic when protonating smaller molecules. Other more quotidian intermolecular interactions, like hydrogen bonding and π-stacking, can also play a role.
+</p>
+
+<p>
+And the ions aren’t the only thing that can stick together: aggregation of acids is often observed in nonpolar solvents. Benzenesulfonic acid <a href=https://link.springer.com/article/10.2116/analsci.15.303>forms a trimer</a> in benzonitrile solution, which is still pretty polar, and alcohols and carboxylic acids are known to aggregate under a variety of conditions as well.<sup><a href="#fn2">2</a></sup> Even seemingly innocuous species like tetrabutylammonium chloride will aggregate at high concentrations (<a href=https://pubs.acs.org/doi/pdf/10.1021/ja9723139>ref</a>, <a href=https://pubs.rsc.org/en/content/articlelanding/1995/c3/c39950002513>ref</a>).
+</p>
+
+<p>
+To reliably extend p<i>K</i><sub>a</sub> scales to nonpolar solvents, one must thus deliberately choose compounds which resist aggregation. As the dielectric constant drops, so does the number of such compounds. The clearest demonstration of this I’ve found is a series of papers (<a href=https://pubs.acs.org/doi/10.1021/jo9713013>1</a>, <a href=https://pubs.acs.org/doi/10.1021/jo0343477>2</a>) by p<i>K</i><sub>a</sub> guru Ivo Leito measuring the acidity of a series of fluorinated compounds in heptane:
+</p>
+
+<figure>
+  <img class=centered-img src=../img/20230710_leito.png style="width:350px;" />
+  <figcaption>
+  A portion of the scale, showing the compounds employed.
+  </figcaption>
+</figure>
+
+<p>
+This effort, while heroic, demonstrates the futility of measuring p<i>K</i><sub>a</sub> in nonpolar media from the standpoint of the synthetic chemist. If only weird fluoroalkanes engineered not to aggregate can have p<i>K</i><sub>a</sub> values, then the scale may be analytically robust, but it’s hardly useful for designing reactions! 
+</p>
+
+<p>
+The key point here is that the difficulty of measuring p<i>K</i><sub>a</sub> in nonpolar media is not an analytical barrier which can be surmounted by new and improved technologies, but rather a fundamental breakdown in the idea of p<i>K</i><sub>a</sub> itself. Even the best p<i>K</i><sub>a</sub> measurement tool in the world can’t determine the p<i>K</i><sub>a</sub> of HCl in hexanes, because no such value exists—the concept itself is borderline nonsensical. Chloride will ion-pair with everything in hexanes, hydrogen chloride will aggregate with itself, chloride will stick to hydrogen chloride, and so forth. Asking for a p<i>K</i><sub>a</sub> in this context just doesn't make much sense.<sup><a href="#fn3">3</a></sup>
+</p>
+
+<p>
+It’s important to remember, however, that just because the p<i>K</i><sub>a</sub> scale no longer functions in nonpolar solvents doesn’t mean that acids don’t have different acidities. Triflic acid in toluene will still protonate just about <a href=https://pubs.acs.org/doi/abs/10.1021/ol061174+>everything</a>, whereas acetic acid will not. Instead, chemists wishing to think about acidity in nonpolar media have to accept the sad truth that no one-dimensional scale will be forthcoming. The idealized world of p<i>K</i><sub>a</sub> we’re accustomed to may no longer function in nonpolar solvents, but chemistry itself still works just fine.
+</p>
+
+<i>
+Thanks to Ivo Leito for discussing these topics with me over Zoom. 
+</i>
+
+<h3>Footnotes</h3>
+<ol class=footnotes>
+  <li id="fn1">
+    Really, each proton.
+  </li>
+  <li id="fn2">
+   Ivo Leito called carboxylic acids "the world champions of aggregation" when I asked him about these issues.
+  </li>
+  <li id="fn3">
+    Even experimentally nonsensical p<i>K</i><sub>a</sub>s can be simulated, though: Jorgensen <a href=https://pubs.acs.org/doi/10.1021/ja00256a053>famously</a> used free energy perturbation to compute the p<i>K</i><sub>a</sub> of ethane in water.
+  </li>
+</ol>
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230703_advice.html'>Opinionated Advice for Incoming Graduate Students</a></h2><i>July 3, 2023</i>
 <ol>
 <li>
 You are a scientist, not a lab monkey. You ought not to view your degree as “six years of hard labor in the chemistry mines.” Always make time to go to interesting seminars, talk with other people about their research, and read the literature. Otherwise, what’s the point of being a scientist?
@@ -342,126 +426,11 @@ Anyhow, thanks for reading!
 
 
 
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230616_varda.html'>Crystallization in Microgravity</a></h2><i>June 16, 2023</i>
-<p>
-<i>Not Boring</i> recently published a <a href=https://www.notboring.co/p/varda-the-space-drug-factory>panegyric</a> about <a href=https://varda.com/>Varda</a>, a startup that’s trying to create “space factories making drugs in orbit.” When I first read this description, alarm bells went off in my head—why would anyone try to make drugs in space? Nevertheless, there’s more to this idea than I initially thought. In this piece, I want to dig a little deeper into the chemistry behind Varda, and discuss some potential advantages and challenges of the approach they’re exploring.
-</p>
-
-<p>
-Much of my confusion was quickly resolved by realizing that Varda is not actually “making drugs in orbit,” or not in the way that an organic chemist would interpret that sentence. Varda’s proposal is actually much more specific: they aim to crystallize active pharmaceutical ingredients (APIs, i.e. finished drug molecules) in microgravity, allowing them to access crystal forms and particle size distributions which can’t be made under terrestrial conditions. To quote from <a href=https://varda.com/wp-content/uploads/varda-info-sheet-mar23_pharmaceutical.pdf>their website</a>:
-</p>
-
-<blockquote>
-Varda’s microgravity platform is grounded in decades of proven research conducted on NASA’s space stations. By eliminating factors such as natural convection and sedimentation, processing in a microgravity environment provides a unique path to formulating small molecules and biologics that traditional manufacturing processes cannot address. The resulting tunable particle size distributions, more ordered crystals, and new forms can lead to improved bioavailability, extended shelf-life, new intellectual property, and new routes of administration. 
-</blockquote>
-
-<p>
-Crystallization is an excellent target for a new and expensive manufacturing process because it’s at once very important and very hard to control. The goal of crystallization is to grow crystals of a given compound, fitting the component molecules together into a perfect lattice that excludes impurities and can be easily handled. To the best of my knowledge, almost every small-molecule API is crystallized at one stage or another; it’s the best way to ensure that the material is extremely pure. 
-</p>
-
-<p>
-(Crystallizing proteins for administration is less common, since proteins are really difficult to crystallize, but it’s not unheard of—insulin is often administered subcutaneously as a <a href=https://onlinelibrary.wiley.com/doi/10.1002/prot.22213>microcrystalline suspension</a>, which allows higher concentrations to be accessed without excessive viscosity.)
-</p>
-
-<p>
-But crystallization is also something we can’t really control. We can’t physically put molecules into a lattice or force them to adopt ordered configurations; all we can do is dissolve them in some mixture, tweak the conditions a little bit, and hope that crystals form. Thus, finding good crystallization conditions basically amounts to randomly screening solvents and additives, leaving the solutions for a long time, and checking to see if crystals grow. In the words of <a href=https://www.science.org/content/blog-post/voodoo-nominations>Derek Lowe</a>:
-</p>
-
-<blockquote>
-I'd like to open up the floor for nominations for the Blackest Art in All of Chemistry. And my candidate is a strong, strong contender: crystallization. When you go into a protein crystallography lab and see stack after stack after stack of plastic trays, each containing scores of different little wells, each with a slight variation on the conditions, you realize that you're looking at something that we just don't understand very well.
-</blockquote>
-
-<p>
-Why does microgravity matter for crystallization? <i>Not Boring</i> says that crystallization occurs “at the mesoscopic scale, the length scale on which objects are larger than nanoscale (on the order of atoms and molecules) but still small enough that quantum mechanical or other non-trivial ‘microscopic’ behavior becomes apparent.” I found this answer a little confusing—doesn’t crystallization begin on the nanoscale and end on the macroscopic scale? 
-</p>
-
-<p>
-Clearer to me was the explanation from a 2001 <a href=https://pubs.acs.org/doi/10.1021/cg005511b>review</a> by Kundrot and co-workers:
-</p>
-
-<blockquote>
-In zero gravity, a crystal is subject to Brownian motion as on the ground, but unlike the ground case, there is no acceleration inducing it to sediment <i>[fall out of solution]</i>. A growing crystal in zero gravity will move very little with respect to the surrounding fluid. Moreover, as growth units leave solution and are added to the crystal, a region of solution depleted in protein is formed. Usually this solution has a lower density than the bulk solution and will convect upward in a 1g field as seen by Schlerien photography (Figure 1). In zero gravity, the bouyant <i>[sic]</i> force is eliminated and no bouyancy-driven convection occurs. Because the positions of the crystal and its depletion zone are stable, the crystal can grow under conditions where its growing surface is in contact with a solution that is only slightly supersaturated. In contrast, the sedimentation and convection that occur under 1g place the growing crystal surface in contact with bulk solution that is typically several times supersaturated. Lower supersaturation at the growing crystal surface allows more high-energy misincorporated growth units to disassociate from the crystal before becoming trapped in the crystal by the addition of other growth units… 
-<br><br>
-In short, promotion of a stable depletion zone in microgravity is postulated to provide a better ordered crystal lattice and benefit the crystal growth process.
-</blockquote>
-
-<p>
-To summarize, microgravity serves to immobilize the crystal with respect to the surrounding solution, preventing convection or sedimentation from bringing highly concentrated solutions into contact with the crystal. This slows crystal growth, which might sound bad but is actually really good: in general, the slower a crystal grows, the higher its purity. (See also <a href=https://www.nature.com/articles/npjmgrav201510>this 2015 article</a> for further discussion.)
-</p>
-
-<p>
-What practical impact does this have? In most cases, crystals grown in space are better than their terrestrial congeners by <a href=https://pubs.acs.org/doi/10.1021/acs.cgd.2c01056>a variety of metrics</a>: larger, structurally better, and more uniform. To quote from the <i>Not Boring</i> piece:
-</p>
-
-<blockquote>
-Doing crystallization in space is like adding a gravity knob to your instrument—it opens up regions of process design space that would otherwise be inaccessible. Importantly, after the crystallization occurs in space, the drug retains its solid state upon re-entry. Manufacture in space; use on earth. 
-<br><br>
-This is why pharma is going to space to experiment with a wide range of medicines. Formulations made in microgravity could open the door to improvements in drug shelf life, bioavailability, IP expansion, and even better approaches to drug delivery…
-<br><br>
-To date, there has been a major disconnect between microgravity research and manufacturing. While it’s been possible to hitch a ride to the ISS and collaborate with NASA on PCG experiments, there is no existing commercial offering to actually manufacture drugs in space. Merck used their research results on Keytruda® crystallization to tinker with their terrestrial approaches to formulation. What if they could actually just manufacture the crystals they discovered in microgravity at commercial scale?
-<br><br>
-This is Varda’s mission—to make widespread research and manufacturing in microgravity a reality.
-</blockquote>
-
-<p>
-One concern I have is that to date, the vast majority of space-based crystallization has been aimed at structural biology (elucidating the structure of a protein via crystallography), which only takes one crystal, one time. What Varda is aiming to do is preparative crystallography: crystallizing proteins and small molecules to isolate large quantities of them. Both processes obviously involve growing crystals, but otherwise they’re pretty different: in structural biology, all you care about is isolating a single large and very pure crystal, while uniformity and reproducibility are paramount in preparative crystallography. 
-</p>
-
-<p>
-There’s some precedent for preparative protein crystallization in microgravity: a 1996 Schering-Plough paper studied crystallization of zinc interferon-α2b on the Space Shuttle. The results are excellent: over 95% of the protein crystallized, and the resulting suspension showed good stability and improved serum half-life in <i>Cynomolgus</i> monkeys (<a href=https://pubs.aip.org/aip/acp/article-abstract/361/1/139/609196/Macroscale-production-and-analysis-of-crystalline?redirectedFrom=fulltext>ref</a>, <a href=https://pubs.aip.org/aip/acp/article-abstract/387/1/671/811857/Protein-crystal-growth-in-microgravity-review-of?redirectedFrom=fulltext>ref</a>). The difference in crystal quality is huge:
-</p>
-
-<figure>
-  <img class=centered-img src=../img/20230616_interferon.png style="width:450px;" />
-  <figcaption>
-  Space-grown crystals are much, much larger than crystals grown on Earth.
-  </figcaption>
-</figure>
-
-<p>
-More recently, scientists from Merck found that crystallization of pembrolizumab (Keytruda) in microgravity reproducibly formed a monomodal particle size distribution, as opposed to the bimodal particle size distribution formed under conventional conditions (<a href=https://www.nature.com/articles/s41526-019-0090-3>ref</a>), although the crystals didn’t seem any larger:
-</p>
-
-<figure>
-  <img class=centered-img src=../img/20230616_keytruda.png style="width:450px;" />
-  <figcaption>
-  Comparison of pembrolizumab crystal size distribution under different conditions.
-  </figcaption>
-</figure>
-
-<p>
-Of course, until recently access to space was very limited and there wasn’t much reason to study preparative protein crystallography in microgravity, so the lack of studies is hardly surprising. For all the reasons discussed above, it seems very likely that preparative crystallography will be generally better in microgravity, and that the resulting crystals will be more homogenous and more pure than the crystals you could grow on Earth. But it’s not 100% certain, and that’s something Varda will have to establish. The word “can” is doing a lot of work in this text from their website:
-</p>
-
-<blockquote>
-By eliminating factors such as natural convection and sedimentation, processing in a microgravity environment provides a unique path to formulating small molecules and biologics that traditional manufacturing processes cannot address. The resulting tunable particle size distributions, more ordered crystals, and new forms <b>can</b> lead to improved bioavailability, extended shelf-life, new intellectual property, and new routes of administration <i>(emphasis added)</i>
-</blockquote>
-
-<p>
-Another concern is that little work (that I’m aware of) has been done on small molecule crystallization in microgravity—the very task Varda intends to start with. Small molecules, in general, are much easier to crystallize than proteins, and there are more parameters for the experimental scientist to tune. While there are certainly cases where small molecule crystals can display unexpected or problematic behaviors (like the famous case of <a href=https://link.springer.com/article/10.1023/A:1011052932607>ritonavir</a>, the molecule Varda is investigating first), in general crystallization of small molecules seems like an easier problem, and one for which there are better state-of-the-art workarounds.
-</p>
-
-<p>
-The most likely failure mode to me, though, is just that microgravity crystallization is better than crystallization on Earth, but not that much better. Shooting APIs into space, waiting for them to crystallize, and then launching them back to Earth is going to be really expensive, and Varda will have to demonstrate extraordinary results to justify the added hassle—particularly for a technique that they hope to make a key part of the pharmaceutical manufacturing process. Talk about supply chain risk! (Is this all going to be <a href=https://www.fda.gov/drugs/pharmaceutical-quality-resources/facts-about-current-good-manufacturing-practices-cgmp>GMP</a>?)
-</p>
-
-<p>
-And it’s worth pointing out a fairly obvious consideration too: what Varda is proposing to do in space is only one part of a vast, multi-step operation. No synthesis will take place in space, so all the manufacturing of either proteins or small molecules will take place on Earth. The purified products will then be launched into space, crystallized, and then the crystal-containing solution will undergo reentry and then be formulated into whatever final form the drug needs to be administered in.
-</p>
-
-<p>
-So, although “there are a number of small molecules that fetch hundreds of thousands or millions of dollars per kg” (<i>Not Boring</i>), Varda can address only a small—albeit important—part of the manufacturing process. I doubt this is likely to change. On average, it takes 100–1000 kg of raw materials to manufacture 1 kg of a small molecule drug (<a href=https://pubs.acs.org/doi/10.1021/acs.oprd.1c00477>ref</a>), so shipping everything to orbit would massively raise costs, without any obvious advantages that I can think of. The TAM for Varda might be large enough to break even, but it’s not going to replace conventional pharmaceutical manufacturing anytime soon.
-</p>
-
-<p>
-Varda’s pitch is perfect for venture capital: ambitious, risky, and potentially game-changing if it succeeds. And I wish them luck in their quest, since new and better ways to approach formulation would be awesome. But I can’t shake the nagging doubt that they’re so excited about the image of space-based manufacturing that they’re trying to invent a problem that their aerospace engineers have a solution for. We’ll find out soon enough if they’ve succeeded.
-</p>
-
 </div><div class='next-link'><a href='blog_p2.html'>next page</a></div><br>
   </body>
   <br>
   <footer>
-    <a href="mailto:cwagen@g.harvard.edu">email</a>
+    <a href="mailto:corin.wagen+blog@gmail.com">email</a>
     <a href="https://github.com/corinwagen">github</a>
     <a href="https://twitter.com/CorinWagen">twitter</a>
     <div style="float:right;">
