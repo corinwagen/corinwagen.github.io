@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      Machine Learning for Explicit Solvent Molecular Dynamics
+    </title>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="language" content="en">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--twitter-->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@github" />
+    <meta name="twitter:title" content="Machine Learning for Explicit Solvent Molecular Dynamics" />
+    <meta name="twitter:description" content="Summarizing some recent work in an exciting area of the literature." />
+    
+
+    <link rel="stylesheet" href="../../static/style.css">
+
+    <link rel="alternate" type="application/rss+xml" title="RSS feed for the blog" href="/rss.xml">
+
+    <!--google-->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MTNZ0ZSG3W"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MTNZ0ZSG3W');
+    </script>
+
+  </head>
+  <body>
+    <ul class="menu-list">
+      <li class="menu-item"><a href="../main/index.html" class="menu-link menu-title">Corin Wagen</a></li>
+      <li class="menu-item"><a href="../main/index.html#about" class="menu-link">About</a></li>
+      <li class="menu-item"><a href="../main/index.html#projects" class="menu-link">Projects</a></li>
+      <!--<li class="menu-item"><a href="../main/index.html#past_work" class="menu-link">Past Work</a></li>-->
+      <li class="menu-item">
+        <a href="../main/blog_p1.html" class="menu-link">Blog</a>
+        <a href='../main/archive.html' class="menu-link">(Archive)</a>
+      </li>   
+    </ul>
+    <h1> Machine Learning for Explicit Solvent Molecular Dynamics </h1>
+    <i>July 20, 2023</i>
+    
+<p>
+An important problem with simulating chemical reactions is that reactions generally take place in solvent, but most simulations are run without solvent molecules. This is a big deal, since much of the inaccuracy associated with simulation actually stems from poor treatment of solvation: when gas phase experimental data is compared to computations, the results are often quite good. 
+</p>
+
+<p>
+Why don’t computational chemists include solvent molecules in their models? It takes a lot of solvent molecules to accurately mimic bulk solvent (enough to cover the system with a few different layers, usually ~10<sup>3</sup>).<sup><a href="#fn1">1</a></sup> Since most quantum chemical methods scale in practice as <i>O</i>(N<sup>2</sup>)–<i>O</i>(N<sup>3</sup>), adding hundreds of additional atoms has a catastrophic effect on the speed of the simulation.
+</p>
+
+<p>
+To make matters worse, the additional degrees of freedom introduced by the solvent molecules are very “flat”—solvent molecules don’t usually have well-defined positions about the substrate, meaning that the number of energetically accessible conformations goes to infinity (with attendant consequences for entropy). This necessitates a fundamental change in how calculations are performed: instead of finding well-defined extrema on the electronic potential energy surface (ground states or transition states), molecular dynamics (MD) or Monte Carlo simulations must be used to sample from an underlying distribution of structures and reconstruct the free energy surface. Sufficient sampling usually requires consideration of 10<sup>4</sup>–10<sup>6</sup> individual structures,<sup><a href="#fn2">2</sup></a> meaning that each individual computation must be very fast (which is challenging for quantum chemical methods).
+</p>
+
+<figure>
+  <img class=centered-img src=../img/20230720_jorgensen.png style="width:550px;" />
+  <figcaption>
+  The title of this paper makes me so sad, because these techniques are still ignored by most organic chemists.
+  </figcaption>
+</figure>
+
+<p>
+Given the complexity this introduces, it’s not surprising that most computational organic chemists try to avoid explicit solvent at all costs. The typical workaround is to use “implicit solvent” models, which “reduce the complexity of individual solvent−solute interactions such as hydrogen-bond, dipole−dipole, and van der Waals interactions into a fictitious surface potential... scaled to reproduce the experimental solvation free energies” (<a href=https://pubs.acs.org/doi/abs/10.1021/acs.organomet.8b00456?src=recsys>Baik</a>). This preserves the well-defined potential energy surfaces that organic chemists are accustomed to, so you can still find transition states by eigenvector following, etc.
+</p>
+
+<p>
+Implicit solvent models like PCM, COSMO, or SMD are better than nothing, but are known to struggle for charged species. In particular, they don’t really describe explicit inner-sphere solvent–solute interactions (like hydrogen bonding), meaning that they’ll behave poorly when these interactions are important. Dan Singleton’s paper on <a href=https://pubs.acs.org/doi/10.1021/ja5111392>the Baylis–Hillman reaction</a> is a nice case study of how badly implicit solvent can fail: even high-level quantum chemical methods are useless when solvation free energies are 10 kcal/mol off from experiment!
+</p>
+
+<p>
+This issue is well-known. To quote from <a href=https://onlinelibrary.wiley.com/doi/abs/10.1002/anie.201709943>Schreiner and Grimme</a>:
+</p>
+
+<blockquote>
+An even more important but still open issue is solvation. In the opinion of the authors it is a ‘scandal’ that in 2018 no routine free energy solvation method is available beyond (moderately successful) continuum theories such as COSMO-RS and SMD and classical FF/MD-based explicit treatments.
+</blockquote>
+
+<p>
+When computational studies have been performed in explicit solvent, the results have often been promising: Singleton has studied <a href=https://pubs.acs.org/doi/full/10.1021/jacs.0c06295>diene hydrochlorination</a> and <a href=https://pubs.acs.org/doi/10.1021/jacs.6b07328>nitration of toluene</a>, and Peng Liu has recently conducted a nice <a href=https://pubs.acs.org/doi/abs/10.1021/jacs.0c12096>study of chemical glycosylation</a>. Nevertheless, these studies all require heroic levels of effort: quantum chemistry is still very slow, and so a single free energy surface might take months and months to compute.<sup><a href="#fn3">3</a></sup>
+</p>
+
+<p>
+One promising workaround is using machine learning to accelerate quantum chemistry. Since these MD-type studies look at the same exact system over and over again, we could imagine first training some sort of ML model based on high-level quantum chemistry data, and then employing this model over and over again for the actual MD run. As long as (1) the ML model is faster than the QM method used to train it and (2) it takes less data to train the ML model than it would to run the simulation, this will save time: in most cases, a lot of time. 
+</p>
+
+<p>
+(This is a somewhat different use case than e.g. <a href=https://pubs.rsc.org/en/content/articlelanding/2017/sc/c6sc05720a>ANI</a>-type models, which aim to achieve decent accuracy for any organic molecule. Here, we already know what system we want to study, and we’re willing to do some training up front.)
+</p>
+
+<p>
+A lot of people are working in this field right now, but today I want to highlight some work that I liked from Fernanda Duarte and co-workers. Last year, they published a <a href=https://pubs.rsc.org/en/content/articlelanding/2022/cp/d2cp02978b#cit23>paper</a> comparing a few different ML methods for studying quasiclassical dynamics (in the gas phase), and found that atomic cluster expansion (ACE) performed better than Gaussian approximation potentials while training faster than NequIP. They then went on to show that ACE models could be trained automatically through active learning, and used the models to successfully predict product ratios for cycloadditions with post-TS bifurcations.
+</p>
+
+<p>
+Their new <a href=https://chemrxiv.org/engage/chemrxiv/article-details/64a8085fba3e99daefab8f89>paper</a>, posted on ChemRxiv yesterday, applies the same ACE/active learning approach to studying reactions in explicit solvent, with the reaction of cyclopentadiene and methyl vinyl ketone chosen as a model system. This is more challenging than their previous work, because the ML model now not only has to recapitulate the solute reactivity but also the solute–solvent and solvent–solvent interactions. To try and capture all the different interactions efficiently, the authors ended up using four different sets of training data: substrates only, substrates with 2 solvent molecules, substrates with 33 solvent molecules, and clusters of solvent only. 
+</p>
+
+<p>
+Previously, the authors used an energy-based selector to determine if a structure should be added to the training set: they predicted the energy with the model, ran a QM calculation, and selected the structure if the difference between the two values was big enough. This approach makes a lot of sense, but has the unfortunate downside that a lot of QM calculations are needed, which is exactly what this ML-based approach is trying to avoid. Here, the authors found that they could use similarity-based descriptors to select data points to add to the training set: these descriptors are both more efficient (needing fewer structures to converge) and faster to compute, making them overall a much better choice. (This approach is reminiscent of the metadynamics-based approach previously <a href=https://arxiv.org/abs/1712.07240>reported</a> by John Parkhill and co-workers.)
+</p>
+
+<p>
+With a properly trained model in hand, the authors went on to study the reaction with biased sampling MD. They find that the reaction is indeed accelerated in explicit water, and that the free energy surface begins to look stepwise, as opposed to the concerted mechanism predicted in implicit solvent. (Singleton has observed similar behavior <a href=https://pubs.acs.org/doi/10.1021/ja208779k>before</a>, and <a href=https://chemrxiv.org/engage/chemrxiv/article-details/6362b49531107263acfa50e6>I’ve seen this too.</a>) They do some other interesting studies: they look at the difference between methanol and water as solvents, argue that Houk is wrong about the role of water in the TS,<sup><a href="#fn4">4</a></sup> and suggest that the hydrophobic effect drives solvent-induced rate acceleration.<sup><a href="#fn5">5</a></sup>
+</p>
+
+<figure>
+  <img class=centered-img src=../img/20230720_pes.png style="width:450px;" />
+  <figcaption>
+  Figure 4B from the paper, showing the change in the PES.
+  </figcaption>
+</figure>
+
+<p>
+The results they find for this particular system are interesting, but more exciting is the promise that these techniques may soon become accessible to “regular” computational chemists. Duarte and co-workers have shown that ML can be used to solve an age-old problem in chemical simulation; if explicit solvent ML/MD simulations of organic reactions become easy enough for non-experts to run, I have no doubt that they will become a valued and essential part of the physical organic chemistry toolbox. Much work is needed to get to that point—new software packages, further validation on new systems, new ways to assess quality and check robustness of simulations, and much more—but the vision behind this paper is powerful, and I can’t wait until it comes to fruition.
+</p>
+
+<i>
+Thanks to Croix Laconsay for reading a draft of this post.
+</i>
+
+<h3>Footnotes</h3>
+<ol class=footnotes>
+  <li id="fn1">
+    <a href=https://www.youtube.com/watch?v=caxpxBT8JsM>This video</a> from Chris Cramer makes the point nicely.
+  </li>
+  <li id="fn2">
+    This obviously depends on the system in question, and what processes are being studied. But in general insufficient sampling is a big issue in molecular dynamics, which I think is underappreciated by organic chemists wading into the area. Jeff Grossman has a <a href=https://pubs.acs.org/doi/abs/10.1021/acs.jctc.0c00833>nice paper on this</a>.
+  </li>
+  <li id="fn3">
+    If you look carefully, many people who claim to be doing big <i>ab initio</i> molecular dynamics studies are actually doing semiempirical molecular dynamics. This isn’t dishonest per se, but it’s a little underwhelming to a computational chemist, especially when it’s only mentioned in the SI. Things get even more confusing when plane wave DFT is employed: in theory, plane wave DFT can be just as accurate as regular DFT, but in practice there are some sneaky approximations that often get introduced.
+  </li>
+  <li id="fn4">
+  This argument hinges on whether uphill dynamics (starting from reactants, going to transition state) or downhill dynamics (starting from transition state, going to reactants) are more appropriate. The authors argue that "uphill dynamics allow the solvent sufficient time to reorganise [<i>sic</i>] before the trajectory passes the free energy barrier, providing a more realistic view of solvent behaviour [<i>sic</i>] during the reaction." I'm not fully convinced by this—isn't the idea that the system reorganizes to minimize the energy of the transition state a basic precept of transition state theory? But I'm not convinced I understand these issues deeply enough to have an opinion; I will leave this to the experts.
+  </li>
+  <li id="fn5">
+    This argument hearkens back to some old-school computational organic chemistry I love from Bill Jorgensen, studying the <a href=https://pubs.aip.org/aip/jcp/article-abstract/77/11/5757/783263/Monte-Carlo-simulation-of-n-butane-in-water?redirectedFrom=fulltext>hydrophobic effect on conformational preferences of butane</a>. We usually think of the hydrophobic effect as associated with macromolecules (ligands binding to proteins, etc), but it can still matter in tiny systems!
+  </li>
+</ol>
+
+    <br>
+    <br>
+    <i>If you want email updates when I write new posts, you can subscribe <a href=https://cwagen.substack.com/>on Substack.</a></i>
+  </body>
+  <br>
+  <br>
+  <footer>
+    <a href="mailto:corin.wagen+blog@gmail.com">email</a>
+    <a href="https://github.com/corinwagen">github</a>
+    <a href="https://twitter.com/CorinWagen">twitter</a>
+    <div style="float:right;">
+      <a href="/rss.xml">rss</a>
+      <a href="https://cwagen.substack.com">substack</a>
+    </div>
+  </footer>
+</html>
