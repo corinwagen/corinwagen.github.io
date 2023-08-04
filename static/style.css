@@ -134,6 +134,10 @@ th,td {
     padding: 0 10px;
 }
 
+.left-aligned-table td {
+    text-align: left;
+}
+
 sup,sub {
   line-height: 0;
   font-size: 75%;

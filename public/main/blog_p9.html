@@ -34,7 +34,82 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p8.html'>previous page</a></div><div class='next-link'><a href='blog_p10.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20221128_business_card_explained.html'>Business Card Lennard–Jones Simulation, Explained</a></h2><i>November 28, 2022</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p8.html'>previous page</a></div><div class='next-link'><a href='blog_p10.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20221205_quick_fuoss.html'>Introducing <i>quick_fuoss</i></a></h2><i>December 5, 2022</i>
+<p>
+Modeling ion-pair association/dissociation is an incredibly complex problem, and one that's often beyond the scope of conventional DFT-based techniques. 
+(<a href="https://pubs.acs.org/doi/10.1021/acs.joc.1c01823">This study</a> is a nice demonstration of how hard modeling ion-pairing can be.)
+Nevertheless, it's still often important to gain insight into what the relative energy of solvent-separated ion pairs and contact-ion pairs might be;
+are solvent-separated configurations energetically accessible or not? 
+</p>
+
+<p>
+I've run into this problem a few times myself: in measuring pKas in nonpolar solvents, and again recently when trying to understand 
+<a href="https://pubs.acs.org/doi/10.1021/acs.orglett.2c03622">the solution structure of ethereal HCl.</a>
+When digging through the pKa literature, I was surprised to learn that there's a simple and relatively accurate way to estimate the dissociation constant of contact-ion pairs, 
+developed by Raymond Fuoss in the 1950s. 
+</p>
+
+<p>
+Despite modeling ions as charged spheres and solvent as a featureless dielectric, the "Fuoss model" is surprisingly good at reproducing experimental data.
+Here's one such example:
+</p>
+
+<figure>
+  <img class=centered-img src=../img/20221205_exp_vs_fuoss.png style="width:450px;" />
+  <figcaption>
+  Comparison of experimental ∆G<sub>diss</sub> for tetraisoamylammonium nitrate in various dioxane–water blends vs. Fuoss-calculated ∆G values.
+  (Data taken from <a href="https://pubs.acs.org/doi/10.1021/ja01330a023">Fuoss, <i>J. Am. Chem. Soc.</i>, <b>1933</b></a>, Table II.)
+  </figcaption>
+</figure>
+
+<p>
+It's not trivial to think about how to get similar results using more atomistic methods!
+(In principle one could actually model the exact solvent mixture and compute the energy of ion-pair dissociation using biased sampling and MD, but this 
+would be horrendously expensive and probably less accurate anyway.)
+</p>
+
+<p>
+The Fuoss model is pretty simple to implement oneself—but to make things even easier, I've implemented it as an open-source Python package, 
+which can be imported using <span class=code>pip</span>.
+The package contains only a single function, <span class=code>compute_kd</span>, which accepts the name of the cation, the name of the anion, and the dielectric constant of the medium.
+(Alternatively, <span class=code>.xyz</span> files, <span class=code>.gjf</span> files, or <span class=code>cctk.Molecule</span> objects can also be given.)
+</p>
+
+<p>
+Under the hood, the program builds molecules using <i>cctk</i>, computes their volume, and then applies the Fuoss model.
+The end result is a comically simple interface:
+</p>
+
+<pre class=code-block>
+$ pip install quick_fuoss
+$ python
+&gt;&gt;&gt; import quick_fuoss
+&gt;&gt;&gt; quick_fuoss.compute_kd("sodium", "chloride", 80)
+1.0793241279015366
+</pre>
+
+<p>
+On the associated <a href="https://github.com/corinwagen/quick-fuoss">Github repository</a>, there's also a little command-line script which makes this even simpler:
+</p>
+
+<pre class=code-block>
+$ python quick_fuoss.py tetraisoamylammonium nitrate 8.5
+Reading ion #1 from rdkit...
+Reading ion #2 from rdkit...
+Dissociation constant:	0.00004930 M
+Ionization energy: 5.873 kcal/mol
+$ python quick_fuoss.py tetraisoamylammonium nitrate 11.9
+Reading ion #1 from rdkit...
+Reading ion #2 from rdkit...
+Dissociation constant:	0.00094706 M
+Ionization energy: 4.122 kcal/mol
+</pre>
+
+<p>
+My hope is that this program promotes wider adoption of the Fuoss model, and in general enables more critical thinking about ion-pair energetics in organic solvents.
+Please feel free to send any bug reports, complaints, etc. my way!
+</p>
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20221128_business_card_explained.html'>Business Card Lennard–Jones Simulation, Explained</a></h2><i>November 28, 2022</i>
 <p>
 Last week, I posted a simple Lennard–Jones simulation, written in C++, that models the behavior of liquid Ar in only 1561 characters.
 By popular request, I'm now posting a breakdown/explanation of this program, both to explain the underlying algorithm and illustrate how it can be compressed.
@@ -608,72 +683,6 @@ Will it be possible to build a robust and practical scientific ecosystem in para
 
 <i>Thanks to Eugene Kwan, Ari Wagen, and Taylor Wagen for reading a draft of this piece.</i>
 
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20221006_water_dimer.html'>Entropy in the Water Dimer</a></h2><i>October 6, 2022</i>
-<p>
-The failure of conventional calculations to handle entropy is well-documented. Entropy, which <a href="https://en.wikipedia.org/wiki/Boltzmann%27s_entropy_formula">fundamentally</a> depends on the number of microstates accesible to a system, is challenging to describe in terms of a single set of XYZ coordinates (i.e. a single microstate), and naïve approaches to computation simply disregard this important consideration.
-</p>
-
-<p>
-Most programs get around this problem by partitioning entropy into various components—translational, rotational, vibrational, and configurational—and handling each of these separately. For many systems, conventional approximations perform well. Translational and rotational entropy depend in <a href="https://gaussian.com/thermo/">predictable ways</a> on the mass and moment of inertia of the molecule, and vibrational entropy can be estimated from normal-mode analysis at stationary points. Conformational entropy is less easily automated and as a result is often neglected in the literature (see the <a href="https://pubs.acs.org/doi/10.1021/ja5111392">discussion</a> in the SI), although <a href="https://pubs.rsc.org/en/content/articlelanding/2021/sc/d1sc00621e">some</a> <a href="https://pubs.acs.org/doi/10.1021/acs.jctc.0c01213">recent</a> <a href="https://pubs.rsc.org/en/content/articlelanding/2022/cp/d1cp05805c">publications</a> are changing that. 
-</p>
-
-<p>
-In general, however, the approximations above only work for ground states. To quote the Gaussian vibrational analysis <a href="https://gaussian.com/vib/">white paper</a>:
-</p>
-
-<blockquote>
-Vibrational analysis, as it’s descibed in most texts and implemented in <i>Gaussian</i>, is valid only when the first derivatives of the energy with respect to displacement of the atoms are zero. In other words, the geometry used for vibrational analysis must be optimized at the same level of theory and with the same basis set that the second derivatives were generated with. Analysis at transition states and higher order saddle points is also valid. Other geometries are not valid. 
-</blockquote>
-
-<p>
-While this isn't a huge issue in most cases, since most processes are associated with a minima or first-order saddle point on the electronic energy surface, it can become a big deal for reactions where entropy significantly shifts the position of the transition state (e.g. Figure 4 in <a href="https://pubs.acs.org/doi/10.1021/ja208779k">this study</a> of cycloadditions). Even worse, however, are cases where entropy constitutes the entire driving force for the reaction: association/dissociation processes. In his elegant <a href="https://pubs.acs.org/doi/pdf/10.1021/acs.organomet.8b00456">review</a> of various failures of computational modelling, Mookie Baik illustrated this point by showing that no transition state could be found for dissociation of the water dimer in the gas phase:
-</p>
-
-<figure>
-  <img class=centered-img src=../img/20221006_baik.png style="width:500px;" />
-  <figcaption>
-  Figure 11 from Baik's review.
-  </figcaption>
-</figure>
-
-<p>
-Panel (b) of this figure shows the electronic energy surface for dissociation, which monotonically increases out to infinity—there's never a maximum, and so there's no transition state. To estimate the position of the transition state, Baik proposes computing the entropy (using the above stationary-point approximations) at the first few points, where the two molecules are still tightly bound, and then extrapolating the curve into a sigmoid function. Combining the two surfaces then yields a nice-looking (if noisy) curve with a clear transition state at an O–H distance of around 3 Å.
-</p>
-
-<p>
-This approach, while clever, seems theoretically a bit dubious—is it guaranteed that entropy must always follow a smooth sigmoidal interpolation between bound and unbound forms? I thought that a more direct solution to the entropy problem would take advantage of <i>ab initio</i> molecular dynamics. While too slow for most systems, AIMD intrinsically accounts for entropy and thus should be able to generate considerably more accurate energy surfaces for association/dissociation events.
-</p>
-
-<p>
-Using <a href="https://github.com/corinwagen/presto"><i>presto</i></a>, I ran 36 constrained 100 ps <i>NVT</i> simulations of the water dimer with different O–O distances, and used the <a href="https://onlinelibrary.wiley.com/doi/abs/10.1002/jcc.540130812">weighted histogram analysis method</a> to stitch them together into a final potential energy surface. I then compared these results to those obtained from a direct <span class=code>opt=modredundant</span> calculation (with frequencies at every point) from Gaussian. (All calculations were performed in Gaussian 16 at the wB97XD/6-31G(d) level of theory, which overbinds the water dimer a bit owing to basis-set superposition error.)
-</p>
-
-<p>
-The results are shown below (error bars from the AIMD simulation are derived from bootstrapping):
-</p>
-
-<figure>
-  <img class=centered-img src=../img/20221006_PES.png style="width:550px;" />
-  <figcaption>
-  Comparison of different approaches for studying dissociation of the water dimer.
-  </figcaption>
-</figure>
-
-<p>
-As expected, no transition state can be seen on the black line corresponding to the electronic energy surface, or on the green line corresponding to enthalpy. All methods that depend on normal-mode analysis show sizeable variation at non-stationary points, which is perhaps unsurprising. What was more surprising was how much conventional DFT calculations (purple) overestimated entropy relative to AIMD! <a href="https://pubs.acs.org/doi/full/10.1021/jp205508z">Correcting for low-frequency vibrational modes</a> brought the DFT values more into line with AIMD, but a sizeable discrepancy persists.
-</p>
-
-<p>
-Also surprising is how different the AIMD free energy surface looks from Baik's estimated free energy surface. Although the scales are clearly different (I used O–O distance for the X axis, whereas Baik used O–H distance), the absence of a sharp maximum in both the AIMD data and the corrected Gibbs free energy data from conventional DFT is striking. Is this another instance of <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4124006/">entropy–enthalpy compensation</a>?
-</p>
-
-<p>
-In the absence of good gas-phase estimates of the free energy surface, it's tough to know how far the AIMD curve is from the true values; perhaps others more skilled in these issues can propose higher-level approaches or suggest additional sources of error. Still, on the meta-level, this case study demonstrates how molecular dynamics holds promise for modelling things that just can't be modelled other ways. Although this approach is still too expensive for medium to large systems, it's exciting to imagine what might be possible in 5 or 10 years!
-</p>
-
-<em>
-Thanks to Richard Liu and Eugene Kwan for insightful discussions about these issues.
-</em>
 </div><div class='previous-link'><a href='blog_p8.html'>previous page</a></div><div class='next-link'><a href='blog_p10.html'>next page</a></div><br>
   </body>
   <br>

@@ -34,7 +34,61 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p3.html'>previous page</a></div><div class='next-link'><a href='blog_p5.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230508_aldehyde_eie.html'>Isotope Effects in Aldehyde Protonation</a></h2><i>May 8, 2023</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p3.html'>previous page</a></div><div class='next-link'><a href='blog_p5.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230512_irms.html'>What Happened to IRMS?</a></h2><i>May 12, 2023</i>
+<p>
+A few days ago, <a href=https://corinwagen.github.io/public/blog/20230508_aldehyde_eie.html>I wrote</a> about kinetic isotope effects (KIEs), probably my favorite way to study the mechanism of organic reactions. To summarize at a high level: if the bonding around a given atom changes over the course of a reaction, then different isotopes of that atom will react at different rates. The exact magnitude of the effect depends on the vibrational modes involved, but is often quite different for different mechanisms, meaning that you can computationally predict isotope effects for a lot of mechanisms and then use KIE measurements to figure out which one is actually happening.
+</p>
+
+<p>
+The trouble is that the magnitude of the effect depends on the difference in the mass of the two isotopologues. <sup>1</sup>H/<sup>2</sup>H isotope effects are quite large: H reacts up to 7x faster than D (more for mechanisms that involve quantum tunneling), meaning that it’s not too hard to measure the value accurately. But as the atom gets heavier, the effects get smaller. For the next most common pair of isotopomers,<sup>12</sup>C/<sup>13</sup>C, the effect is usually 5% or less.
+</p>
+
+<p>
+Small KIEs are usually measured by one-pot competition experiments: a mixture of the two isomers is reacted to partial conversion, and then the isotopic composition of either the starting material or the product is determined. The product will be enriched in the isotope that reacts more quickly, and the starting material will be enriched in the isotope that reacts more slowly. If you know the starting ratio of isotopes, the conversion, and the ratio of isotopes at partial conversion, then you can use the Bigeleisen−Mayer equation to figure out the KIE.
+(<a href=https://pubs.acs.org/doi/pdf/10.1021/jacs.1c07351>This</a> is a really good review on isotope effects in general, if you want more than this cursory summary.)
+</p>
+
+<p>
+The accuracy of the KIE measurement is thus limited by (1) how accurately you can determine conversion and (2) how accurately you can measure the isotopic composition of a sample. Although conversion can be annoying, the second is the more serious limitation—<i>a priori</i> it’s not obvious how to figure out what the relative abundance of various isotopes is.
+</p>
+
+<p>
+Today, most people use approaches based on NMR spectroscopy: since <sup>1</sup>H and <sup>13</sup>C are both NMR-active nuclei, you can just integrate the peak of interest against another peak to figure out how much there is. (Quantitative <sup>13</sup>C NMR is super slow, so <a href=https://pubs.acs.org/doi/10.1021/jacs.6b10621>various</a> <a href=https://www.nature.com/articles/s41557-018-0079-7>tricks</a> can be employed to speed things up.)
+</p>
+
+<p>
+But there was an age before the advent of accurate NMR spectroscopy where people measured isotope effects differently. I was awestruck by <a href=https://pubs.acs.org/doi/pdf/10.1021/ja00834a064>this 1975 paper</a> from Cromartie and Swain reporting the measurement of a <sup>35</sup>Cl/<sup>37</sup>Cl isotope effect in the cyclization of 4-chlorobutanol: they report an isotope effect of 1.000757 ± 0.00015 using hydroxide as base, which they differentiate from an isotope effect of 1.000796 ± 0.00013 using water as base by Student’s <i>t</i> test. These numbers are way, way smaller and more precise than any isotope effect I’ve seen measured in the last few decades.
+</p>
+
+<p>
+Digging a little deeper reveals a <a href=https://pubs.acs.org/doi/pdf/10.1021/ja00418a038>whole</a> <a href=https://pubs.acs.org/doi/pdf/10.1021/ja00426a047>wealth</a> of papers using <sup>35</sup>Cl/<sup>37</sup>Cl isotope effects to study various mechanistic phenomena. The instrument Swain and others use (described <a href=https://pubs.acs.org/doi/pdf/10.1021/jo00972a016>here</a>) is an isotope-ratio mass spectrometer, which as the name implies is a special sort of mass spectrometer designed specifically to measure isotopic composition. These instruments, although a little obscure from my point of view, are <a href=https://www.thermofisher.com/us/en/home/industrial/mass-spectrometry/isotope-ratio-mass-spectrometry-irms.html>commercial</a>!
+</p>
+
+<p>
+So, why isn’t IRMS used more frequently in organic chemistry today? I think it’s for a few reasons. IRMS, at least historically, only works on gases, meaning that you have to either use gaseous reactants or convert your analytes to gases, both of which are pretty annoying. In the Swain work, they (i) incinerate their samples with nitric acid, (ii) precipitate out silver chloride by adding silver nitrate, and then (iii) convert silver chloride to gaseous methyl chloride by <a href=https://pubs.acs.org/doi/abs/10.1021/ja00873a025>heating with methyl iodide</a> in a sealed tube. This is certainly a lot of hassle to put up with for a single measurement—and you generally want to get a good number of replicates.
+</p>
+
+<p>
+(There are some <a href=https://www.thermofisher.com/order/catalog/product/11206175>all-in-one solutions</a> available for sale, which automatically combust samples à la elemental analysis, but they don’t seem to work on non-standard isotopes like chlorine.)
+</p>
+
+<p>
+Another reason why IRMS might have fallen out of favor is that it requires a dedicated instrument, whereas NMR-based methods can be done using the NMR spectrometers that any university already has. Most labs only have budgets for a handful of instruments—is an IRMS really worth the investment? (Owing to the typical aura of secrecy around instrument prices, I’m not sure how much one costs, but I’m guessing it’s a few hundred thousand dollars or so.)
+</p>
+
+<p>
+These downsides notwithstanding, I think there is a lot of good science that could be done if a mechanistic group decided to make IRMS a core part of their program. In particular, <sup>35</sup>Cl/<sup>37</sup>Cl KIEs seem really powerful: there are a growing number of organometallic reactions which involve chlorine atoms in the key step(s), and for which Cl KIEs might be complementary or superior to more conventional KIEs. I’m envisioning studying <a href=https://www.science.org/doi/10.1126/science.aad6981>transmetallation from Pd(II) chlorides</a>, or <a href=https://pubs.acs.org/doi/10.1021/jacs.1c13333>chlorine radical-mediated C–H activation</a>, or <a href=https://pubs.acs.org/doi/10.1021/jacs.2c01356>photolysis of Ni(II) chlorides</a>.
+</p>
+
+<p>
+(And why stop at Cl? According to ThermoFisher, thermal ionization mass spectrometry lets you analyze the isotopic composition of metals with really high accuracy [five decimal places, per their <a href=https://assets.thermofisher.com/TFS-Assets/CMD/brochures/br-30537-triton-xt-tims-br30537-en.pdf>brochure</a>]. Would a <sup>58</sup>Ni/<sup>60</sup>Ni isotope effect be possible to measure? This might provide a handle on some mechanistically ambiguous Ni(III) scenarios, like those reported <a href=https://pubs.acs.org/doi/10.1021/jacs.5b13211>here</a>: is radical trapping or reductive elimination rate- and enantioselectivity-determining?)
+</p>
+
+<p>
+It doesn’t seem like it’s that easy to start a purely mechanistic research group these days, so maybe this is an unfundable idea. But it seems sad that a technique as powerful for physical (in)organic chemists as IRMS could just fade into obscurity, and I hope somebody finds the time and resources to apply it to modern mechanistic problems.
+</p>
+
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230508_aldehyde_eie.html'>Isotope Effects in Aldehyde Protonation</a></h2><i>May 8, 2023</i>
 <p>
 I’m writing my dissertation right now, and as a result I’m going back through a lot of old slides and references to fill in details that I left out for publication.
 </p>
@@ -947,68 +1001,6 @@ If you really need your data to be in a low-dimensional space (e.g. for plotting
 <i>
 Thanks to Michael Tartre for helpful conversations, and the students in Carnegie Mellon’s “Digital Molecular Design Studio” class for their thought-provoking questions on these topics.  
 </i>
-
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230413_new_ways.html'>New Ways To Read The Blog: RSS and Substack</a></h2><i>April 13, 2023</i>
-<p>
-<i>
-(This is more of a housekeeping post than an actual post with content; apologies.)
-</i>
-</p>
-
-<p>
-Up until now, my blogging strategy has been to write new posts about once a week and publicize them on Twitter, which works great for people who are on Twitter but (obviously) fails for people who aren’t on Twitter. I’m frequently asked if there are non-Twitter ways to subscribe to the blog updates: given that I myself don’t love relying on Twitter to bring me content, and that Twitter itself feels increasingly dicey, I feel bad saying no every time.
-</p>
-
-<p>
-I’m happy to announce that there are now two additional ways to read the blog: RSS and Substack. 
-</p>
-
-<h2>
-RSS
-</h2>
-
-<p>
-RSS is a lovely way to get updates from sites, which is sadly limited by the fact that nobody uses it anymore. (Half the people I talk to these days don’t even know what it is.) You can use an RSS aggregator like <a href=https://feedly.com/>Feedly</a>, and simply subscribe to various sites, so that they’ll dependably show up in your feed. This is the main way I get <a href=https://corinwagen.github.io/public/blog/20230329_literature.html>journal updates</a> and my news. 
-</p>
-
-<p>
-So, if you like using RSS, you can simply search “corinwagen.github.io” in Feedly, and the blog will come up:
-</p>
-
-<figure>
-  <img class="centered-img" src="../img/20230413_feedly.jpg" style="width:300px;" />
-  <figcaption> 
-  What it looks like on Feedly. The Twitter preview images sadly don't display.
-  </figcaption>
-</figure>
-
-<h2>
-Substack
-</h2>
-
-<p>
-Substack is a platform that helps people write and manage newsletters. It essentially solves the problem of “how do I create an email list”/“how do I manage subscriptions” for people who would rather not take care of hosting a web service and handling payments themselves, like me.
-</p>
-
-<p>
-I initially didn’t want to use Substack because (1) I wanted the blog to be part of my website, (2) I liked being able to control every aspect of the design, and (3) I wasn’t sure if anyone would read the blog, and there’s nothing sadder than an empty Substack. As things stand, (3) is a non-issue, so the question is whether the added convenience of Substack outweighs my own personal design and website preferences.
-I suspect that it may, so I’ve capitulated and copied all existing posts over to <a href=https://cwagen.substack.com>my new Substack</a>. (There are a few formatting issues in old posts, but otherwise things copied pretty well.)
-</p>
-
-<p>
-For now, I plan to continue posting everything on the blog, and manually copying each post over to Substack (I write in plain HTML so this is not too hard). If Substack ends up totally outperforming the blog in terms of views, then I’ll probably switch to Substack entirely for blogging and just leave my website up as a sort of virtual CV. 
-</p>
-
-<p>
-(I have no plans to enable subscriptions at this point; that being said, if for some bizarre reason there’s sufficient demand I’ll probably try to think of something to reward subscribers.)
-</p>
-
-<p>
-If you’d like to receive updates on Substack, you can subscribe below: 
-</p>
-
-<br>
-<iframe src="https://cwagen.substack.com/embed" width="480" height="320" style="display:block; border:1px solid #EEE; background:white; margin:auto;" frameborder="0" scrolling="no"></iframe>
 
 </div><div class='previous-link'><a href='blog_p3.html'>previous page</a></div><div class='next-link'><a href='blog_p5.html'>next page</a></div><br>
   </body>
