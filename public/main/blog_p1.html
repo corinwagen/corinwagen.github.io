@@ -36,7 +36,7 @@
     </ul>
     <h1 class='blogroll-header'>Blog</h1><div class='next-link'><a href='blog_p2.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230804_abundance.html'>How Common Are Different Functional Groups?</a></h2><i>August 4, 2023</i>
 <p>
-Since the ostensible purpose of organic methodology is to develop reactions that are useful in the real world, the utility of a method is in large part dictated by the accessibility of the starting materials. If a precursor is difficult to synthesize or hazardous to work with, then it’s difficult to convince people to use it in a reaction (e.g. most diazoalkanes). Organic chemists are pragmatic, and would usually prefer to run a reaction that starts from a commercial and bench-stable starting material. 
+Since the ostensible purpose of organic methodology is to develop reactions that are useful in the real world, the utility of a method is in large part dictated by the accessibility of the starting materials. If a compound is difficult to synthesize or hazardous to work with, then it’s difficult to convince people to use it in a reaction (e.g. most diazoalkanes). Organic chemists are pragmatic, and would usually prefer to run a reaction that starts from a commercial and bench-stable starting material. 
 </p>
 
 <p>
@@ -44,7 +44,7 @@ For instance, this explains the immense popularity of the Suzuki reaction: altho
 </p>
 
 <p>
-The ideal starting material, then, is one which is commercially available and cheap. In recent years, it’s become popular to advertise new synthetic methods by showing that they work on exceptionally cheap and common functional groups, and in particular to compare the abundance of different functional groups to prove that one starting material is more common than another. To pick just one of many examples, Dave MacMillan used this plot to show why cross-coupling reactions of alcohols were important (<a href=https://macmillan.princeton.edu/wp-content/uploads/Zhe.pdf>ref</a>):
+The ideal starting material, then, is one which is commercially available and cheap. In recent years, it’s become popular to advertise new synthetic methods by showing that they work on exceptionally cheap and common functional groups, and in particular to compare the abundance of different functional groups to demonstrate that one starting material is more common than another. To pick just one of many examples, Dave MacMillan used this plot to show why cross-coupling reactions of alcohols were important (<a href=https://macmillan.princeton.edu/wp-content/uploads/Zhe.pdf>ref</a>):
 </p>
 
 <figure>
@@ -55,7 +55,7 @@ The ideal starting material, then, is one which is commercially available and ch
 </figure>
 
 <p>
-When I saw this in MacMillan’s talk at MIT last year, I was curious what it would take to make additional plots like this. The “number of reactions” plot can be made pretty easily from Reaxys, but I’ve always been uncertain how the “number of commercial sources” plots are made: I haven’t seen references listed for these numbers, nor is anything usually found in the Supporting Information. 
+When I saw MacMillan’s talk at MIT last year, I was curious what it would take to make additional graphics like this. The “number of reactions” plot can be made pretty easily from Reaxys, but I’ve always been uncertain how the “number of commercial sources” plots are made: I haven’t seen references listed for these numbers, nor is anything usually found in the Supporting Information. 
 </p>
 
 <p>
@@ -296,10 +296,10 @@ What conclusions can we draw from this?
 The most common functional groups are the milquetoast ones: alcohols, amines, esters, etc. Perhaps this explains <a href=https://pubs.acs.org/doi/pdf/10.1021/acs.jmedchem.5b01409>where all the new reactions have gone</a>: unless your new method works on alcohols or amines, it will struggle to get traction in most of chemical space relative to e.g. Williamson ether synthesis or reductive amination. (Kudos to MacMillan for identifying this; <i>vide supra</i>.)
 </li>
 <li>
-Ureas are much more common than you’d expect from academic methods papers. This I think speaks to the difference between what methodologists want and what medicinal chemists want. Ureas are a bit annoying to work with: they’re pretty polar by the standards of academia, they’re not always soluble in organic solvents, and they have a tendency to stick to transition metal catalysts or get deprotonated by strong bases. But they’re easy to make in libraries, since the isocyanate/amine disconnection is so robust, and they’re excellent hydrogen-bond donors and hydrogen-bond acceptors.
+Ureas are much more common than you’d expect from academic methods papers. This I think speaks to the difference between what methodologists want and what medicinal chemists want. Ureas are a bit annoying to work with: they’re pretty polar by the standards of academia, they’re not always soluble in organic solvents, and they have a tendency to stick to transition metal catalysts or get deprotonated by strong bases. But they’re easy to make in libraries, since the isocyanate/amine disconnection is so robust, and they’re excellent hydrogen-bond donors and acceptors.
 </li>
 <li>
-Uncommon functional groups, like SF<sub>5</sub> and allenes, are very uncommon. If you want to introduce an SF<sub>5</sub> group, you are in for a rough time: there aren’t great ways to add it to molecules (although there have been some steps forward in recent years), and there are only 18 commercial examples. So people can write as many <a href=https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7728329/>papers</a> as they want about how cool SF<sub>5</sub> groups are: I still doubt we’ll see them used very much in the near future.
+Uncommon functional groups, like SF<sub>5</sub> and allenes, are very uncommon. If you want to introduce an SF<sub>5</sub> group, you are in for a rough time: there aren’t great ways to add it to molecules (although there have been some steps forward <a href=https://chemistry-europe.onlinelibrary.wiley.com/doi/10.1002/chem.202201491>in recent years</a>), and there are only 18 commercial examples. So people can write as many <a href=https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7728329/>papers</a> as they want about how cool SF<sub>5</sub> groups are: I still doubt we’ll see them used very much in the near future.
 </li>
 <li>
 But also, the abundance of a given functional group is very elastic in the long run. Trifluoromethyl groups used to be extremely rare—they’re not found in nature!—but now 1 in 8 molecules has a CF<sub>3</sub> group. CF<sub>3</sub> just turns out to be a very good handle for a lot of molecular design tasks, and so people found ways to introduce it all over the place, and now it’s not hard to get molecules that have trifluoromethyl groups. Synthetic chemists should feel good about this.
@@ -307,7 +307,7 @@ But also, the abundance of a given functional group is very elastic in the long 
 </ul>
 
 <p>
-The functional-group-specific SMILES files are in the previously mentioned Github repo, so anyone who wants to e.g. look through all the commercially available alkenes and perform further cheminformatics can do so. I hope the attached code and data helps other chemists perform similar, and better, analyses, and that this sort of thinking can be useful for those who are currently engaged in reaction discovery. 
+The functional-group-specific SMILES files are in the previously mentioned Github repo, so anyone who wants to e.g. look through all the commercially available alkenes and perform further cheminformatics analyses can do so. I hope the attached code and data helps other chemists perform similar, and better, studies, and that this sort of thinking can be useful for those who are currently engaged in reaction discovery. 
 </p>
 
 <i>
