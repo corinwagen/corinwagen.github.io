@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      The Perils of EDA
+    </title>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="language" content="en">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--twitter-->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@github" />
+    <meta name="twitter:title" content="The Perils of EDA" />
+    <meta name="twitter:description" content="Why I'm always nervous about energy decomposition analysis." />
+    <meta name="twitter:image" content="https://corinwagen.github.io/public/img/20230904_shoggoth.png" />
+
+    <link rel="stylesheet" href="../../static/style.css">
+
+    <link rel="alternate" type="application/rss+xml" title="RSS feed for the blog" href="/rss.xml">
+
+    <!--google-->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MTNZ0ZSG3W"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MTNZ0ZSG3W');
+    </script>
+
+  </head>
+  <body>
+    <ul class="menu-list">
+      <li class="menu-item"><a href="../main/index.html" class="menu-link menu-title">Corin Wagen</a></li>
+      <li class="menu-item"><a href="../main/index.html#about" class="menu-link">About</a></li>
+      <li class="menu-item"><a href="../main/index.html#projects" class="menu-link">Projects</a></li>
+      <!--<li class="menu-item"><a href="../main/index.html#past_work" class="menu-link">Past Work</a></li>-->
+      <li class="menu-item">
+        <a href="../main/blog_p1.html" class="menu-link">Blog</a>
+        <a href='../main/archive.html' class="menu-link">(Archive)</a>
+      </li>   
+    </ul>
+    <h1> The Perils of EDA </h1>
+    <i>September 4, 2023</i>
+    
+<p><i>
+ICYMI: Ari and I announced our new company, <a href=https://www.rowansci.com/>Rowan</a>! We wrote an article about what we're hoping to build, which you can read <a href=https://rowansci.substack.com/p/why-were-building-rowan>here</a>. Also, this blog is now listed on <a href=https://rogue-scholar.org/>The Rogue Scholar</a>, meaning that posts have DOIs and can be easily cited.
+</i></p>
+
+<p>
+Conventional quantum chemical computations operate on a collection of atoms and create a single wavefunction for the entire system, with an associated energy and possibly other properties. This is great, but sometimes we want to understand things in more detail. For instance, if we have a host <b>A</b> and two guests <b>B</b><sub>good</sub> and <b>B</b><sub>bad</sub>, a normal calculation would just tell us that E(<b>A</b>•<b>B</b><sub>good</sub>) is lower than E(<b>A</b>•<b>B</b><sub>bad</sub>), without giving any clue as to why.
+</p>
+
+<p>
+Enter EDA. EDA, or “energy decomposition analysis,” is a family of techniques used to dissect interactions in a system with multiple molecules. In this case, an EDA calculation on the <b>AB</b> system would break down the interaction between <b>A</b> and <b>B</b> into various components, which could be used to help scientists understand the origin of the difference, and perhaps used for continued molecular design.
+</p>
+
+<p>
+Unfortunately, EDA has always seemed like a pretty troubled technique to me. Wavefunctions are inherently not localized to individual fragments of a multimolecular system—you can’t just slice apart the molecular orbitals or the density matrix and end up with anything that’s physically sane. So you have to do some computational gymnastics to get energetic terms which are at all meaningful. Many such gymnastic workflows have been proposed, leading to a veritable alphabet soup of different EDA methods.
+</p>
+
+<p>
+(It’s worth skimming <a href=https://onlinelibrary.wiley.com/doi/10.1002/jcc.26003>this review</a> on different EDA methods to get a sense for some of the questions the field faces, and also to laugh at how Alston Misquitta &amp; Krzysztof Szalewicz use the review as a chance to relentlessly advertise SAPT and denigrate any and all competing methods.)
+</p>
+
+<p>
+I’ll briefly outline how the EDA-NCOV method works for a system <b>AB</b> (following <a href=https://wires.onlinelibrary.wiley.com/doi/epdf/10.1002/wcms.1345>this review</a>), to give a sense for the flavor of the field:
+</p>
+
+<ol>
+<li>
+Optimized ground-state fragments <b>A</b><sup>0</sup> and <b>B</b><sup>0</sup> are distorted to the geometries and electronic states (<b>A</b> &amp; <b>B</b>) which they possess in <b>AB</b>, and the energy required for this distortion/excitation is termed <i>E</i><sub>prep</sub>. (The difference between <i>E</i>(<b>AB</b>) and <i>E</i>(<b>A</b>) + <i>E</i>(<b>B</b>) is called <i>E</i><sub>int</sub>, and the total binding energy is equal to <i>E</i><sub>int</sub> + <i>E</i><sub>prep</sub>.)
+</li>
+<li>
+The distorted fragments <b>A</b> and <b>B</b> are brought together (with frozen charge densities) to form the “promolecule” <b>AB</b><sup>0</sup>, and the change in energy is termed <i>E</i><sub>elstat</sub>, the quasiclassical Coulomb interaction energy (typically attractive). The wavefunction for <b>AB</b><sup>0</sup> is Ψ<sup>A</sup>Ψ<sup>B</sup>.
+</li>
+<li>
+The product wavefunction Ψ<sup>A</sup>Ψ<sup>B</sup> is antisymmetrized and renormalized to give an “intermediate state” Ψ<sup>0</sup> with energy <i>E</i><sup>0</sup>, and the change in energy is termed <i>E</i><sub>Pauli</sub>, originating from Pauli repulsion. This component is always repulsive.
+</li>
+<li>
+Ψ<sup>0</sup> is relaxed to yield the final wavefunction Ψ<sup>AB</sup>. The change in energy is termed <i>E</i><sub>orb</sub>, because it arises from orbital interactions, and is always attractive.
+</li>
+</ol>
+
+<p>
+Thus, <i>E</i><sub>int</sub> = <i>E</i><sub>elstat</sub> + <i>E</i><sub>Pauli</sub> + <i>E</i><sub>orb</sub>. (Dispersion can also be added if an exogenous dispersion correction is employed—that’s pretty trivial.)
+</p>
+
+<p>
+The critical reader might observe that the steps taken to obtain these numbers are pretty odd, and that the components of the interaction energy arise from differences in energy between bizarre nonphysical states. Thus, the interpretation of terms like <i>E</i><sub>elstat</sub> in terms of actual physical interactions might not be as easy as it seems. The authors of the above review agree:
+</p>
+
+<blockquote>
+It is important to realize that the identification of the three major terms Δ<i>E</i><sub>elstat</sub>, Δ<i>E</i><sub>Pauli</sub>, and Δ<i>E</i><sub>orb</sub> with specific interactions is conceptually attractive but must not be taken as genuine expression of the physical forces.
+</blockquote>
+
+<p>
+Unfortunately, it seems that imprecise concepts familiar to experimental chemists like “steric repulsion” and “electrostatic attraction” have to be discarded in favor of precise terms like <i>E</i><sub>Pauli</sub>. Too bad they’re virtually uninterpretable!
+</p>
+
+<p>
+And what’s worse is that different EDA-type schemes don’t even give the same results. <a href=https://pubs.acs.org/doi/10.1021/jacs.3c08196>A paper</a> out today in <i>JACS</i> from Zare/Shaik discusses the use of EDA and related schemes in studying the origin of the hydrogen bond (a pretty fundamental question), motivated by the substantial disagreement between various techniques: 
+</p>
+
+<blockquote>
+It is important to realize that different methods (e.g., BOVB, ALMO-EDA, NEDA, and BLW) do not fully agree with one another about whether the dominant stabilizing term is Δ<i>E</i><sub>POL</sub> or Δ<i>E</i><sub>CT</sub> in a particular HB.
+</blockquote>
+
+<p>
+While the authors make a good case that the sum of these two terms is relatively conserved across methods, and that it’s this term that we should care about for hydrogen bonds, the conclusions for EDA broadly are not encouraging. (Note, too, that <i>E</i><sub>POL</sub> and <i>E</i><sub>CT</sub> don’t even appear in the EDA-NCOV method summarized above—another reason that EDA is a frustrating field!)
+</p>
+
+<figure>
+  <img class=centered-img src=../img/20230904_shoggoth.png style="width:550px;" />
+  <figcaption>
+  How I feel about EDA, borrowing <a href=https://www.nytimes.com/2023/05/30/technology/shoggoth-meme-ai.html>a meme from the AI discourse</a>.
+  </figcaption>
+</figure>
+ 
+<p>
+And even if the theorists eventually put their heads together and develop a version of EDA that doesn’t have these pitfalls, it’s still not clear that any form of EDA will give the answers that experimental chemists are looking for. Chemistry is complicated, and ground- or transition-state structures arise from a delicate equilibrium between opposing factors: steric repulsion, electrostatic attraction, bond distances, torsional strain, dispersion, &amp;c.
+</p>
+
+<p>
+As a result, one can see large changes in the contribution of individual factors even while the overall structure’s stability is minimally perturbed (<a href=https://pubs.rsc.org/en/content/articlehtml/2014/md/c4md00057a>enthalpy–entropy compensation</a> is a classic example, as is Fig. 2 in <a href=https://onlinelibrary.wiley.com/doi/full/10.1002/anie.201701486>this review</a> on distortion–interaction analysis). Looking only at changes in individual factors isn’t always a useful way to gain insight from computation.
+</p>
+
+<p>
+For example, imagine a nucleophile adding to two faces of an oxocarbenium, a bulky face and an unhindered face. Based on this description, we might expect to see that TS<sub>bulky</sub> has higher steric repulsion than TS<sub>unhindered</sub> (if we’re lucky enough to find a way to extract <i>E</i><sub>steric</sub> out of our EDA method). But it’s also likely that the nucleophile might take a less favorable trajectory towards the oxocarbenium in TS<sub>bulky</sub> to avoid steric repulsion, thus weakening key orbital interactions. These changes might even end up being larger in magnitude than the destabilization induced by steric repulsion. Is the correct answer, then, that TS<sub>bulky</sub> is higher in energy because of decreased <i>E</i><sub>orb</sub>, not increased <i>E</i><sub>steric</sub>?
+</p>
+
+<p>
+The solution is to recognize that causation is not unique (cf. <a href=https://en.wikipedia.org/wiki/Four_causes>Aristotle</a>), and so there’s no one right answer here. Within the constraints of the EDA framework, the theorist wouldn’t be incorrect in saying that <i>E</i><sub>orb</sub> is the driving factor—but the experimental chemist might reasonably expect “the bulky TS is destabilized by steric repulsion” as their answer, since this is the root cause of the changes between the two structures. (I side with the experimentalists here.)
+</p>
+
+<p>
+And the precisely defined concepts favored by theorists are often hard for experimental scientists to work with. Even if the correct answer in the above scenario were “<i>TS</i><sub>bulky</sub> is destabilized by decreased orbital overlap”—what’s an experimentalist supposed to do with this information, add more orbitals? (This is how I feel about Trevor Hamlin’s work on Pauli repulsion.) The steric explanation at least suggests an intuitive solution (make the bulky group or the nucleophile smaller). If the purpose of EDA is to help people to understand intermolecular interactions better on a conceptual level, I’m not sure it’s succeeding in most cases.
+</p>
+
+<p>
+(The only use of EDA that led to an actual experimental advance which I’m aware of is Buchwald/Peng Liu’s body of work on ligand–substrate dispersion in hydrocupration: <a href=https://pubs.acs.org/doi/abs/10.1021/jacs.7b07373>study</a>, <a href=https://pubs.acs.org/doi/10.1021/jacs.8b09565>new ligand</a>, <a href=https://pubs.acs.org/doi/10.1021/jacs.0c08746>ligand from Hartwig</a>. I don’t think it’s a coincidence that these papers focus on dispersion, one of the easiest pieces of EDA to decouple and understand.)
+</p>
+
+<p>
+I don’t mean to be too critical here. The ability to break intermolecular interactions down into different components is certainly useful, and it seems likely that some version of EDA will eventually achieve consensus and emerge as a useful tool. But I think the utility of EDA even in the best case is pretty limited. Quantum chemistry is complicated, and if we think we can break it down into easy-to-digest components and eliminate the full nonlocal majesty of the Schrodinger equation, we’re lying to ourselves (or our experimental collaborators). Compute with caution!
+</p>
+
+
+    <br>
+    <br>
+    <i>If you want email updates when I write new posts, you can subscribe <a href=https://cwagen.substack.com/>on Substack.</a></i>
+  </body>
+  <br>
+  <br>
+  <footer>
+    <a href="mailto:corin.wagen+blog@gmail.com">email</a>
+    <a href="https://github.com/corinwagen">github</a>
+    <a href="https://twitter.com/CorinWagen">twitter</a>
+    <div style="float:right;">
+      <a href="/rss.xml">rss</a>
+      <a href="https://cwagen.substack.com">substack</a>
+    </div>
+  </footer>
+</html>

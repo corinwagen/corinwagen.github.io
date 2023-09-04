@@ -34,7 +34,135 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p7.html'>previous page</a></div><div class='next-link'><a href='blog_p9.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20221231_books.html'>Books from 2022</a></h2><i>December 31, 2022</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p7.html'>previous page</a></div><div class='next-link'><a href='blog_p9.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230103_hdkie_puzzle.html'>Misleading H/D KIE Experiments</a></h2><i>January 3, 2023</i>
+<p>
+<i>
+Note: old versions of this post lacked a discussion of S<sub>N</sub>2. I've added an appendix which remedies this.
+</i>
+</p>
+
+<p>
+In <a href=https://corinwagen.github.io/public/blog/20220815_rate_determining_span.html>“The Rate-Limiting Span,”</a> I discussed how thinking in terms of the span from ground state to transition state, rather than in terms of elementary steps, can help prevent conceptual errors. Today, I want to illustrate why this is important in the context of a little H/D KIE puzzle. 
+</p>
+
+<p>
+Consider the following reaction, which could conceivably proceed via an S<sub>N</sub>2 mechanism (red), an S<sub>N</sub>1 mechanism (blue), or really anywhere on the continuum:
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20230103_structures.png" style="width:550px;" />
+  <figcaption> 
+    This is a bit of a silly reaction, admittedly. The intermolecular version or the <i>endo</i> version would have been better.
+  </figcaption>
+</figure>
+
+<p>
+What experiment can be used to investigate the mechanism of this reaction? One possibility is an alpha H/D KIE experiment at the iminium position. Reactions with a sp<sup>3</sup> ground state and an sp<sup>2</sup> transition state display secondary normal alpha H/D KIEs, while reactions with an sp<sup>2</sup> ground state and an sp<sup>3</sup> transition state display secondary inverse KIEs.
+Thus, one might think “if iminium formation is rate-limiting, the KIE will be normal, but if alkene addition is rate-limiting, the KIE will be inverse.”
+</p>
+
+<p>
+Unfortunately this is not true. Instead, all mechanistic possibilities give secondary normal KIEs! I investigated this model system computationally at the wB97X-D/6-31G(d)/SMD(CH<sub>2</sub>Cl<sub>2</sub>) level of theory. Here’s a More O’Ferrall–Jencks plot of the H/D KIE at the iminium position, computed with <a href=https://github.com/ekwan/PyQuiver>PyQuiver</a>
+(breaking bond on Y axis, forming bond on X axis): 
+</p>
+
+<!--
+<figure>
+  <img class="centered-img" src="../img/20230103_energy.png" style="width:500px;" />
+  <figcaption> 
+    Some of the grid points didn't finish, which explains the scattered gaps. I've also excluded anything with energy more than 30 kcal/mol above the ground state.
+  </figcaption>
+</figure>
+-->
+
+<figure>
+  <img class="centered-img" src="../img/20230103_kie.png" style="width:550px;" />
+  <figcaption> 
+    The raw data from PyQuiver is a little fuzzy, so I applied a convolution to smooth the data. Details later on. 
+  </figcaption>
+</figure>
+
+<p>
+Rather than telling us which step is rate-limiting, all the KIE shows us is how much the transition state resembles an iminium ion (bottom right). Structures with long C–Cl bond distances and short C–C bond distances have substantial isotope effects (around 20%), while structures with forming or breaking bonds have smaller isotope effects. 
+</p>
+
+<p>
+Why is this? Both ionization and addition proceed through iminium-like structures that are substantially sp<sup>2</sup>-hybridized at carbon, irrespective of whether sp<sup>2</sup> character is technically increasing or decreasing in the elementary step. Relative to the starting material, both transition states look like iminium ions and thus lead to large isotope effects. 
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20230103_structures2.png" style="width:300px;" />
+  <figcaption>
+  These both look pretty much like iminium ions.
+  </figcaption>
+</figure>
+
+<p>
+We can also conceptualize this in terms of elementary steps. Taken by itself, alkene addition does lead to an inverse kinetic isotope effect, as seen by the decreasing values as one moves left from the iminium—but an inverse isotope effect relative to the normal equilibrium isotope effect of the iminium. In this system, the equilibrium isotope effect of the iminium is larger than the kinetic isotope effect for alkene addition, and so the combination of these two effects leads to a (smaller) overall normal effect. 
+</p>
+
+<p>
+(This is the opposite of primary H/D KIEs, where central transition states lead to the largest isotope effects and equilibrium effects are typically small. Here, the isotope effect is mainly a function of hybridization, and so the later the TS, the greater the difference in hybridization and the larger the isotope effect.)
+</p>
+
+<p>
+In summary, although this experiment seems informative, it’s actually not very useful. It tells you something about the structure of the transition state, but not which step is rate-limiting! In this case, a better experiment would be to measure <sup>13</sup>C KIEs, or an H/D KIE on the nucleophile. 
+</p>
+
+<h3>Appendix I: What About S<sub>N</sub>2?</h3>
+
+<p>
+On Twitter, <a href="https://twitter.com/LevinChem/status/1610287881993728000">Mark Levin</a> asks about the KIE for the concerted path. I originally meant to include a discussion of this, but then totally forgot to! So let’s fix that.
+</p>
+
+<p>
+As shown in the graph above, extremely concerted pathways (i.e. going right down the middle of the MOJ plot) will have pretty small isotope effects. These sorts of mechanisms are common where the carbocation would be extremely unstable (methyl iodide) but much less common for stabilized carbocations like we’re discussing here. When oxocarbeniums or iminiums are involved, even “concerted” mechanisms shift towards the bottom right corner: this is the <a href=https://pubs.acs.org/doi/pdf/10.1021/ja506092h>“loose”/“exploded” S<sub>N</sub>2</a> often seen in glycosylation. These pathways will have a modest to large H/D KIE, depending on the exact system and how “exploded” they are (see page 53 of <a href=https://pubs.acs.org/doi/10.1021/jacs.6b10621>this SI</a> for examples)
+</p>
+
+<p>
+Putting this together, then, what experimental results would be conclusive? A very small KIE would be diagnostic for a “classic” synchronous S<sub>N</sub>2 process, which I consider to be very unlikely here. But medium or large H/D KIEs are consistent with any possibility: S<sub>N</sub>1 with rate-limiting ionization, S<sub>N</sub>1 with rate-limiting nucleophilic attack, or a loose S<sub>N</sub>2. There’s an annulus of different mechanistic possibilities that all give about the same isotope effect, as shown below:
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20230103_sn2_plot.png" style="width:470px;" />
+  <figcaption> 
+  Any TS in the red zone is consistent with a moderately large KIE (say, 15%).
+  </figcaption>
+</figure>
+
+<p>
+To make matters worse, H/D KIEs are pretty tough to simulate quantitatively, because of tunneling, so the annulus isn’t even that precise. That’s why I think this isn’t a very good experiment.
+</p>
+
+<h3>Appendix II: Smoothing the KIE Grid</h3>
+
+<p>
+The raw KIE values from PyQuiver were pretty noisy, probably because there are small or multiple imaginary frequencies for some of these non-stationary points, so I used convolution to smooth things out a bit. 
+</p>
+
+<pre class=code-block>
+import numpy as np
+from scipy.ndimage import convolve
+
+#### this code block takes a 2d np.ndarray of KIE values 
+#### and returns a smoothed np.ndarray with the same dimensions
+
+corner_w = 0.05
+edge_w = 0.2
+kernel = np.array([
+    [corner_w, edge_w, corner_w],
+    [edge_w, 1 ,edge_w],
+    [corner_w, edge_w, corner_w]
+])
+kernel = kernel / np.sum(kernel)
+
+smooth_grid = convolve(kie_grid, kernel, mode="nearest")
+</pre>
+
+<p>
+I haven’t seen this technique used before, but it doesn’t seem unreasonable to me.
+</p>
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20221231_books.html'>Books from 2022</a></h2><i>December 31, 2022</i>
 <p>
 Last January, I aimed to read 50 books in 2022. I got through 32, which is at least more than I read in 2021.
 </p>
@@ -540,70 +668,6 @@ The first question is clearly complex, and probably deserves a longer and fuller
 But the second question seems more straightforward. Is requiring <sup>13</sup>C NMR for every compound a Pareto-optimal way to ensure accuracy, as opposed to HSQC or HMBC? I struggle to see how the answer can be yes.
 </p>
 
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20221214_against_carbon_nmr.html'>Against Carbon NMR</a></h2><i>December 14, 2022</i>
-<p>
-<sup>13</sup>C NMR is, generally speaking, a huge waste of time.
-</p>
-
-<p>
-This isn’t meant to be an attack on carbon NMR as a scientific tool; it’s an excellent technique, and gives structural information that no other methods can. Rather, I take issue with the requirement that the identity of every published compound be verified with a <sup>13</sup>C NMR spectrum.
-</p>
-
-<p>
-Very few <sup>13</sup>C NMR experiments yield unanticipated results. While in some cases <sup>13</sup>C NMR is the only reliable way to characterize a molecule, in most cases the structural assignment is obvious from <sup>1</sup>H NMR, and any ambiguity can be resolved with high-resolution mass spectrometry. Most structure determination is boring. Elucidating the structure of bizarre secondary metabolites from sea sponges takes <sup>13</sup>C NMR; figuring out if your amide coupling or click reaction worked does not.
-</p>
-
-<p>
-The irrelevance of <sup>13</sup>C NMR can be shown via the doctrine of revealed preference: most carbon spectra are acquired only for publication, indicating that researchers are confident in their structural assignments without <sup>13</sup>C NMR. It’s not uncommon for the entire project to be scientifically “done” before any <sup>13</sup>C NMR spectra are acquired. In most fields, people treat <sup>13</sup>C NMR like a nuisance, not a scientific tool—the areas where this isn’t true, like total synthesis or sugar chemistry, are the areas where <sup>13</sup>C NMR is actually useful.
-</p>
-
-<p>
-Requiring <sup>13</sup>C NMR for publication isn’t costless. The low natural abundance of <sup>13</sup>C and poor gyromagnetic ratio means that <sup>13</sup>C NMR spectra are orders of magnitude more difficult to obtain than <sup>1</sup>H NMR spectra. As a result, a large fraction of instrument time in any chemistry department is usually dedicated to churning out <sup>13</sup>C NMR spectra for publication, while people with actual scientific problems are kept waiting. <sup>13</sup>C NMR-induced demand for NMR time means departments have to buy more instruments, hire more staff, and use more resources; the costs trickle down.
-</p>
-
-<p>
-And it’s not like eliminating the requirement to provide <sup>13</sup>C NMR spectra would totally upend the way we do chemical research. Most of our field’s history, including some of our greatest achievements, were done in the age before carbon NMR—the first <sup>13</sup>C NMR study of organic molecules was done by <a href="https://aip.scitation.org/doi/10.1063/1.1743253">Lauterbur</a> in 1957, and it would take even longer for the techniques to advance to the point where non-specialists could use the technique routinely. Even in the early 2000s you can find <i>JACS</i> papers without <sup>13</sup>C NMR spectra in the SI, indicating that it's possible to do high-quality research without it. 
-</p>
-
-<p>
-Why, then, do we require <sup>13</sup>C NMR today? I think it stems from a misguided belief that scientific journals should be the ultimate arbiters of truth—that what’s reported in a journal ought to be trustworthy and above reproach. We hope that by requiring enough data, we can force scientists to do their science properly, and ferret out bad actors along the way. (Perhaps the clearest example of this mindset is <i>JOC</i> &amp; <i>Org. Lett.</i>, who maintain an ever-growing <a href="https://publish.acs.org/publish/author_guidelines?coden=joceah#data_requirements">list of standards</a> for chemical data aimed at requiring all work to be high quality.) Our impulse to require more and more data flows from our desire to make science an institution, a vast repository of knowledge equipped to combat the legions of misinformation.
-</p>
-
-<p>
-But this hasn’t always been the role of science. Geoff Anders, <a href="https://www.palladiummag.com/2022/10/10/the-transformations-of-science/">writing for <i>Palladium</i></a>, describes how modern science began as an explicitly anti-authoritative enterprise:
-</p>
-
-<blockquote>
-Boyle maintained that it was possible to base all knowledge of nature on personal observation, thereby eliminating a reliance on the authority of others. He further proposed that if there were differences of opinion, they could be resolved by experiments which would yield observations confirming or denying those opinions. The idea that one would rely on one’s own observations rather than those of others was enshrined in the motto of the Royal Society—<i>nullius in verba</i>.
-</blockquote>
-
-<p>
-<i>nullius in verba</i> translates to “take no one’s word for it,” not exactly a ringing endorsement of science as institutional authority. This same theme can be found in more recent history. Melinda Baldwin’s <a href="https://astralcodexten.substack.com/p/your-book-review-making-nature"><i>Making Nature</i></a> recounts how peer review—a now-core part of scientific publishing—became commonplace at <i>Nature</i> only in the 1970s. In the 1990s it was still common to publish organic chemistry papers without supporting information.
-</p>
-
-<figure>
-  <img class=centered-img src=../img/20221214_royal_society.jpeg style="width:450px;" />
-  <figcaption>
-  The Royal Society—a group of folks who definitely didn't take <sup>13</sup>C NMR spectra.
-  </figcaption>
-</figure>
-
-<p>
-The point I’m trying to make is not that peer review is bad, or that scientific authority is bad, but that the goal of enforcing accuracy in the scientific literature is a new one, and perhaps harder to achieve than we think. There are problems in the scientific literature everywhere, big and small. John Ioannidis memorably claimed that <a href="https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.0020124">“most published findings are false,”</a> and while chemistry may not suffer from the same issues as the social sciences, we have our own problems. 
-<a href="https://pubs.acs.org/doi/10.1021/acscentsci.2c00325">Elemental analysis doesn’t work</a>, <a href="https://chemrxiv.org/engage/chemrxiv/article-details/60c74474ee301c02d6c7916e">integration grids cause problems</a>, and even <a href="http://blog-syn.blogspot.com/2013/02/blog-syn-003-benzylic-oxidation-of_18.html">reactions from famous labs can’t be replicated</a>. Based on this, we might conclude that we’re very, very far from making science a robust repository of truth.
-</p>
-
-<p>
-Nevertheless, progress marches on. A few misassigned compounds here and there don’t cause too many problems, any more than a faulty elemental analysis report or a sketchy DFT study. Scientific research itself has mechanisms for error correction: anyone who’s ever tried to reproduce a reaction has engaged in one such mechanism. Robust reactions get used, cited, and amplified, while reactions that never work slowly fade into obscurity. Indeed, despite all of the above failures, we’re living through a golden age for our field.
-</p>
-
-<p>
-Given that we will never be able to eradicate bad data completely, the normative question then becomes “how hard should we try?” In an age of <a href="https://www.agrarheute.com/sites/agrarheute.com/files/2020-01/innovation_scientific_progress.pdf">declining research productivity</a>, we should be mindful not only of the dangers of low standards (proliferation of bad work) but also of the dangers of high standards (making projects take way longer). There’s clear extremes on both ends: requiring <sup>1</sup>H NMR spectra for publication is probably good, but requiring a crystal structure of every compound would be ridiculous. The claim I hope to make here is that requiring <sup>13</sup>C NMR for every compound does more to slow down good work than it does to prevent bad work, and thus should be abandoned.
-</p>
-
-<i>
-Update 12/16/2022: see <a href="https://corinwagen.github.io/public/blog/20221216_carbon_nmr_response.html">some followup remarks</a> based on feedback from Twitter.
-</i>
 </div><div class='previous-link'><a href='blog_p7.html'>previous page</a></div><div class='next-link'><a href='blog_p9.html'>next page</a></div><br>
   </body>
   <br>
