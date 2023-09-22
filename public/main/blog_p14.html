@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      Blog
+    </title>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="language" content="en">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="../../static/style.css">
+
+    <link rel="alternate" type="application/rss+xml" title="RSS feed for the blog" href="/rss.xml">
+
+    <!--google-->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MTNZ0ZSG3W"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MTNZ0ZSG3W');
+    </script>
+
+  </head>
+  <body>
+    <ul class="menu-list">
+      <li class="menu-item"><a href="index.html" class="menu-link menu-title">Corin Wagen</a></li>
+      <li class="menu-item"><a href="index.html#about" class="menu-link">About</a></li>
+      <li class="menu-item"><a href="index.html#projects" class="menu-link">Projects</a></li>
+      <!--<li class="menu-item"><a href="index.html#past_work" class="menu-link">Past Work</a></li>-->
+      <li class="menu-item">
+        <a href="blog_p1.html" class="menu-link">Blog</a>
+        <a href='archive.html' class="menu-link">(Archive)</a>
+      </li>
+    </ul>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p13.html'>previous page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220620_glycosylation.html'>Site-Selective Glycosylation: Reflections</a></h2><i>June 20, 2022</i>
+<p>
+  Now that our lab’s site-selective glycosylation has been <a href="https://www.nature.com/articles/s41586-022-04958-w">published</a>,
+  I wanted to share some reflections from the computational portion of the work.
+</p>
+
+<p>
+  As one might expect, finding transition states for these large and flexible catalysts was a substantial challenge.
+  We ended up using an ONIOM-type scheme to model most of the catalyst using PM7, 
+which meant only the thioureas and the “northern” amide (which acts as a general base) needed to be computed using DFT. 
+  Even with this approximation, it took three months to find the first glycosylation transition state. 
+  Although we ended reoptimizing everything with all-atom DFT for publication, 
+  using PM7 for non-essential atoms was crucial in accelerating the initial transition-state search.
+</p>
+
+<p>
+  Working on this project also gave me a new appreciation for all of the work done to develop linear-scaling DFT methods. 
+  The size of the full system meant that even routine Hessian calculations with a double-zeta basis set took most of a week; 
+  without all the work that’s been done to speed up calculations on large systems (e.g. the <a href="https://www.science.org/doi/10.1126/science.271.5245.51">fast multipole method</a>), 
+  these computations would not even have been possible. 
+  Hopefully, calculations on systems of this size will become routine in the coming decade.
+</p>
+
+<p>
+  After finding the (1,2) and (1,3) transition states, we were surprised (and disappointed) to find that the predicted selectivity was completely backwards from that observed experimentally. 
+  Closer observation of the transition states showed that the hydrogen-bonding network in the unprotected acceptor was quite different between the two structures, 
+  leading us to suspect that this energetic difference might be an artifact of implicit solvation. Since the reaction is run in diisopropyl ether, a hydrogen-bond acceptor, 
+  we reasoned that the unprotected hydroxyls would be able to form hydrogen bonds with solvent ether molecules and not with the donor.
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20220620_presto.png" style="width:450px;" alt="picture of a solvated complex" />
+  <figcaption> CYLView visualization of the solvated complex </figcaption>
+</figure>
+
+<p>
+  To test this idea, we decided to attempt explicit solvent calculations. Although a full <i>ab initio</i> molecular dynamics study of this system was clearly out of the question, 
+  we were able to run molecular dynamics using Grimme’s GFN2-xtb method for the catalyst, donor, and acceptor and the GFN-FF polarizable forcefield for the solvent. 
+  Examination of the pre-(1,3) complex shows that the C4 hydroxyl is indeed solvated by a diisopropyl ether, meaning that the donor–acceptor hydrogen bond predicted by DFT is just wrong. 
+  (As a bonus, we found that no (1,2) preference exists in the ground state, in agreement with the experimental observation that <i>K<sub>M</sub></i> is not lower for more selective catalysts.)
+</p>
+
+<p>
+  Although the coolest solution would have been to do free energy perturbation in explicit solvent to get an accurate ∆∆G between the (1,2) and (1,3) transition states, 
+  technical barriers meant we had to settle for modeling the C4-protected acceptor, which indeed favored the correct product. 
+  Still, I think this approach demonstrates the computational insight that explicit solvent calculations can give even when a full, high-level treatment of the system is unreasonable. 
+  We’ve been developing <a href="https://github.com/corinwagen/presto">software</a> to make this sort of molecular dynamics more routine—if you’re interested in using this in your research, 
+  please contact me!
+</p>
+</div><div class='previous-link'><a href='blog_p13.html'>previous page</a></div><br>
+  </body>
+  <br>
+  <footer>
+    <a href="mailto:corin.wagen+blog@gmail.com">email</a>
+    <a href="https://github.com/corinwagen">github</a>
+    <a href="https://twitter.com/CorinWagen">twitter</a>
+    <div style="float:right;">
+      <a href="/rss.xml">rss</a>
+      <a href="https://cwagen.substack.com">substack</a>
+    </div>
+  </footer>
+</html>
