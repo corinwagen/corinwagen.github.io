@@ -4,6 +4,64 @@
           <link>https://corinwagen.github.io</link>
           <title>Corin Wagen</title>
           <item>
+              <title>Networking, For Skeptics</title>
+              <link>public/blog/20231016_networking.html</link>
+              <description><![CDATA[
+<figure>
+  <img class=centered-img src=https://arthistorybuff.files.wordpress.com/2017/10/dp819996.jpg style="width:400px;" />
+  <figcaption>
+    "Hi, would you like to connect on LinkedIn?"
+  </figcaption>
+</figure>
+
+<p>
+<i>
+(in the spirit of Dale Carnegie and post-rat <a href=https://sympatheticopposition.substack.com/p/how-and-why-to-be-ladylike-for-women>etiquette guides</a>)
+</i>
+</p>
+
+<p>
+Scientists, engineers, and other technical people often make fun of networking. Until a few years ago, I did this too: I thought networking was some dumb activity done by business students who didn’t have actual work to do, or something exploitative focused on pure self-advancement. But over the past year or so, I’ve learned why networking is important, and have found a way to network that doesn’t make me feel uncomfortable or selfish. I want to share my current thoughts here, in case they help anyone else.
+</p>
+
+<p>
+The first thing to recognize is that networking matters because we live in a world of relationships. Technical people often struggle with this point: to some, relying on relationships feels imprecise or even nepotistic. But we’re human beings, not stateless automata communicating via some protocol, and it’s inevitable (and appropriate) for us to form relationships and care about them.
+</p>
+
+<p>
+Having the right relationships can make a big difference. We trust people we know much more than we trust strangers. It’s weird for someone whom you’ve never met to email you asking for a favor, but very normal for a friend or acquaintance to reach out and ask for something. And most ambitious projects (academia, startups, etc) are limited not by money but by human capital: there are only so many talented people out there, and if you can’t get access to them, what you’re doing will suffer. (On a macro level, this explains why management consulting has become so important.)
+</p>
+
+<p>
+So it’s worth intentionally building relationships before you have an immediate need. There are a lot of people,<sup>[citation needed]</sup> so how might one go about this? One obvious strategy might be to build relationships with people you think could be useful to you. But this doesn’t work very well. It’s not always obvious what will or won’t be useful in the future, and far too easy to let status quo bias reign supreme. (Most graduate students struggle to imagine how knowing someone from another subfield could ever be useful, let alone someone who isn’t a scientist, which makes it tough when they want to do <a href=https://news.ycombinator.com/item?id=24459155>something outside academia.</a>)
+</p>
+
+<p>
+Another downside to this strategy is that you have to partition people into “useful” or “not useful” upon meeting them. This is self-defeating: most people can figure out when you’re treating them only as a means to an end, so walking around evaluating everyone’s utility tends to poison your interactions. Plus, it’s a very Machiavellian way to view the world, and ought to make you feel a little gross.
+</p>
+
+<p>
+Instead, a better strategy is to accept that you won’t be able to predict <i>a priori</i> who will be useful and instead just try and meet people. If the end goal of networking is to find people you’ll be able to collaborate with in the future, in one capacity or another, then it’s important to find people who share your values and who you get along with: in other words, friends. So, rather than worrying about if it’ll be better to know a renewable energy consultant or a paralegal for a medical device company, you can just see who you like spending time with and go from there.
+</p>
+
+<p>
+If we think of networking as synonymous to making friends, then it also becomes more obvious when and how one should network. Anything explicitly framed as an opportunity for networking is a bad choice: these events tend to attract people who are self-centered, and mostly end up revolving around LinkedIn (the Tinder of networking?). Instead, look for places where you’ll find people you could be friends with. For me, this ends up mostly being church and church-adjacent spaces like Bible studies; I’m not sure what the analogous space for non-religious people is.
+</p>
+
+<p>
+The strategies I’ve discussed above are framed in terms of “demand-side networking,” or how you can find ways to acquire human capital when you have a demand for it. But the same considerations apply to “supply-side networking,” or marketing oneself to potential people. The beauty of treating networking simply as making friends is that you’re not committing to any particular outcome: maybe you’ll benefit from it, maybe the other person will benefit from it, or maybe both of you will (or neither). The expected value of building new relationships should always be positive, which means that networking isn’t a zero-sum game: it’s good for all involved.
+</p>
+
+<p>
+The conclusion I want to leave you with is this: networking, rightly understood, just means living in a way that recognizes our dependence on other people. To live life as a “networker” means putting yourself in places where you might make new friends, looking for common ground in all your interactions, and trying to recognize others’ talents and abilities. Networking isn’t some Randian pursuit focused on extracting value from those around us. It should be done with humility, accepting that we need other people to thrive and being open to whatever relationships come our way.
+</p>
+
+<i>Thanks to Ari Wagen for editing drafts of this post.</i>
+
+]]></description>
+              <pubDate>Mon, 16 Oct 2023 00:00:00 +0000</pubDate>
+          </item>
+          <item>
               <title>Composite Methods in Quantum Chemistry</title>
               <link>public/blog/20230922_composite.html</link>
               <description><![CDATA[
@@ -234,7 +292,7 @@ Molecule-optimized basis sets are rarely used in quantum chemistry. We are aware
 </blockquote>
 
 <p>
-They also put together a new set of effective core potentials, which also helps to minimize the number of basis functions. Even so, ωB97X-3c is by far the slowest of the composite methods, as shown in this figure:
+They also put together a new set of effective core potentials, which also helps to minimize the number of basis functions. Even so, ωB97X-3c is the slowest of the composite methods, as shown in this figure:
 </p>
 
 <figure>

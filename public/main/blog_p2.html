@@ -34,7 +34,137 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p1.html'>previous page</a></div><div class='next-link'><a href='blog_p3.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230720_ml_aimd.html'>Machine Learning for Explicit Solvent Molecular Dynamics</a></h2><i>July 20, 2023</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p1.html'>previous page</a></div><div class='next-link'><a href='blog_p3.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230728_two_cultures.html'>The Two Cultures in Atomistic Simulation</a></h2><i>July 28, 2023</i><br>
+<br>
+<i>
+TW: stereotypes about molecular dynamics.
+</i>
+
+<p>
+In his fantastic essay “<a href=https://en.wikipedia.org/wiki/The_Two_Cultures>The Two Cultures</a>,” C. P. Snow observed that there was (in 1950s England) a growing divide between the academic cultures of science and the humanities:
+</p>
+
+<blockquote>
+Literary intellectuals at one pole—at the other scientists, and as the most representative, the physical scientists. Between the two a gulf of mutual incomprehension—sometimes (particularly among the young) hostility and dislike, but most of all lack of understanding. They have a curious distorted image of each other. Their attitudes are so different that, even on the level of emotion, they can't find much common ground.
+</blockquote>
+
+<p>
+He reflects on the origins of this phenomenon, which he contends is new to the 20th century, and argues that it ought to be opposed:
+</p>
+
+<blockquote>
+This polarisation is sheer loss to us all. To us as people, and to our society. It is at the same time practical and intellectual and creative loss, and I repeat that it is false to imagine that those three considerations are clearly separable. But for a moment I want to concentrate on the intellectual loss.
+</blockquote>
+
+<p>
+Snow’s essay is wonderful: his portrait of a vanishing cultural intellectual unity should inspire us all, scientists and otherwise, to improve ourselves, and the elegiac prose reminds the reader that even the best cultural institutions are fragile and fleeting things.
+</p>
+
+<p>
+I want to make an analogous—but much less powerful—observation about the two cultures present in atomistic simulation. I’ll call these the “QM tribe” and the “MD tribe” for convenience: crudely, “people who use Gaussian/ORCA/Psi4 for their research” and “people who use Schrodinger/AMBER/OpenMM/LAMMPS for their research,” respectively. Although this dichotomy is crude, I contend there are real differences between these two groups, and that their disunity hurts scientific progress.
+</p>
+
+<h2>
+The Nature of Energy Surfaces
+</h2>
+
+<p>
+The most fundamental disagreement between these two cultures is in how they think about energy surfaces, I think. Most QM-tribe people think in terms of optimizing to discrete critical points on the potential energy surface: one can perform some sort of gradient-informed optimization to a ground state, or follow negative eigenvalues to a transition state.
+</p>
+
+<p>
+Implicit to this assumption is that there exist well-defined critical points on the PES, and that finding such critical points is meaningful and productive. Conformers exist, and many people now compute properties as Boltzmann-weighted averages over conformational ensembles, but this is usually done for 10–100 conformers, not thousands or millions. Entropy and solvation, if they’re considered at all, are viewed as corrections, not key factors: since QM is so frequently used to study high-barrier bond-breaking processes where enthalpic factors dominate, one can often get reasonable results with cartoonish treatments of entropy.
+</p>
+
+<p>
+In contrast, MD-tribe scientists generally don’t think about transition states as specific configurations of atoms—rather, a transition state can emerge from some sort of simulation involving biased sampling, but it’s just a position along some abstract reaction coordinate, rather than a structure which can be visualized in CYLView. Any information gleaned is statistical, rather than concretely visual (e.g. “what is the mean number of hydrogen bonds to this oxygen near this transition state”).
+</p>
+
+<p>
+Unlike the QM tribe, MD-tribe scientists generally cannot study bond-breaking processes, and so focus on conformational processes (protein folding, aggregation, nucleation, transport) where entropy and solvation are of critical importance: as such, free energy is almost always taken into consideration by MD-tribe scientists, and the underlying PES itself is rarely (to my knowledge) viewed as a worthy topic of study in and of itself.
+</p>
+
+<h2>
+Molecular Representations
+</h2>
+
+<p>
+This divide also affects how the two cultures view the task of molecular representation. QM-tribe scientists generally view a list of coordinates and atomic numbers as the most logical representation of a molecule (perhaps with charge and multiplicity information). To the QM tribe, a minimum on the PES represents a structure, and different minima naturally ought to have different representations. Bonding and bond order are not specified, because QM methods can figure that out without assistance (and it’s not uncommon for bonds to change in a QM simulation anyway).
+</p>
+
+<p>
+In contrast, people in the MD tribe generally want a molecular representation that’s independent of conformation, since many different conformations will intrinsically be considered. (See Connor Coley’s <a href=https://drive.google.com/file/d/1PMZ8GHvvJv_jhy8t6fH73wv4e9ZjHwUN/view>presentation</a> from a recent MolSSI workshop for a discussion of this.) Thus, it’s common to represent molecules through their topology, where connectivity and bond order are explicitly specified. This allows for some pretty wild <a href=https://pubs.acs.org/doi/10.1021/ja00241a001>simulations</a> of species that would be reactive in a QM simulation, but also means that e.g. tautomers can be a massive problem in MD (<a href=https://link.springer.com/article/10.1007/s10822-016-9920-5>ref</a>), since protons can’t equilibrate freely.
+</p>
+
+<p>
+For property prediction, an uneasy compromise can be reached wherein one takes a SMILES string, performs a conformational search, and then Boltzmann-averages properties over all different conformers, to return a set of values which are associated only with the SMILES string and not any individual conformation. (Matt Sigman does this, as does Bobby Paton <a href=https://nova.chem.colostate.edu/cascade/predict/>for NMR prediction.</a>) This is a lot of work, though.
+</p>
+
+<h2>
+“A Gulf Of Mutual Incomprehension”
+</h2>
+
+<p>
+These differences also become apparent when comparing the software packages that different tribes use. Take, for instance, the task of predicting partial charges for a given small molecule. A QM-tribe scientist would expect these charges to be a function of the geometry, whereas an MD-tribe scientist would want the results to be explicitly geometry-independent (<a href=https://www.cell.com/biophysj/fulltext/S0006-3495(22)01326-1>e.g.</a>) so that they can be used for subsequent MD simulations.
+</p>
+
+<p>
+The assumptions implicit to these worldviews mean that it’s often quite difficult to go from QM-tribe software packages to MD-tribe software packages or vice versa. I’ve been <a href=https://github.com/openforcefield/openff-toolkit/issues/611>stymied</a> before by trying to get OpenMM and openforcefield to work on organic molecules for which I had a list of coordinates and not e.g. a SMILES string—although obviously coordinates will at some point be needed in the MD simulation, most workflows expect you to start from a topology and not an xyz file.
+</p>
+
+<p>
+Similarly, it’s <a href=https://github.com/nglviewer/nglview/issues/589#issuecomment-468339971>very difficult</a> to get the graphics package NGLView to illustrate the process of bonds breaking and forming—NGLView is typically used for MD, and expects that the system’s topology will be defined at the start of the simulation and never changed. (There are kludgy workarounds, like defining a new object for every frame, but it’s nevertheless true that NGLView is not made for QM-tribe people.)
+</p>
+
+<p>
+(I’m sure that MD-tribe people are very frustrated by QM software as well, but I don’t have as much experience going in this direction. In general, MD tooling seems quite a bit more advanced than QM-tribe tooling; most MD people I’ve talked to seem to interact with QM software as little as possible, and I can’t say I blame them.)
+</p>
+
+<h2>
+“A Curious Distorted Image of Each Other”
+</h2>
+
+<p>
+There are also cultural factors to consider here. The questions that QM-tribe scientists think about are different than those that MD-tribe scientists think about: a somewhat famous QM expert once told me that they were “stuck on an ivory tower where people hold their nose when it comes to DFT, forget anything more approximate,” whereas MD-tribe scientists often seem alarmingly unconcerned about forcefield error but are obsessed with proper sampling and simulation convergence.
+</p>
+
+<p>
+It seems that most people have only a vague sense of what their congeners in the other tribe actually work on. I don’t think most QM-tribe scientists I know have ever run or analyzed a regular molecular dynamics simulation using e.g. AMBER or OpenMM, nor do I expect that most MD-tribe scientists have tried to find a transition state in Gaussian or ORCA. In theory, coursework could remedy this, but education for QM alone already seems chaotic and ad hoc—trying to cram in MD, statistical mechanics, etc is probably ill-advised at the present.
+</p>
+
+<p>
+Social considerations also play a role. There’s limited crosstalk between the two fields, especially at the trainee level. How many QM people even know who Prayush Tiwary is, or Michael Shirts, or Jay Ponder? How many MD graduate students have heard of Frank Neese or Troy Van Voorhis? As always, generational talent manages to transcend narrow boundaries—but rank-and-file scientists would benefit immensely from increased contact with the other tribe.
+</p>
+
+<h2>
+“Unite Them”
+</h2>
+
+<p>
+I’m not an expert on the history of chemistry, but my understanding is that the two fields were not always so different: Martin Karplus, Arieh Warshel, and Bill Jorgensen, key figures in the development of modern MD, were also formidable quantum chemists. (If any famous chemists who read this blog care to share their thoughts on this history, please email me: you know who you are!)
+</p>
+
+<p>
+And as the two fields advance, I think they will come closer together once more. As QM becomes capable of tackling larger and larger systems, QM-tribe scientists will be forced to deal with more and more complicated conformational landscapes: modern enantioselective catalysts routinely have hundreds of ground-state complexes to consider (<a href=https://pubs.rsc.org/en/content/articlehtml/2022/sc/d2sc02274e>ref</a>), and QSimulate and Amgen recently reported full DFT calculations on protein–ligand complexes (<a href=https://core.ac.uk/download/pdf/345075772.pdf>ref</a>).
+</p>
+
+<p>
+Similarly, the increase in computing power means that many MD use cases (like FEP) are now limited not by insufficient sampling but by the poor energetics of the forcefields they employ. This is difficult to prove unequivocally, but I’ve heard this in interviews with industry folks, and there are certainly plenty of references complaining about poor forcefield accuracy (<a href=https://pubs.acs.org/doi/10.1021/acs.jctc.0c00801>1</a>, <a href=https://pubs.acs.org/doi/10.1021/acs.jctc.2c01081>2</a>): a Psivant <a href=https://pubs.acs.org/doi/10.1021/acs.jcim.7b00564>review</a> dryly notes that “historically solvation energy errors on the order of 2–3 kcal/mol have been considered to be accurate,” which is hardly encouraging.
+</p>
+
+<p>
+Many QM-tribe professors now work on dynamics: Dean Tantillo and Todd Martinez (who have long been voices “crying out in the wilderness” for dynamics) perhaps most prominently, but also Steven Lopez, Daniel Ess, Fernanda Duarte, Peng Liu, etc. And MD-tribe professors seem more and more interested in using ML mimics of QM to replace forcefields (<a href=https://www.biorxiv.org/content/10.1101/2020.07.29.227959v1>e.g.</a>), which will inevitably lead them down the speed–accuracy rabbit hole that is quantum chemistry. So it seems likely to me that the two fields will increasingly reunite, and that being a good 21st-century computational chemist will require competency in both areas.
+</p>
+
+<p>
+If this is true, the conclusions for individual computational chemists are obvious: learn techniques outside your specialty, before you get forcibly dragged along by the current of scientific progress! There’s plenty to learn from the other culture of people that deals with more-or-less the same scientific problems you do, and no reason to wait.
+</p>
+
+<i>
+As a denizen of quantum chemistry myself, I apologize for any misrepresentations or harmful stereotypes about practitioners of molecular dynamics, for whom I have only love and respect. I would be happy to hear any corrections over email.
+</i>
+
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230720_ml_aimd.html'>Machine Learning for Explicit Solvent Molecular Dynamics</a></h2><i>July 20, 2023</i>
 <p>
 An important problem with simulating chemical reactions is that reactions generally take place in solvent, but most simulations are run without solvent molecules. This is a big deal, since much of the inaccuracy associated with simulation actually stems from poor treatment of solvation: when gas phase experimental data is compared to computations, the results are often quite good. 
 </p>
@@ -335,91 +465,6 @@ Success in graduate school may be necessary for your life goals, but it won’t 
 <i>
 Thanks to Joe Gair for reading a draft of this piece.
 </i>
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230626_feedback.html'>Peer Review, Imperfect Feedback</a></h2><i>June 26, 2023</i>
-<p>
-I’ve been pretty critical of peer review in the past, arguing that it <a href=https://corinwagen.github.io/public/blog/20230427_journals.html>doesn’t accomplish much</a>, <a href=https://corinwagen.github.io/public/blog/20230320_domain_arbitrage.html>contributes to status quo bias</a>, etc. But a few recent experiences remind me of the value that peer review provides: <u>in today’s scientific culture, peer review is essentially the only time that scientists get honest and unbiased feedback on their work.</u> 
-</p>
-
-<p>
-How can this be true? In experimental science, scientists typically work alongside other students and postdocs under the supervision of a professor. This body of people forms a lab, also known as a research group, and it’s to these people that you present most frequently. Your lab generally knows the techniques and methods that you employ very well: so if you’ve misinterpreted a piece of data or designed an experiment poorly, group meeting is a great place to get feedback. 
-</p>
-
-<p>
-But a lab is also biased in certain ways. People are attracted to a lab because they think the science is exciting and shows promise, and so they’re likely to be credulous about positive results. Certain labs also develop beliefs or dogmas about how to conduct science: the best ways to perform a mechanistic study, or the most useful reaction conditions. To some extent, every lab is a paradigm unto itself. This means that paradigm-shifting criticism is hard to find among one’s coworkers, even if it’s common in the outside world.
-<p>
-
-<p>
-Here are some examples of controversial-in-the-field statements that are unlikely to be controversial within given labs:
-</p>
-<ul>
-<li>
-Palladium-based catalysis is going to become obsolete due to the scarcity of Pd and must be replaced. <a href=https://www.dal.ca/sites/stradiotto/research.html>Some labs</a> build their research program around this; others think Pd will always be relevant.
-</li>
-<li>
-Water is the greenest possible solvent. Some scientists believe this <a href=https://lipshutz.chem.ucsb.edu/research>wholeheartedly</a>, while others think it’s stupid (for instance, a 2021 <a href=https://link.springer.com/article/10.1007/s10098-021-02188-8>review</a> states that “to meet regulations concerning the discharge of waste water into rivers and other natural waters… [water] often requires very extensive treatment prior to discharge, making the use of water as a reaction medium much less attractive.”)
-</li>
-<li>
-More broadly, the belief that machine learning and generative AI are the future of chemical discovery: while many computational chemists believe this, plenty of experimentalists (even young ones) are pretty skeptical.
-</li>
-</ul>
-
-<p>
-In each of these cases, it’s unlikely that criticism along these lines is available internally: people who’ve chosen to do their PhDs studying ML in chemistry aren’t likely to criticize your paper for overemphasizing the importance of ML in chemistry!
-</p>
-
-<p>
-More generally, internal criticism works best when a lab serves as a shared repository of expertise, i.e. when everyone in the lab has roughly the same skillset. Some labs focus instead on a single overarching goal and employ many different tools to get to that point: a given chemical biology group might have a synthetic chemist, a MS specialist, a genomics guru, a mechanistic enzymologist, and someone specializing in cell culture. If this is the case, your techniques are opaque to your coworkers: what advice can someone who does cell culture give about improving Q-TOF signal-to-noise?
-</p>
-
-<p>
-Ideally, one’s professor is well-versed enough in each of the techniques employed that he or she can dispense criticism as needed. But professors are often busy, aren’t always operational experts at each of the techniques they oversee, and suffer from the same viewpoint biases that their students do (perhaps even more so).
-</p>
-
-<p>
-So, it’s important to solicit feedback from external sources. Unfortunately, at least in my experience most external feedback is too positive: “great talk,” “nice job,” etc. Our scientific culture tries so hard to be supportive that I almost never get any meaningful criticism from people outside my group, either publicly or privately. (Ideally one’s committee would help, but I never really got to present research results to my committee, and this doesn’t help postdocs anyhow.) 
-</p>
-
-<p>
-Peer review, then, serves as the last bastion against low-quality science: reviewers are outside the lab, have no incentive to be nice, and are tasked specifically with poking holes in your argument or pointing out extra experiments that would improve it. Peer review has improved each one of my papers, and I’m grateful for it.<sup><a href="fn1">1</a></sup>
-</p>
-
-<p>
-What’s a little sad is that the excellent feedback that reviewers give only comes at the bitter end of a project, which for me has often meant that the results are more than a year old and my collaborators have moved on. Much more useful would be critical feedback delivered early on in a project, when my own thinking is more flexible and the barrier to running additional experiments is lower. And more useful still would be high-quality criticism available at every step of the project, given not anonymously but by people whom you can talk to and learn from.
-</p>
-
-<p>
-What might this practically look like? 
-</p>
-<ul>
-<li>
-A culture of “red teaming,” where students are incentivized to find flaws in others’ projects in somewhat adversarial ways. This would need to be done within a supportive and collegial atmosphere, lest it degenerate into bullying: red teaming need not be red in tooth and claw.
-</li>
-<li>
-Similarly, PIs could invite other professors to come to group meetings and (constructively) criticize the projects, particularly professors from adjacent subfields who might have different perspectives.
-</li>
-<li>
-Poster presentations or talks (at conferences), although often used to present finished projects, can also be used to present unfinished work. I presented some unfinished work at <a href=http://jiwu.chem.uh.edu/tpoc.html>TPOC</a> a few years ago, and got really helpful suggestions from Ken Houk and Dean Tantillo that fundamentally changed how we approached the rest of the project. Maybe this is something that we should encourage more, although finished projects will probably always look more impressive than unfinished projects.
-</li>
-<li>
-Decentralized peer review solutions like <a href=https://www.theseedsofscience.org/><i>Seeds of Science</i></a> or <a href=https://pubpeer.com/><i>PubPeer</i></a> might also help here, but my sense is that it’s unlikely that qualified experts will just spend their time investigating something that they found online; they need to be solicited somehow.
-</li>
-</ul>
-
-<p>
-I don’t know what the right solution looks like here: the burden of peer review is already substantial, and I don’t mean to suggest that this work ought to be arbitrarily multiplied for free. But I do worry that eliminating peer review, absent other changes, would simply mean that one of the only meaningful chances to get unfiltered feedback on one’s science would be eliminated, and that this would be bad.
-<p>
-
-<i>
-Thanks to Croix Laconsay and Lucas Karas for helpful feedback on this piece.
-</i>
-
-<h3>Footnotes</h3>
-<ol class=footnotes>
-  <li id="fn1">
-  It's also true that the threat of peer review increases paper quality. I agree with <a href=https://twitter.com/dasingleton/status/1528877848093954048?s=20>Singleton</a> that this is important today, but am less convinced that this is necessary from an institutional design perspective: if peer review didn't exist, I think some other system of norms or regulations would spring forth to protect good-quality science. See the "Anarchic Preprint Lake" discussion in <a href=https://corinwagen.github.io/public/blog/20230427_journals.html>my piece on journals</a>. (h/t Croix Laconsay for raising this point)
-  </li>
-</ol>
-
 </div><div class='previous-link'><a href='blog_p1.html'>previous page</a></div><div class='next-link'><a href='blog_p3.html'>next page</a></div><br>
   </body>
   <br>
