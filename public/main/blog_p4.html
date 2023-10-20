@@ -34,7 +34,52 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p3.html'>previous page</a></div><div class='next-link'><a href='blog_p5.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230602_data_cheaper.html'>Data Are Getting Cheaper</a></h2><i>June 2, 2023</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p3.html'>previous page</a></div><div class='next-link'><a href='blog_p5.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230607_degrees.html'>Seven Degrees of Screening for Generality</a></h2><i>June 7, 2023</i>
+<p>
+<i>
+(with apologies to <a href=https://www.chabad.org/library/article_cdo/aid/45907/jewish/Eight-Levels-of-Charity.htm>Maimonides</a> and <a href=https://rintintin.colorado.edu/~vancecd/phil215/Nozick.pdf>Nozick</a>)
+</i>
+</p>
+
+<ol type="I">
+<li>
+Screening on only one substrate before assessing the substrate scope. This is the “ordinary means” in methods development. 
+</li>
+
+<li>
+Screening on one substrate, but choosing a substrate that worked poorly in a previous study (<a href=https://onlinelibrary.wiley.com/doi/10.1002/anie.201705525>e.g.</a>). This can be thought of as serial multi-substrate screening, where each substrate is a separate project, but the body of work achieves greater generality over time.
+</li>
+
+<li>
+Screening on one substrate at a time, but rescreening catalysts when you find problematic substrates (<a href=https://www.nature.com/articles/s41557-022-00895-3>e.g.</a>). This amounts to serial multi-substrate screening within a single project.
+</li>
+
+<li>
+Intentionally choosing a variety of catalysts up front and screening this set of catalysts for each new substrate class (<a href=https://pubs.acs.org/doi/10.1021/jacs.3c03182>e.g.</a>), thus achieving a high degree of generality with a family of catalysts, but without attempting to systematically quantify the generality of each catalyst in this set.
+</li>
+
+<li>
+Choosing a handful of model substrates instead of just one, but otherwise doing everything the same as one would normally (<a href=https://pubs.acs.org/doi/full/10.1021/jacs.0c06139>e.g.</a>, pages S24–S29).
+</li>
+
+<li>
+Intentionally choosing a large, diverse panel of substrates and screening against this panel to quantify catalyst generality over a given region of chemical space. This is essentially what <a href=https://www.nature.com/articles/s41586-022-05263-2>we</a> and <a href=https://www.science.org/doi/10.1126/science.adf6177>the Miller group</a> did recently (and others, etc). 
+</li>
+
+<li>
+The same, but incorporating robotics, fancy analytical methods, generative AI, or whatever else.
+</li>
+</ol>
+
+<p>
+When I present the “screening for generality” work, I often get the response “this is cool, but my reaction doesn’t work in 96-well plates/I don’t have an SFC-MS/my substrates are hard to make.” The point of this taxonomy is to illustrate that there are a lot of ways to move towards “screening for generality” that don’t involve 96-well plates. 
+</p>
+
+<p>
+If you have the time and resources for robotics or SFC-MS, that’s great—you’ll be able to screen more quickly and cover more ground. But you can still start to consider more than a single model substrate even without any specialized equipment. It’s a mindset, not a recipe.
+</p>
+
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230602_data_cheaper.html'>Data Are Getting Cheaper</a></h2><i>June 2, 2023</i>
 <p>
 Much ink has been spilled on whether scientific progress is slowing down or not (<a href=https://www.theatlantic.com/science/archive/2018/11/diminishing-returns-science/575665/>e.g.</a>). I don’t want to wade into that debate today—instead, I want to argue that, regardless of the rate of new discoveries, acquiring scientific data is easier now than it ever has been.
 </p>
@@ -677,60 +722,6 @@ A transcript of Hamming’s talk “You and Your Research” (a shorter expositi
 <br>
 <br>
 <i>Thanks to Michael Tartre for giving me this book originally, and to Jacob Thackston and Ari Wagen for extensive edits.</i>
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230512_irms.html'>What Happened to IRMS?</a></h2><i>May 12, 2023</i>
-<p>
-A few days ago, <a href=https://corinwagen.github.io/public/blog/20230508_aldehyde_eie.html>I wrote</a> about kinetic isotope effects (KIEs), probably my favorite way to study the mechanism of organic reactions. To summarize at a high level: if the bonding around a given atom changes over the course of a reaction, then different isotopes of that atom will react at different rates. The exact magnitude of the effect depends on the vibrational modes involved, but is often quite different for different mechanisms, meaning that you can computationally predict isotope effects for a lot of mechanisms and then use KIE measurements to figure out which one is actually happening.
-</p>
-
-<p>
-The trouble is that the magnitude of the effect depends on the difference in the mass of the two isotopologues. <sup>1</sup>H/<sup>2</sup>H isotope effects are quite large: H reacts up to 7x faster than D (more for mechanisms that involve quantum tunneling), meaning that it’s not too hard to measure the value accurately. But as the atom gets heavier, the effects get smaller. For the next most common pair of isotopomers,<sup>12</sup>C/<sup>13</sup>C, the effect is usually 5% or less.
-</p>
-
-<p>
-Small KIEs are usually measured by one-pot competition experiments: a mixture of the two isomers is reacted to partial conversion, and then the isotopic composition of either the starting material or the product is determined. The product will be enriched in the isotope that reacts more quickly, and the starting material will be enriched in the isotope that reacts more slowly. If you know the starting ratio of isotopes, the conversion, and the ratio of isotopes at partial conversion, then you can use the Bigeleisen−Mayer equation to figure out the KIE.
-(<a href=https://pubs.acs.org/doi/pdf/10.1021/jacs.1c07351>This</a> is a really good review on isotope effects in general, if you want more than this cursory summary.)
-</p>
-
-<p>
-The accuracy of the KIE measurement is thus limited by (1) how accurately you can determine conversion and (2) how accurately you can measure the isotopic composition of a sample. Although conversion can be annoying, the second is the more serious limitation—<i>a priori</i> it’s not obvious how to figure out what the relative abundance of various isotopes is.
-</p>
-
-<p>
-Today, most people use approaches based on NMR spectroscopy: since <sup>1</sup>H and <sup>13</sup>C are both NMR-active nuclei, you can just integrate the peak of interest against another peak to figure out how much there is. (Quantitative <sup>13</sup>C NMR is super slow, so <a href=https://pubs.acs.org/doi/10.1021/jacs.6b10621>various</a> <a href=https://www.nature.com/articles/s41557-018-0079-7>tricks</a> can be employed to speed things up.)
-</p>
-
-<p>
-But there was an age before the advent of accurate NMR spectroscopy where people measured isotope effects differently. I was awestruck by <a href=https://pubs.acs.org/doi/pdf/10.1021/ja00834a064>this 1975 paper</a> from Cromartie and Swain reporting the measurement of a <sup>35</sup>Cl/<sup>37</sup>Cl isotope effect in the cyclization of 4-chlorobutanol: they report an isotope effect of 1.000757 ± 0.00015 using hydroxide as base, which they differentiate from an isotope effect of 1.000796 ± 0.00013 using water as base by Student’s <i>t</i> test. These numbers are way, way smaller and more precise than any isotope effect I’ve seen measured in the last few decades.
-</p>
-
-<p>
-Digging a little deeper reveals a <a href=https://pubs.acs.org/doi/pdf/10.1021/ja00418a038>whole</a> <a href=https://pubs.acs.org/doi/pdf/10.1021/ja00426a047>wealth</a> of papers using <sup>35</sup>Cl/<sup>37</sup>Cl isotope effects to study various mechanistic phenomena. The instrument Swain and others use (described <a href=https://pubs.acs.org/doi/pdf/10.1021/jo00972a016>here</a>) is an isotope-ratio mass spectrometer, which as the name implies is a special sort of mass spectrometer designed specifically to measure isotopic composition. These instruments, although a little obscure from my point of view, are <a href=https://www.thermofisher.com/us/en/home/industrial/mass-spectrometry/isotope-ratio-mass-spectrometry-irms.html>commercial</a>!
-</p>
-
-<p>
-So, why isn’t IRMS used more frequently in organic chemistry today? I think it’s for a few reasons. IRMS, at least historically, only works on gases, meaning that you have to either use gaseous reactants or convert your analytes to gases, both of which are pretty annoying. In the Swain work, they (i) incinerate their samples with nitric acid, (ii) precipitate out silver chloride by adding silver nitrate, and then (iii) convert silver chloride to gaseous methyl chloride by <a href=https://pubs.acs.org/doi/abs/10.1021/ja00873a025>heating with methyl iodide</a> in a sealed tube. This is certainly a lot of hassle to put up with for a single measurement—and you generally want to get a good number of replicates.
-</p>
-
-<p>
-(There are some <a href=https://www.thermofisher.com/order/catalog/product/11206175>all-in-one solutions</a> available for sale, which automatically combust samples à la elemental analysis, but they don’t seem to work on non-standard isotopes like chlorine.)
-</p>
-
-<p>
-Another reason why IRMS might have fallen out of favor is that it requires a dedicated instrument, whereas NMR-based methods can be done using the NMR spectrometers that any university already has. Most labs only have budgets for a handful of instruments—is an IRMS really worth the investment? (Owing to the typical aura of secrecy around instrument prices, I’m not sure how much one costs, but I’m guessing it’s a few hundred thousand dollars or so.)
-</p>
-
-<p>
-These downsides notwithstanding, I think there is a lot of good science that could be done if a mechanistic group decided to make IRMS a core part of their program. In particular, <sup>35</sup>Cl/<sup>37</sup>Cl KIEs seem really powerful: there are a growing number of organometallic reactions which involve chlorine atoms in the key step(s), and for which Cl KIEs might be complementary or superior to more conventional KIEs. I’m envisioning studying <a href=https://www.science.org/doi/10.1126/science.aad6981>transmetallation from Pd(II) chlorides</a>, or <a href=https://pubs.acs.org/doi/10.1021/jacs.1c13333>chlorine radical-mediated C–H activation</a>, or <a href=https://pubs.acs.org/doi/10.1021/jacs.2c01356>photolysis of Ni(II) chlorides</a>.
-</p>
-
-<p>
-(And why stop at Cl? According to ThermoFisher, thermal ionization mass spectrometry lets you analyze the isotopic composition of metals with really high accuracy [five decimal places, per their <a href=https://assets.thermofisher.com/TFS-Assets/CMD/brochures/br-30537-triton-xt-tims-br30537-en.pdf>brochure</a>]. Would a <sup>58</sup>Ni/<sup>60</sup>Ni isotope effect be possible to measure? This might provide a handle on some mechanistically ambiguous Ni(III) scenarios, like those reported <a href=https://pubs.acs.org/doi/10.1021/jacs.5b13211>here</a>: is radical trapping or reductive elimination rate- and enantioselectivity-determining?)
-</p>
-
-<p>
-It doesn’t seem like it’s that easy to start a purely mechanistic research group these days, so maybe this is an unfundable idea. But it seems sad that a technique as powerful for physical (in)organic chemists as IRMS could just fade into obscurity, and I hope somebody finds the time and resources to apply it to modern mechanistic problems.
-</p>
-
 </div><div class='previous-link'><a href='blog_p3.html'>previous page</a></div><div class='next-link'><a href='blog_p5.html'>next page</a></div><br>
   </body>
   <br>

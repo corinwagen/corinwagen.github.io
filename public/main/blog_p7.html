@@ -34,7 +34,73 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p6.html'>previous page</a></div><div class='next-link'><a href='blog_p8.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230309_optimizing_python.html'>Optimizing Python</a></h2><i>March 9, 2023</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p6.html'>previous page</a></div><div class='next-link'><a href='blog_p8.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230314_nmr_microreview.html'>Computational NMR Prediction: A Microreview</a></h2><i>March 14, 2023</i>
+<p>
+Recently, I’ve been working to assign the relative configuration of some tricky diastereomers, which has led me to do a bit of a deep dive into the world of computational NMR prediction. Having spent the last week or so researching the current state-of-the-art in simulating experimental <sup>1</sup>H NMR spectra, I’m excited to share some of my findings.
+</p>
+
+<p>
+My main resource in this quest has been <a href=https://www.mdpi.com/1420-3049/28/6/2449>a new NMR benchmarking paper</a>, published on March 7th by authors from Merck (and a few other places). Why this paper in particular? Although there have been many NMR benchmarks, not all of these papers are as useful as they seem. Broadly speaking, there are two ways to benchmark NMR shifts: (1) against high-level computed results or (2) against experimental NMR shifts.
+</p>
+
+<p>
+The first strategy seems to be popular with theoretical chemists: NMR shifts at a very high level of theory are presumably very accurate, and so if we can just reproduce those values with a cheap method, we will have solved the NMR prediction problem. Of course, effects due to solvation and vibrational motion will be ignored, but these effects can always be corrected for later. In contrast, the second strategy is more useful for experimental chemists: if the calculation is going to be compared to experimental NMR spectra in CDCl<sub>3</sub> solution, the match with experiment is much more important than the gas-phase accuracy of the functional employed.
+</p>
+
+<p>
+Not only are these two approaches different in theory, they yield vastly different results in practice, as is nicely illustrated by the case of the double-hybrid functional DSD-PBEP86. DSD-PBEP86 was <a href=https://pubs.acs.org/doi/full/10.1021/acs.jctc.8b00624>first reported in 2018</a> by Frank Neese and coworkers, who found it to be much superior to regular DFT methods or MP2-type wavefunction methods at reproducing CCSD(T) reference data.<sup><a href=#fn1>1</a></sup> <a href=https://pubs.acs.org/doi/full/10.1021/acs.jctc.1c00919>A subsequent benchmark</a> by Kaupp and coworkers looked at a much larger set of compounds and confirmed that DSD-PBEP86 was indeed superior at reproducing CCSD(T) data, with a mean absolute error (MAE) for <sup>1</sup>H of 0.06 ppm. In contrast, <a href=https://pubs.acs.org/doi/full/10.1021/acs.jctc.1c00604>de Oliveira and coworkers</a> found that DSD-PBEP86 and related double-hybrid methods were much worse at predicting experimental <sup>1</sup>H NMR shifts, with a MAE of 0.20 ppm, making them no better than conventional DFT approaches.
+</p>
+
+</p>
+The difference between these two mindsets is nicely demonstrated by Kaupp’s paper, which dismisses de Oliveira’s work as suffering from “methodological inadequacies” and states:
+</p>
+
+<blockquote>
+[Benchmarking] can be done by comparing approximative calculations to experimental data or to data computed using high-level ab initio methodologies. The latter helps to eliminate a number of factors that often complicate the direct comparison against experiment, such as environmental, ro-vibrational, or thermal contributions (possibly also relativistic effects, see below).
+</blockquote>
+
+<p>
+While Kaupp is correct that using gas-phase CCSD(T) data does eliminate “environmental” effects (e.g. from solvent), it’s not clear that these effects always ought to be eliminated! Although directly optimizing a computational method to reproduce a bunch of ill-defined environmental effects is perhaps inelegant, it’s certainly pragmatic.
+</p>
+
+<p>
+The authors of the 2023 benchmark create a new set of well-behaved reference compounds that avoid troublesome heavy-atom effects (poorly handled by most conventional calculations) or low-lying conformational equilibria, and re-acquire experimental spectra (in chloroform) for every compound in the set. They then score a wide variety of computational methods against this dataset: functionals, basis sets, implicit solvent methods, and more.
+</p>
+
+<p>
+In the end, <a href=https://pubs.acs.org/doi/10.1021/ct6001016>Cramer’s WP04 functional</a> is found to be best, which is perhaps unsurprising given that it was specifically optimized for the prediction of <sup>1</sup>H shifts in chloroform.<sup><a href="#fn2">2</a></sup> The WP04/6-311++G(2d,p)/PCM(chloroform) level of theory is optima, giving an MAE of 0.08 ppm against experiment, but WP04/jul-CC-PVDZ/PCM(chloroform) is cheaper and not much worse. B3LYP-D3/6-31G(d) works fine for geometry optimization, as do wB97X-D/6-31G(d) and M06-2X/6-31G(d).
+</p>
+
+<p>
+Based on these results, my final workflow for predicting experimental proton spectra is:
+</p>
+
+<ol>
+<li><a href=https://corinwagen.github.io/public/blog/20221219_low_code_csearch.html>Run a conformational search using <i>crest</i></a>.</li>
+<li>Optimize each conformer using B3LYP-D3BJ/6-31G(d).</li>
+<li>Remove duplicate conformers with <span class=code>cctk.ConformationalEnsemble.eliminate_redundant()</span>.</li>
+<li>Predict NMR shifts for each conformer using WP04/6-311++G(2d,p)/PCM(chloroform).</li>
+<li>Combine conformer predictions through <a href=https://corinwagen.github.io/public/blog/20221228_boltzmann_error.html>Boltzmann weighting</a>, and apply a linear correction.</li>
+</ol>
+
+<p>
+For small molecules, this workflow runs extremely quickly (just a few hours from start to finish), and has produced good-quality results that solved the problem I was trying to solve.
+</p>
+
+<p>
+Nevertheless, the theoreticians have a point—although WP04 can account for a lot of environmental effects (essentially by overfitting to experimental data), there are plenty of systems for which this pragmatic approach cannot succeed. For instance, the DELTA50 dataset intentionally excludes molecules which might exhibit concentration-dependent aggregation behavior, which includes basically anything capable of hydrogen bonding or π–π stacking! If we hope to get beyond a certain level of accuracy, it seems likely that physically correct models of NMR shieldings, solvent effects, and aggregation will be necessary.
+</p>
+
+<h3>Footnotes</h3>
+<ol class=footnotes>
+  <li id="fn1">
+  CCSD(T) NMR shifts have to be computed in <a href=https://cfour.uni-mainz.de/cfour/>CFOUR</a>.
+  </li>
+  <li id="fn2">
+  The WP04 functional is not technically in Gaussian, but can be employed with the following route card: <span class=code>#p nmr=giao BLYP IOp(3/ 76=1000001189,3/77=0961409999,3/78=0000109999) 6-311++G(2d,p) scrf=(pcm,solvent=chloroform)</span>.
+  </li>
+</ol>
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230309_optimizing_python.html'>Optimizing Python</a></h2><i>March 9, 2023</i>
 <p>
 Python is an easy language to write, but it’s also <a href=https://benchmarksgame-team.pages.debian.net/benchmarksgame/index.html>very</a> <a href=https://programming-language-benchmarks.vercel.app/problem/nbody>slow</a>. Since it’s a dynamically typed and interpreted language, every Python operation is much slower than the corresponding operation would be in C or FORTRAN—every line of Python must be interpreted, type checked, and so forth (see this <a href=https://www.codingdojo.com/blog/interpreters-run-python-code>little overview</a> of what the Python interpreter does).
 </p>
@@ -497,114 +563,6 @@ I think Brooks’s summary is simple and elegant. If we judge the value of our w
 Thanks to Michael Nielsen, Joe Gair, Ari Wagen, and Michael Tartre for editing drafts of this post. Michael Tartre sent me the Richard Hamming quote, and Phil Brooks sent me his grandfather’s article.
 </i>
 
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230203_poy.html'>2022 Paper(s) of the Year</a></h2><i>February 3, 2023</i>
-<p>
-Every year, our group participates in a “Paper of the Year” competition, where we each nominate five papers and then duke it out in a multi-hour debate. Looking through hundreds of papers in a few weeks is a great exercise: it helps highlight both creativity and its absence, and points towards where the field’s focus might turn next.
-</p>
-
-<p>
-My picks are very personal—how could they not be?—and also biased towards towards experimental chemistry, owing to what our group focuses on. So, don’t take this as any attempt towards creating an objective list.
-</p>
-
-<p>
-All the papers I really liked are listed below, with my top five listed in bold:
-</p>
-
-<ul>
-<li><a href=https://www.science.org/doi/pdf/10.1126/science.abo0039>A lovely electrochemical cross-electrophile coupling</a> (Sevov). Great scope and forms challenging bonds.</li>
-
-<li><a href=https://www.science.org/doi/pdf/10.1126/science.abo4282>Carbon deletion through photochemistry, converting quinolines to indoles</a> (Levin). 
-My favorite of the skeletal editing papers, with apologies to the others (<a href=https://pubs.acs.org/doi/pdf/10.1021/jacs.2c09616>1</a>,
-<a href=https://pubs.acs.org/doi/pdf/10.1021/jacs.2c10746>2</a>, 
-<a href=https://www.science.org/doi/10.1126/science.add1383>3</a>,
-<a href=https://pubs.acs.org/doi/pdf/10.1021/jacs.2c10570>4</a>,
-<a href=https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/anie.202202703>5</a>, 
-<a href=https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/anie.202208014>6</a>,
-<a href=https://pubs.acs.org/doi/10.1021/jacs.2c08464>7</a>). <b>Pick 1/5.</b></li>
-
-<li><a href=https://www.science.org/doi/pdf/10.1126/science.abn1885>High-throughput additive screening reveals a new role for phthalimide in Ni-catalyzed cross-couplings</a> (MacMillan, Dreher).</li>
-
-<li><a href=https://www.science.org/doi/10.1126/science.abo6443>Turning aldehydes into metal carbenoids</a> (Nagib); self-recommending.</li>
-
-<li><a href=https://www.science.org/doi/10.1126/science.add6852>Epimerization at tertiary carbons for “stereochemical editing”</a> (Wendlandt).</li>
-
-<li><a href=https://www.science.org/doi/10.1126/science.ade5320>Setting stereocenters with vinyl carbocations, somehow</a> (Nelson, Houk).</li>
-
-<li><a href=https://www.nature.com/articles/s41586-022-04491-w.pdf>Expanding automated synthesis to Csp<sub>3</sub> centers with “TIDA boronates”</a> (Burke). 
-An approach with a real chance of revolutionizing how we approach organic synthesis. <b>Pick 2/5.</b></li>
-
-<li><a href=https://www.nature.com/articles/s41586-022-04524-4.pdf>Some beautiful asymmetric catalysis to form S-chiral sulfinate esters</a> (Tan).</li>
-
-<li><a href=https://www.nature.com/articles/s41586-022-05211-0.pdf>Two</a>
-<a href=https://pubs.acs.org/doi/pdf/10.1021/jacs.2c05648>papers</a> disclosing the use of photoexcited nitroarenes to perform “ozonolysis without ozone” (Parasram, Leonori).
-
-<li><a href=https://www.nature.com/articles/s41557-022-00895-3.pdf>Enantioselective conversion of carboxylic acids into amino acids</a> (Meggers, Chen).</li>
-
-<li><a href=https://pubs.acs.org/doi/pdf/10.1021/jacs.2c00527>Catalytic olefin hydroalkoxylation, through a tri-catalytic system</a> (Ohmiya). Reminds me a little of <a href=https://pubs.acs.org/doi/full/10.1021/jacs.0c04735>Kanai’s tri-catalytic aldehyde allylation</a>; in both cases, it’s hard to believe so many catalysts play nicely together.</li>
-
-<li><a href=https://pubs.acs.org/doi/10.1021/jacs.2c04807>Deoxygenative trifluoromethylation</a> (MacMillan), a reaction which speaks for itself.</li>
-
-<li><a href=https://pubs.acs.org/doi/pdf/10.1021/jacs.2c08778>Functional group-tolerant Kochi–Salamon [2+2] cycloaddition in water, catalyzed by copper sulfate</a> (Burns). Bizarre, unbelievable, outstanding. <b>Pick 3/5.</b> (With apologies to the other 2+2 cycloaddition papers:
-<a href=https://www.nature.com/articles/s41586-022-05335-3.pdf>1</a>,
-<a href=https://www.nature.com/articles/s41586-022-05342-4.pdf>2</a>,
-<a href=https://www.nature.com/articles/s41586-022-04636-x.pdf>3</a>,
-<a href=https://pubs.acs.org/doi/pdf/10.1021/acs.orglett.2c03606>4</a>,
-<a href=https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/anie.202200725>5</a>,
-<a href=https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/anie.202208800>6</a>,
-<a href=https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/anie.202211596>7</a>.)</li>
-
-<li><a href=https://pubs.acs.org/doi/pdf/10.1021/jacs.2c08332>Pd-catalyzed C–H hydroxylation</a> (Yu). Addresses a lot of my misgivings about C–H activation: directed by carboxylic acids, silver-free, scalable, and uses aqueous H<sub>2</sub>O<sub>2</sub> (perhaps the best oxidant possible, after air).</li>
-
-<li><a href=https://pubs.acs.org/doi/pdf/10.1021/jacs.2c09745>Red-light-mediated C–N coupling, through Os photocatalysis</a> (Rovis). Suppresses a lot of the annoying mass balance issues that plague conventional photoredox.</li>
-
-<li><a href=https://pubs.acs.org/doi/10.1021/jacs.1c13151>A nice mechanistic study of an enantioselective C–N coupling reaction</a> (Peters, Fu).</li>
-
-<li><a href=https://pubs.acs.org/doi/pdf/10.1021/jacs.2c01487>Mechanistic study and an improved phosphetane catalyst for C–N coupling</a> (Radosevich).</li>
-
-<li><a href=https://pubs.acs.org/doi/pdf/10.1021/jacs.2c01375>Studying the factors that lead to hydroxyl versus chlorine radical transfer in non-heme Fe complexes</a> (Goldberg, de Visser).</li>
-
-<li><a href=https://pubs.acs.org/doi/pdf/10.1021/jacs.2c02283>Studying the mechanism of enantioselective enzymatic C–H amination</a> (Yang Yang, Peng Liu). Surprisingly, radical rebound is enantiodetermining! I remember being puzzled by the mechanism of this reaction when it was first published; this is a very satisfying resolution. Cool isotope studies &amp; <i>ab initio</i> molecular dynamics seal the deal. <b>Pick 4/5.</b></li>
-
-<li><a href=https://pubs.acs.org/doi/pdf/10.1021/jacs.2c01356>The latest on photochemistry of Ni oxidative-addition complexes</a> (Hadt). Beautiful physical inorganic chemistry; a lot of the details are beyond me, but clearly important work.</li>
-
-<li><a href=https://pubs.acs.org/doi/10.1021/jacs.2c07099>Mechanistic study of PCET-mediated olefin hydroamination</a> (Knowles).</li>
-
-<li><a href=https://pubs.acs.org/doi/10.1021/jacs.2c07643>A really beautiful metal-free hydroamination</a> (Wang/Wang).</li>
-
-<li><a href=https://pubs.acs.org/doi/10.1021/jacs.2c09786>The latest on cobaltacene-based PCET mediators</a> (Peters). Big fan of this program.</li>
-
-<li><a href=https://pubs.acs.org/doi/pdf/10.1021/jacs.2c00675>Using aryl nitriles as sensors for electric field strength</a> (Boxer). 
-Also a really cool program: I liked <a href=https://chemrxiv.org/engage/chemrxiv/article-details/626b29f9ed4d8830581c6ed6>this preprint</a> too.
-</li>
-
-<li><a href=https://pubs.acs.org/doi/10.1021/jacs.2c00154>Studying cation–acetonitrile dynamics with 2D IR and isotope labelling</a> (Tokmakoff). I've <a href=https://corinwagen.github.io/public/blog/20220708_apotheosis_of_2d_ir.html>written about this</a> before</li>
-
-<li><a href=https://pubs.acs.org/doi/10.1021/acscatal.1c05802>A very nice <sup>13</sup>C KIE study of the Suzuki reaction, emphasizing the importance of monoligated Pd even when using PPh<sub>3</sub></a> (Vetticatt, Hirschi). And another <a href=https://pubs.acs.org/doi/pdf/10.1021/jacs.2c02941>cool <sup>13</sup>C KIE study</a> for Hirschi.</li>
-
-<li><a href=https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/anie.202114044>The first enantioselective beta-alkoxy elimination I’ve seen!</a> (Streuff)</li>
-
-<li><a href=https://pubs.acs.org/doi/pdf/10.1021/acs.orglett.2c03201>An interesting way to functionalize ketones, via phosphorus-mediated umpolung</a> (Ball).</li>
-
-<li><a href=https://pubs.acs.org/doi/pdf/10.1021/acs.organomet.2c00504>Investigating a concentration-dependent KIE for protonolysis of (cod)PtMe<sub>2</sub></a> (Bowring).</li>
-
-<li><a href=https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/anie.202213056>Biocatalytic N-heterocycle methylation, with unbelievable regioselectivity</a> (Hammer). Hammer also published a <a href=https://onlinelibrary.wiley.com/doi/10.1002/anie.202215093>really exciting styrene hydration paper</a>, albeit technically in 2023.</li>
-
-<li><a href=https://pubs.acs.org/doi/10.1021/acscatal.2c04316>Bifunctional redox-active esters add to styrenes to make a variety of heterocycles.</a> (Knowles/Doyle).</li>
-
-<li><a href=https://pubs.rsc.org/en/content/articlehtml/2022/sc/d2sc02274e>A nice illustration of the importance of conformer sampling workflows</a> (Neese, Bistoni). See also work from 
-<a href=https://pubs.rsc.org/en/content/articlepdf/2022/sc/d2sc01714h>Laplaza/Corminboef</a>, 
-<a href=https://pubs.acs.org/doi/pdf/10.1021/jacs.2c01381>Peter Chen</a>, and <a href=https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/anie.202113905>Grimme</a>.</li>
-
-<li><a href=https://arxiv.org/pdf/2204.05249.pdf>The latest equivariant neural network potential</a>, faster than <a href=https://www.nature.com/articles/s41467-022-29939-5>their previous work</a> (Kozinsky).</li>
-
-<li><a href=https://arxiv.org/pdf/2010.01196.pdf>Espaloma, a differential neural network forcefield from the OpenForcefield folks.</a></li>
-
-<li><a href=https://chemrxiv.org/engage/chemrxiv/article-details/62b1b0c97da6ce535c19d40c>Studying cycloaddition dynamics with neural network potentials</a> (Young, Duarte).</li>
-
-<li><a href=https://pubs.acs.org/doi/pdf/10.1021/acs.jpca.2c08301>Studying dynamic control of kinetic product ratios in cyclopropylidine opening using ML-learned potentials</a> (Carpenter).</li>
-
-<li><a href=https://aip.scitation.org/doi/full/10.1063/5.0133026>wB97X-3c, the latest “composite method”</a> (Grimme). If the reported speed and accuracy are true “in the wild,” every computational chemist ought to use this method. <b>Pick 5/5.</b></li>
-</ul>
 </div><div class='previous-link'><a href='blog_p6.html'>previous page</a></div><div class='next-link'><a href='blog_p8.html'>next page</a></div><br>
   </body>
   <br>
