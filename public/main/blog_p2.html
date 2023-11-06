@@ -34,7 +34,110 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p1.html'>previous page</a></div><div class='next-link'><a href='blog_p3.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230820_ts_polarizable.html'>Transition States Are Polarizable</a></h2><i>August 20, 2023</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p1.html'>previous page</a></div><div class='next-link'><a href='blog_p3.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230904_eda.html'>EDA Scares Me</a></h2><i>September 4, 2023</i>
+<p><i>
+ICYMI: Ari and I announced our new company, <a href=https://www.rowansci.com/>Rowan</a>! We wrote an article about what we're hoping to build, which you can read <a href=https://rowansci.substack.com/p/why-were-building-rowan>here</a>. Also, this blog is now listed on <a href=https://rogue-scholar.org/>The Rogue Scholar</a>, meaning that posts have DOIs and can be easily cited.
+</i></p>
+
+<p>
+Conventional quantum chemical computations operate on a collection of atoms and create a single wavefunction for the entire system, with an associated energy and possibly other properties. This is great, but sometimes we want to understand things in more detail. For instance, if we have a host <b>A</b> and two guests <b>B</b><sub>good</sub> and <b>B</b><sub>bad</sub>, a normal calculation would just tell us that E(<b>A</b>•<b>B</b><sub>good</sub>) is lower than E(<b>A</b>•<b>B</b><sub>bad</sub>), without giving any clue as to why.
+</p>
+
+<p>
+Enter EDA. EDA, or “energy decomposition analysis,” is a family of techniques used to dissect interactions in a system with multiple molecules. In this case, an EDA calculation on the <b>AB</b> system would break down the interaction between <b>A</b> and <b>B</b> into various components, which could be used to help scientists understand the origin of the difference, and perhaps used for continued molecular design.
+</p>
+
+<p>
+Unfortunately, EDA has always seemed like a pretty troubled technique to me. Wavefunctions are inherently not localized to individual fragments of a multimolecular system—you can’t just slice apart the molecular orbitals or the density matrix and end up with anything that’s physically sane. So you have to do some computational gymnastics to get energetic terms which are at all meaningful. Many such gymnastic workflows have been proposed, leading to a veritable alphabet soup of different EDA methods.
+</p>
+
+<p>
+(It’s worth skimming <a href=https://onlinelibrary.wiley.com/doi/10.1002/jcc.26003>this review</a> on different EDA methods to get a sense for some of the questions the field faces, and also to laugh at how Alston Misquitta &amp; Krzysztof Szalewicz use the review as a chance to relentlessly advertise SAPT and denigrate any and all competing methods.)
+</p>
+
+<p>
+I’ll briefly outline how the EDA-NCOV method works for a system <b>AB</b> (following <a href=https://wires.onlinelibrary.wiley.com/doi/epdf/10.1002/wcms.1345>this review</a>), to give a sense for the flavor of the field:
+</p>
+
+<ol>
+<li>
+Optimized ground-state fragments <b>A</b><sup>0</sup> and <b>B</b><sup>0</sup> are distorted to the geometries and electronic states (<b>A</b> &amp; <b>B</b>) which they possess in <b>AB</b>, and the energy required for this distortion/excitation is termed <i>E</i><sub>prep</sub>. (The difference between <i>E</i>(<b>AB</b>) and <i>E</i>(<b>A</b>) + <i>E</i>(<b>B</b>) is called <i>E</i><sub>int</sub>, and the total binding energy is equal to <i>E</i><sub>int</sub> + <i>E</i><sub>prep</sub>.)
+</li>
+<li>
+The distorted fragments <b>A</b> and <b>B</b> are brought together (with frozen charge densities) to form the “promolecule” <b>AB</b><sup>0</sup>, and the change in energy is termed <i>E</i><sub>elstat</sub>, the quasiclassical Coulomb interaction energy (typically attractive). The wavefunction for <b>AB</b><sup>0</sup> is Ψ<sup>A</sup>Ψ<sup>B</sup>.
+</li>
+<li>
+The product wavefunction Ψ<sup>A</sup>Ψ<sup>B</sup> is antisymmetrized and renormalized to give an “intermediate state” Ψ<sup>0</sup> with energy <i>E</i><sup>0</sup>, and the change in energy is termed <i>E</i><sub>Pauli</sub>, originating from Pauli repulsion. This component is always repulsive.
+</li>
+<li>
+Ψ<sup>0</sup> is relaxed to yield the final wavefunction Ψ<sup>AB</sup>. The change in energy is termed <i>E</i><sub>orb</sub>, because it arises from orbital interactions, and is always attractive.
+</li>
+</ol>
+
+<p>
+Thus, <i>E</i><sub>int</sub> = <i>E</i><sub>elstat</sub> + <i>E</i><sub>Pauli</sub> + <i>E</i><sub>orb</sub>. (Dispersion can also be added if an exogenous dispersion correction is employed—that’s pretty trivial.)
+</p>
+
+<p>
+The critical reader might observe that the steps taken to obtain these numbers are pretty odd, and that the components of the interaction energy arise from differences in energy between bizarre nonphysical states. Thus, the interpretation of terms like <i>E</i><sub>elstat</sub> in terms of actual physical interactions might not be as easy as it seems. The authors of the above review agree:
+</p>
+
+<blockquote>
+It is important to realize that the identification of the three major terms Δ<i>E</i><sub>elstat</sub>, Δ<i>E</i><sub>Pauli</sub>, and Δ<i>E</i><sub>orb</sub> with specific interactions is conceptually attractive but must not be taken as genuine expression of the physical forces.
+</blockquote>
+
+<p>
+Unfortunately, it seems that imprecise concepts familiar to experimental chemists like “steric repulsion” and “electrostatic attraction” have to be discarded in favor of precise terms like <i>E</i><sub>Pauli</sub>. Too bad they’re virtually uninterpretable!
+</p>
+
+<p>
+And what’s worse is that different EDA-type schemes don’t even give the same results. <a href=https://pubs.acs.org/doi/10.1021/jacs.3c08196>A paper</a> out today in <i>JACS</i> from Zare/Shaik discusses the use of EDA and related schemes in studying the origin of the hydrogen bond (a pretty fundamental question), motivated by the substantial disagreement between various techniques: 
+</p>
+
+<blockquote>
+It is important to realize that different methods (e.g., BOVB, ALMO-EDA, NEDA, and BLW) do not fully agree with one another about whether the dominant stabilizing term is Δ<i>E</i><sub>POL</sub> or Δ<i>E</i><sub>CT</sub> in a particular HB.
+</blockquote>
+
+<p>
+While the authors make a good case that the sum of these two terms is relatively conserved across methods, and that it’s this term that we should care about for hydrogen bonds, the conclusions for EDA broadly are not encouraging. (Note, too, that <i>E</i><sub>POL</sub> and <i>E</i><sub>CT</sub> don’t even appear in the EDA-NCOV method summarized above—another reason that EDA is a frustrating field!)
+</p>
+
+<figure>
+  <img class=centered-img src=../img/20230904_shoggoth.png style="width:550px;" />
+  <figcaption>
+  How I feel about EDA, borrowing <a href=https://www.nytimes.com/2023/05/30/technology/shoggoth-meme-ai.html>a meme from the AI discourse</a>.
+  </figcaption>
+</figure>
+ 
+<p>
+And even if the theorists eventually put their heads together and develop a version of EDA that doesn’t have these pitfalls, it’s still not clear that any form of EDA will give the answers that experimental chemists are looking for. Chemistry is complicated, and ground- or transition-state structures arise from a delicate equilibrium between opposing factors: steric repulsion, electrostatic attraction, bond distances, torsional strain, dispersion, &amp;c.
+</p>
+
+<p>
+As a result, one can see large changes in the contribution of individual factors even while the overall structure’s stability is minimally perturbed (<a href=https://pubs.rsc.org/en/content/articlehtml/2014/md/c4md00057a>enthalpy–entropy compensation</a> is a classic example, as is Fig. 2 in <a href=https://onlinelibrary.wiley.com/doi/full/10.1002/anie.201701486>this review</a> on distortion–interaction analysis). Looking only at changes in individual factors isn’t always a useful way to gain insight from computation.
+</p>
+
+<p>
+For example, imagine a nucleophile adding to two faces of an oxocarbenium, a bulky face and an unhindered face. Based on this description, we might expect to see that TS<sub>bulky</sub> has higher steric repulsion than TS<sub>unhindered</sub> (if we’re lucky enough to find a way to extract <i>E</i><sub>steric</sub> out of our EDA method). But it’s also likely that the nucleophile might take a less favorable trajectory towards the oxocarbenium in TS<sub>bulky</sub> to avoid steric repulsion, thus weakening key orbital interactions. These changes might even end up being larger in magnitude than the destabilization induced by steric repulsion. Is the correct answer, then, that TS<sub>bulky</sub> is higher in energy because of decreased <i>E</i><sub>orb</sub>, not increased <i>E</i><sub>steric</sub>?
+</p>
+
+<p>
+The solution is to recognize that causation is not unique (cf. <a href=https://en.wikipedia.org/wiki/Four_causes>Aristotle</a>), and so there’s no one right answer here. Within the constraints of the EDA framework, the theorist wouldn’t be incorrect in saying that <i>E</i><sub>orb</sub> is the driving factor—but the experimental chemist might reasonably expect “the bulky TS is destabilized by steric repulsion” as their answer, since this is the root cause of the changes between the two structures. (I side with the experimentalists here.)
+</p>
+
+<p>
+And the precisely defined concepts favored by theorists are often hard for experimental scientists to work with. Even if the correct answer in the above scenario were “<i>TS</i><sub>bulky</sub> is destabilized by decreased orbital overlap”—what’s an experimentalist supposed to do with this information, add more orbitals? (This is how I feel about Trevor Hamlin’s work on Pauli repulsion.) The steric explanation at least suggests an intuitive solution: make the bulky group or the nucleophile smaller. If the purpose of EDA is to help people to understand intermolecular interactions better on a conceptual level, I’m not sure it’s succeeding in most cases.
+</p>
+
+<p>
+(The only use of EDA that led to an actual experimental advance which I’m aware of is Buchwald/Peng Liu’s body of work on ligand–substrate dispersion in hydrocupration: <a href=https://pubs.acs.org/doi/abs/10.1021/jacs.7b07373>study</a>, <a href=https://pubs.acs.org/doi/10.1021/jacs.8b09565>new ligand</a>, <a href=https://pubs.acs.org/doi/10.1021/jacs.0c08746>ligand from Hartwig</a>. I don’t think it’s a coincidence that these papers focus on dispersion, one of the easiest pieces of EDA to decouple and understand.)
+</p>
+
+<p>
+I don’t mean to be too critical here. The ability to break intermolecular interactions down into different components is certainly useful, and it seems likely that some version of EDA will eventually achieve consensus and emerge as a useful tool. But I think the utility of EDA even in the best case is pretty limited. Quantum chemistry is complicated, and if we think we can break it down into easy-to-digest components and eliminate the full nonlocal majesty of the Schrodinger equation, we’re lying to ourselves (or our experimental collaborators). Compute with caution!
+</p>
+
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230820_ts_polarizable.html'>Transition States Are Polarizable</a></h2><i>August 20, 2023</i>
 <p><i>
 Recently in off-blog content: I coauthored <a href=https://www.freaktakes.com/p/the-past-and-present-of-computer>an article with Eric Gilliam</a> on how LLMs can assist in hypothesis generation and help us all become more like Sharpless. Check it out!
 </i></p>
@@ -617,86 +720,6 @@ Thanks to Croix Laconsay for reading a draft of this post.
     This argument hearkens back to some old-school computational organic chemistry I love from Bill Jorgensen, studying the <a href=https://pubs.aip.org/aip/jcp/article-abstract/77/11/5757/783263/Monte-Carlo-simulation-of-n-butane-in-water?redirectedFrom=fulltext>hydrophobic effect on conformational preferences of butane</a>. We usually think of the hydrophobic effect as associated with macromolecules (ligands binding to proteins, etc), but it can still matter in tiny systems!
   </li>
 </ol>
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230717_fmufros.html'>For-Profit Micro Focused Research Organizations: A Proposal</a></h2><i>July 17, 2023</i>
-<p>
-<i>
-TW: sarcasm.
-</i>
-</p>
-
-<p>
-Today, most research is done by academic labs funded mainly by the government. Many articles have been written on the shortcomings with academic research: Sam Rodriques recently had a nice <a href=https://www.sam-rodriques.com/post/academia-is-an-educational-institution>post</a> about how academia is ultimately an educational institution, and how this limits the quality of academic research. (It’s worth a read; I’ve written about these issues from a <a href=https://corinwagen.github.io/public/blog/20221026_structural_diversity.html>few</a> <a href=https://corinwagen.github.io/public/blog/20230502_startups.html>angles</a>, and will probably write more at a later date.)
-</p>
-
-<p>
-The major alternative to academic research that people put forward is <a href=https://www.nature.com/articles/d41586-022-00018-5>focused research organizations</a> (FROs): large, non-profit research organizations capable of tackling big unsolved problems. These organizations, similar in scope and ambition to e.g. CERN or LIGO, are envisioned to operate with a budget of $20–100M over five years, making them substantially larger and more expensive than a single academic lab. This model is still being tested, but it seems likely that some version of FROs will prove effective for appropriately sized problems. 
-</p>
-
-<p>
-But FROs have some disadvantages, too: they represent a significant investment on the part of funders, and so it’s important to choose projects where there’s a high likelihood of impact in the given area. (In contrast, it’s expected that most new academic labs will focus on high-risk projects, and pivot if things don’t work out in a few years.) In this piece, I propose a new form of scientific organization that combines aspects of both FROs and academic labs: <u>for-profit micro focused research organizations (FPµFROs)</u>.
-</p>
-
-<p>
-The key insight behind FPµFROs is that existing financial markets could be used to fund scientific research when there is a realistic possibility for profit as a result of the research. This means that FPµFROs need not be funded by the government or philanthropic spending, but could instead raise capital from e.g. venture capitalists or angel investors, who have access to substantially more money and are used to making high-risk, high-reward investments. 
-</p>
-
-<p>
-FPµFROs would also be smaller and more nimble than full-fledged FROs, able to tackle high-risk problems just like academia. But unlike academic labs, FPµFROs would be able to spend more freely and hire more aggressively, thus circumventing the human capital issues that plague academic research. While most academic labs are staffed entirely with inexperienced trainees (as Rodriques notes above), FPµFROs could hire experienced scientists, engineers, and programmers, thus accelerating the rate of scientific progress.
-</p>
-
-<p>
-One limitation of the FPµFRO model is that research would need to be profitable within a reasonable time frame. But this limitation might actually be a blessing in disguise: the need for profitability means that FPµFROs would be incentivized to provide real value to firms, thus preventing useless research through the magic of Adam Smith’s invisible hand. 
-</p>
-
-<p>
-Another disadvantage of FPµFROs is that they must be able to achieve success with relatively little funding (probably around $10M; big for academia, but small compared to a FRO). This means that their projects would have to be modest in scope. I think this is probably a blessing in disguise, though. Consider the following advice <a href=http://www.paulgraham.com/ambitious.html>from Paul Graham</a>:
-</p>
-
-<blockquote>
-Empirically, the way to do really big things seems to be to start with deceptively small things.… Maybe it's a bad idea to have really big ambitions initially, because the bigger your ambition, the longer it's going to take, and the further you project into the future, the more likely you'll get it wrong.
-</blockquote>
-
-<p>
-Thus, the need for FPµFROs to focus on getting a single “minimal viable product” right might be very helpful, and could even lead to more impactful firms later on.
-</p>
-
-<p>
-In conclusion, FPµFROs could combine the best qualities of academic labs and FROs: they would be agile and risk-tolerant, like academic labs, but properly incentivized to produce useful research instead of publishing papers, like FROs. This novel model should be investigated further as a mechanism for generating new scientific discoveries at scale with immediate short-term utility.
-</p>
-
-<br>
-<div class=dinkus>* * *</div>
-<br>
-
-<p>
-Hopefully it’s clear by now that this is a joke: an FPµFRO is just a startup. 
-</p>
-
-<p>
-The point of this piece isn’t to criticize FROs or academia: both have their unique advantages relative to startups, and much has been written about the relative advantages and disadvantages of different sorts of research institutions (<a href=https://www.convergentresearch.org/about-fros>e.g.</a>).
-</p>
-
-<p>
-Rather, I want to remind people that startups can do really good scientific work, something that many people seem to forget. It’s true that basic research can be a public good, and something that’s difficult to monetize within a reasonable timeframe. But most research today isn’t quite this basic, which leads me to suspect that many activities today confined to academic labs could be profitably conducted in startups. 
-</p>
-
-<p>
-Academics are generally very skeptical of organizations motivated by profit. But all incentives are imperfect, and the drive to achieve profitability pushes companies to provide value to real customers, which is more than many academics motivated by publication or prestige ever manage to achieve. It seems likely that for organizations focused on applied research, profit is the least bad incentive. 
-</p>
-
-<p>
-I’ll close with a quote from Eric Gilliam’s recent <a href=https://www.freaktakes.com/p/an-alternative-approach-to-deep-tech>essay</a> on a new model for “deep tech” startups:
-</p>
-
-<blockquote>
-Our corporate R&amp;D labs in most industries have taken a step back in how “basic” their research is. Meanwhile, what universities call ‘applied’ research has become much less applied than it used to be. This ‘middle’ of the deep tech pipeline has been hollowed out.
-</blockquote>
-
-<p>
-What Eric proposes in his piece, and what I’m arguing here, is that scientific startups can help fill this void: not by replacing FROs and academic research, but by complementing them. 
-</p>
-
-<i>Thanks to Ari Wagen for reading a draft of this piece.</i>
 </div><div class='previous-link'><a href='blog_p1.html'>previous page</a></div><div class='next-link'><a href='blog_p3.html'>next page</a></div><br>
   </body>
   <br>
