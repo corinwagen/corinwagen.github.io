@@ -34,7 +34,91 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p10.html'>previous page</a></div><div class='next-link'><a href='blog_p12.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20221026_structural_diversity.html'>Structural Diversity in Science</a></h2><i>October 26, 2022</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p10.html'>previous page</a></div><div class='next-link'><a href='blog_p12.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20221121_business_card_lennard_jones.html'>Business Card Lennard–Jones Simulation</a></h2><i>November 21, 2022</i>
+<p>
+An (in)famous code challenge in computer graphics is to write a complete ray tracer small enough to fit onto a business card.
+I've really enjoyed reading through some of the submissions over the years (e.g. 
+<a href="https://fabiensanglard.net/rayTracing_back_of_business_card/">1</a>,
+<a href="https://mzucker.github.io/2016/08/03/miniray.html">2</a>,
+<a href="https://www.realtimerendering.com/blog/back-of-the-business-card-ray-tracers/">3</a>,
+<a href="https://www.taylorpetrick.com/blog/post/business-rt">4</a>), and I've wondered what a chemistry-specific equivalent might be.
+</p>
+
+<p>
+As a first step in this space—and as a learning exercise for myself as I try to learn C++—I decided to try and write a tiny Lennard–Jones simulation.
+Unlike most molecular simulation methods, which rely on heavily parameterized forcefields or complex quantum chemistry algorithms, 
+the Lennard–Jones potential has a simple functional form and accurately models noble gas systems.
+Nice work from <a href="https://journals.aps.org/pr/abstract/10.1103/PhysRev.136.A405">Rahman</a> in 1964 showed that Lennard–Jones simulations
+of liquid argon could reproduce experimental X-ray scattering results for the radial distribution function:
+</p>
+
+<figure>
+  <img class=centered-img src=../img/20221121_rahman_rdf.png style="width:350px;" />
+  <figcaption>
+  Figure 2 from Rahman, showing the radial distribution function of liquid argon with clear first, second, and third solvation shells.
+  </figcaption>
+</figure>
+
+<p>
+This thus seemed like a good target for a "tiny chemistry" program: easy enough to be doable, but tricky enough to be interesting.
+After a bit of development, I was able to get my final program down to 1561 characters, easily small enough for a business card.
+The final program implements periodic boundary conditions, random initialization, and temperature control with the Berendsen thermostat for the first 10 picoseconds.
+Neighbor lists are used to reduce the computational cost, and an xyz file is written to stdout. 
+</p>
+
+<pre class=code-block>
+#include &lt;iostream&gt;
+#include &lt;random&gt;
+#define H return
+typedef double d;typedef int i;using namespace std;d L=17;i N=860;d B=8.314e-7;d
+ s=3.4;d M=6*s*s;d S=s*s*s*s*s*s;d q(d x){if(x&gt;L)x-=2*L;if(x&lt;-L)x+=2*L;H x;}d rd
+(){H 2*L*drand48()-L;}struct v{d x,y,z;v(d a=0,d b=0,d c=0):x(a),y(b),z(c){}d n(
+){H x*x+y*y+z*z;}v p(){x=q(x);y=q(y);z=q(z);H*this;}};v operator+(v a,v b){H v(a
+.x+b.x,a.y+b.y,a.z+b.z);}v operator*(d a,v b){H v(a*b.x,a*b.y,a*b.z);}struct p{d
+ m;v r,q,a,b;vector&lt;i&gt; W;p(v l,d n=40):r(l),m(n),q(v()),a(v()),b(v()),W(vector&lt;i
+&gt;()){}void F(v f){b=(1/m)*f+b;}};vector&lt;p&gt; P;void w(){cout&lt;&lt;N&lt;&lt;"\n\n";for(i j=N;
+j--;){v l=P[j].r;cout&lt;&lt;"Ar "&lt;&lt;l.x&lt;&lt;" "&lt;&lt;l.y&lt;&lt;" "&lt;&lt;l.z&lt;&lt;"\n";}cout&lt;&lt;"\n";}void E(
+){for(i j=0;j&lt;N;j++){for(i x=0;x&lt;P[j].W.size();x++){i k=P[j].W[x];v R=(P[j].r+-1
+*P[k].r).p();d r2=R.n();if(r2&lt;M){d O=1/(r2*r2*r2);d f=2880*B*(2*S*S*O*O-S*O)/r2;
+R=f*R;P[j].F(R);P[k].F(-1*R);}}}}void cW(){for(i j=0;j&lt;N;j++){P[j].W.clear();for
+(i k=j+1;k&lt;N;k++)if((P[j].r+-1*P[k].r).p().n()&lt;1.3*M)P[j].W.push_back(k);}}i mai
+n(){i A=1e3;i e=75;i Y=5e3;for(i j=N;j--;){for(i a=99;a--;){v r=v(rd(),rd(),rd()
+);i c=0;for(i k=P.size();k--;){d D=(r+-1*P[k].r).p().n();if(D&lt;2*s)c=1;}if(!c){P.
+push_back(p(r));break;}}}if(P.size()!=N)H 1;for(i t=0;t&lt;=3e4;t+=10){for(i j=N;j-
+-;){P[j].r=P[j].r+P[j].q+0.5*P[j].a;P[j].r.p();}if(t%20==0)cW();E();d K=0;for(i
+j=N;j--;){P[j].q=P[j].q+0.5*(P[j].b+P[j].a);P[j].a=P[j].b;P[j].b=v();K+=P[j].m*P
+[j].q.n()/2;}d T=2*K/(3*B*N);if(t&lt;2*Y){d C=e;if(t&lt;Y)C=e*t/Y+(A-e)*(Y-t)/Y;d s=sq
+rt(C/T);for(i j=N;j--;)P[j].q=s*P[j].q;}if(t%100==0&amp;&amp;t&gt;2*Y)w();}}
+</pre>
+
+<p>
+The program can be compiled with <span class=code>g++ -std=gnu++17 -O3 -o mini-md mini-md.cc</span> and run:
+</p>
+
+<pre class=code-block>
+$ time ./mini-md &gt; Ar.xyz
+
+real	0m4.689s
+user	0m4.666s
+sys	0m0.014s
+</pre>
+
+<p>
+Analysis of the resulting file in <i>cctk</i> results in the following radial distribution function, in good agreement with the literature:
+</p>
+
+<figure>
+  <img class=centered-img src=../img/20221121_rdf.png style="width:450px;" />
+  <figcaption>
+  Radial distribution function generated by the above code.
+  </figcaption>
+</figure>
+
+<p>
+I'm pretty pleased with how this turned out, and I learned a good deal both about the details of C++ syntax and about molecular dynamics.
+There are probably ways to make this shorter or faster; if you write a better version, let me know and I'll happily link to it here! 
+</p>
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20221026_structural_diversity.html'>Structural Diversity in Science</a></h2><i>October 26, 2022</i>
 <p>
 Michael Nielsen and Kanjun Qiu recently published a massive essay entitled <a href="https://scienceplusplus.org/metascience/index.html">“A Vision of Metascience: An Engine of Improvement for the Social Processes of Science.”</a> Metascience, the central topic of the essay, is science about science. As the authors put it, metascience “overlaps and draws upon many well-established fields, including the philosophy, history, and sociology of science, as well as newer fields such as the economics of science funding, the science of science, science policy, and others.”
 </p>
@@ -500,129 +584,6 @@ The vision that talent search is ‘a thing,’ that it is an art that can be le
 I’d recommend this book both for people looking for talent (professors, founders, leaders) and for those hoping to display their own talent accurately to the world. 
 </p>
 
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220926_plotting_diversity.html'>Plotting Chemical Space with UMAP and Molecular Fingerprints</a></h2><i>September 26, 2022</i>
-<p>
-In our recently published work on <a href="https://corinwagen.github.io/public/blog/20220901_screening_for_generality.html">screening for generality</a>, we selected our panel of model substrates in part using cheminformatic techniques. We're not the only people to do this, obviously: cheminformatics is a busy and important field, and even in organic chemistry there's lots of papers using similar techniques these days (I liked <a href="https://pubs.acs.org/doi/10.1021/jacs.1c12203">this work</a> from the Doyle lab). But since often the people who would benefit most from a new technique are the people who might be most intimidated by wading though documentation, I thought I'd post some simple example code here that others can copy-and-paste and modify to suit their own ends.
-</p>
-
-<p>
-There are lots of ways to approach plotting chemical space, but fundamentally all approaches must address two big questions:
-</p>
-
-<ol>
-  <li>
-    How do you convert molecules into some numeric representation?
-  </li>
-  <li>
-    Once you have numeric representations of all your molecules, how do you plot this?
-  </li>
-</ol>
-
-<p>
-I chose a relatively simple approach to the first question: molecular fingerprints (if you don't know what these are, I liked <a href=https://towardsdatascience.com/a-practical-introduction-to-the-use-of-molecular-fingerprints-in-drug-discovery-7f15021be2b1>this introduction</a> from <i>Towards Data Science</i>).
-Based on <a href="https://greglandrum.github.io/rdkit-blog/similarity/reference/2021/05/26/similarity-threshold-observations1.html">Greg Landrum's findings</a>, I used the RDKit7 fingerprint. RDKit is the premier cheminformatics package, and well worth a download for anyone interested in these concepts.
-</p>
-
-<p>
-For the second question (dimensionality reduction), I used the <a href="https://arxiv.org/abs/1802.03426">UMAP</a> algorithm. There are other approaches to this, like tSNE or PCA, but in my opinion there are <a href="https://blog.reverielabs.com/mapping-chemical-space-with-umap/">relatively convincing reasons</a> to favor UMAP (although <a href="https://jcheminf.biomedcentral.com/articles/10.1186/s13321-020-0416-x">this paper</a> points out some limitations).
-</p>
-
-<p>
-Without further ado, then, here's some example code to take a list of IUPAC-type names and generate a 2D representation:
-</p>
-
-<pre class=code-block>
-from rdkit import Chem
-from urllib.request import urlopen
-import re, tqdm, sys, umap
-import numpy as np
-import matplotlib.pyplot as plt
-
-# make matplotlib look good
-plt.rc('font', size=11, family="serif")
-plt.rc('axes', titlesize=12, labelsize=12)
-plt.rc(['xtick', 'ytick'], labelsize=11)
-plt.rc('legend', fontsize=12)
-plt.rc('figure', titlesize=14)
-%matplotlib inline
-%config InlineBackend.figure_format='retina'
-
-# function for turning names into SMILES strings, because I find writing SMILES by hand impossible
-def smiles_from_name(name):
-    try:
-        url_name = re.sub(" ", "%20", name)
-        url = 'http://cactus.nci.nih.gov/chemical/structure/' + url_name + '/smiles'
-        smiles = urlopen(url, timeout=5).read().decode('utf8')
-        return smiles
-    except Exception as e:
-        print(name + " failed SMILES conversion")
-
-class THbC():
-    """ A tetrahydrobetacarboline. """
-    def __init__(self, group, substituent, color="grey"):
-        self.name = f"2-benzyl-1-({group})-{substituent}2,3,4,9-tetrahydro-1H-pyrido[3,4-b]indole"
-        self.smiles = smiles_from_name(self.name)
-        self.mol = Chem.MolFromSmiles(self.smiles)
-        self.fingerprint = None
-        self.color = color
-
-    def get_fingerprint(self):
-        if self.fingerprint is None:
-            self.fingerprint = Chem.RDKFingerprint(self.mol, maxPath=7, branchedPaths=False)
-        return self.fingerprint
-
-# I just wrote out a lot of aromatic groups...
-groups = [
-    "phenyl", "4-methylphenyl", "4-methoxyphenyl", "4-fluorophenyl", "4-chlorophenyl", "4-bromophenyl",
-    "4-(trifluoromethyl)phenyl", "4-nitrophenyl", "4-cyanophenyl", "piperonyl", "dihydrobenzofuryl",
-    "3-methylphenyl", "3-methoxyphenyl", "3-fluorophenyl", "3-chlorophenyl", "3-bromophenyl",
-    "3-(trifluoromethyl)phenyl", "3-nitrophenyl", "3-cyanophenyl", "2-methylphenyl", "2-methoxyphenyl",
-    "2-fluorophenyl", "2-chlorophenyl", "2-bromophenyl", "2-(trifluoromethyl)phenyl",
-    "2-nitrophenyl", "2-cyanophenyl", "2-pyridyl", "3-pyridyl", "4-pyridyl", "2-thiophenyl", "3-thiophenyl",
-    "2-furyl", "3-furyl", "2-quinolinyl", "3-quinolinyl","6-quinolinyl", "5-quinolinyl", "8-quinolinyl",
-    "5-indolyl", "3-indolyl", "7-azaindol-3-yl", "2-pyrrolyl", "3-pyrrolyl", "2-thiazolyl", "4-thiazolyl",
-    "5-thiazolyl", "5-phenylisoxazol-3-yl", "imidazol-2-yl" "5-pyrimidyl", "5-indazolyl", "3-pyrazolyl",
-    "4-pyrazolyl", "4-imidazolyl"
-]
-
-# substituents on the indole ring, and corresponding colors
-subs = ["", "6-methoxy", "6-chloro"]
-colors = ["grey", "red", "green"]
-
-# build THbC objects (this might take a minute or two)
-mols = list()
-for group in tqdm.tqdm(groups):
-    for sub, c in zip(subs, colors):
-        mols.append(THbC(group=group, substituent=sub, color=c))
-
-# generate UMAP embedding
-crds = umap.UMAP(n_components=2, n_neighbors=20, min_dist=0.1, metric="jaccard").fit_transform([m.get_fingerprint() for m in mols])
-
-# plot the result
-fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(5,5))
-plt.scatter(crds[:,0], crds[:,1], c=[m.color for m in mols], s=20, alpha=0.8)
-ax.set_xticks([])
-ax.set_yticks([])
-plt.xlabel("UMAP1")
-plt.ylabel("UMAP2")
-plt.tight_layout()
-plt.show()
-</pre>
-
-<p>
-This code generates the following image:
-</p>
-
-<figure>
-  <img class=centered-img src=../img/20220926_umap.png style="width:400px;" />
-  <figcaption>
-    A 2D plot of the molecules shown above. Colors represent different substitution on the indole ring.
-  </figcaption>
-</figure>
-
-<p>
-  Although this program is a little clunky (slow calls to the CACTUS web service), it works well enough and is easy to modify as needed (to label the individual molecules, or apply a clustering algorithm to pick out model substrates). I hope you find this useful!
-</p>
 </div><div class='previous-link'><a href='blog_p10.html'>previous page</a></div><div class='next-link'><a href='blog_p12.html'>next page</a></div><br>
   </body>
   <br>

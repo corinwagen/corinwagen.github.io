@@ -34,7 +34,130 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p11.html'>previous page</a></div><div class='next-link'><a href='blog_p13.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220919_report_cards.html'>Computational Report Cards</a></h2><i>September 19, 2022</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p11.html'>previous page</a></div><div class='next-link'><a href='blog_p13.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220926_plotting_diversity.html'>Plotting Chemical Space with UMAP and Molecular Fingerprints</a></h2><i>September 26, 2022</i>
+<p>
+In our recently published work on <a href="https://corinwagen.github.io/public/blog/20220901_screening_for_generality.html">screening for generality</a>, we selected our panel of model substrates in part using cheminformatic techniques. We're not the only people to do this, obviously: cheminformatics is a busy and important field, and even in organic chemistry there's lots of papers using similar techniques these days (I liked <a href="https://pubs.acs.org/doi/10.1021/jacs.1c12203">this work</a> from the Doyle lab). But since often the people who would benefit most from a new technique are the people who might be most intimidated by wading though documentation, I thought I'd post some simple example code here that others can copy-and-paste and modify to suit their own ends.
+</p>
+
+<p>
+There are lots of ways to approach plotting chemical space, but fundamentally all approaches must address two big questions:
+</p>
+
+<ol>
+  <li>
+    How do you convert molecules into some numeric representation?
+  </li>
+  <li>
+    Once you have numeric representations of all your molecules, how do you plot this?
+  </li>
+</ol>
+
+<p>
+I chose a relatively simple approach to the first question: molecular fingerprints (if you don't know what these are, I liked <a href=https://towardsdatascience.com/a-practical-introduction-to-the-use-of-molecular-fingerprints-in-drug-discovery-7f15021be2b1>this introduction</a> from <i>Towards Data Science</i>).
+Based on <a href="https://greglandrum.github.io/rdkit-blog/similarity/reference/2021/05/26/similarity-threshold-observations1.html">Greg Landrum's findings</a>, I used the RDKit7 fingerprint. RDKit is the premier cheminformatics package, and well worth a download for anyone interested in these concepts.
+</p>
+
+<p>
+For the second question (dimensionality reduction), I used the <a href="https://arxiv.org/abs/1802.03426">UMAP</a> algorithm. There are other approaches to this, like tSNE or PCA, but in my opinion there are <a href="https://blog.reverielabs.com/mapping-chemical-space-with-umap/">relatively convincing reasons</a> to favor UMAP (although <a href="https://jcheminf.biomedcentral.com/articles/10.1186/s13321-020-0416-x">this paper</a> points out some limitations).
+</p>
+
+<p>
+Without further ado, then, here's some example code to take a list of IUPAC-type names and generate a 2D representation:
+</p>
+
+<pre class=code-block>
+from rdkit import Chem
+from urllib.request import urlopen
+import re, tqdm, sys, umap
+import numpy as np
+import matplotlib.pyplot as plt
+
+# make matplotlib look good
+plt.rc('font', size=11, family="serif")
+plt.rc('axes', titlesize=12, labelsize=12)
+plt.rc(['xtick', 'ytick'], labelsize=11)
+plt.rc('legend', fontsize=12)
+plt.rc('figure', titlesize=14)
+%matplotlib inline
+%config InlineBackend.figure_format='retina'
+
+# function for turning names into SMILES strings, because I find writing SMILES by hand impossible
+def smiles_from_name(name):
+    try:
+        url_name = re.sub(" ", "%20", name)
+        url = 'http://cactus.nci.nih.gov/chemical/structure/' + url_name + '/smiles'
+        smiles = urlopen(url, timeout=5).read().decode('utf8')
+        return smiles
+    except Exception as e:
+        print(name + " failed SMILES conversion")
+
+class THbC():
+    """ A tetrahydrobetacarboline. """
+    def __init__(self, group, substituent, color="grey"):
+        self.name = f"2-benzyl-1-({group})-{substituent}2,3,4,9-tetrahydro-1H-pyrido[3,4-b]indole"
+        self.smiles = smiles_from_name(self.name)
+        self.mol = Chem.MolFromSmiles(self.smiles)
+        self.fingerprint = None
+        self.color = color
+
+    def get_fingerprint(self):
+        if self.fingerprint is None:
+            self.fingerprint = Chem.RDKFingerprint(self.mol, maxPath=7, branchedPaths=False)
+        return self.fingerprint
+
+# I just wrote out a lot of aromatic groups...
+groups = [
+    "phenyl", "4-methylphenyl", "4-methoxyphenyl", "4-fluorophenyl", "4-chlorophenyl", "4-bromophenyl",
+    "4-(trifluoromethyl)phenyl", "4-nitrophenyl", "4-cyanophenyl", "piperonyl", "dihydrobenzofuryl",
+    "3-methylphenyl", "3-methoxyphenyl", "3-fluorophenyl", "3-chlorophenyl", "3-bromophenyl",
+    "3-(trifluoromethyl)phenyl", "3-nitrophenyl", "3-cyanophenyl", "2-methylphenyl", "2-methoxyphenyl",
+    "2-fluorophenyl", "2-chlorophenyl", "2-bromophenyl", "2-(trifluoromethyl)phenyl",
+    "2-nitrophenyl", "2-cyanophenyl", "2-pyridyl", "3-pyridyl", "4-pyridyl", "2-thiophenyl", "3-thiophenyl",
+    "2-furyl", "3-furyl", "2-quinolinyl", "3-quinolinyl","6-quinolinyl", "5-quinolinyl", "8-quinolinyl",
+    "5-indolyl", "3-indolyl", "7-azaindol-3-yl", "2-pyrrolyl", "3-pyrrolyl", "2-thiazolyl", "4-thiazolyl",
+    "5-thiazolyl", "5-phenylisoxazol-3-yl", "imidazol-2-yl" "5-pyrimidyl", "5-indazolyl", "3-pyrazolyl",
+    "4-pyrazolyl", "4-imidazolyl"
+]
+
+# substituents on the indole ring, and corresponding colors
+subs = ["", "6-methoxy", "6-chloro"]
+colors = ["grey", "red", "green"]
+
+# build THbC objects (this might take a minute or two)
+mols = list()
+for group in tqdm.tqdm(groups):
+    for sub, c in zip(subs, colors):
+        mols.append(THbC(group=group, substituent=sub, color=c))
+
+# generate UMAP embedding
+crds = umap.UMAP(n_components=2, n_neighbors=20, min_dist=0.1, metric="jaccard").fit_transform([m.get_fingerprint() for m in mols])
+
+# plot the result
+fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(5,5))
+plt.scatter(crds[:,0], crds[:,1], c=[m.color for m in mols], s=20, alpha=0.8)
+ax.set_xticks([])
+ax.set_yticks([])
+plt.xlabel("UMAP1")
+plt.ylabel("UMAP2")
+plt.tight_layout()
+plt.show()
+</pre>
+
+<p>
+This code generates the following image:
+</p>
+
+<figure>
+  <img class=centered-img src=../img/20220926_umap.png style="width:400px;" />
+  <figcaption>
+    A 2D plot of the molecules shown above. Colors represent different substitution on the indole ring.
+  </figcaption>
+</figure>
+
+<p>
+  Although this program is a little clunky (slow calls to the CACTUS web service), it works well enough and is easy to modify as needed (to label the individual molecules, or apply a clustering algorithm to pick out model substrates). I hope you find this useful!
+</p>
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220919_report_cards.html'>Computational Report Cards</a></h2><i>September 19, 2022</i>
 <p>
 In the course of preparing a literature meeting on post-Hartree–Fock computational methods last year, I found myself wishing that there was a quick and simple way to illustrate the relative error of different approximations on some familiar model reactions, like a "report card" for different levels of theory. I couldn't find any such graphic online, so I decided to make one (click image to view high-res PDF):
 </p>
@@ -497,116 +620,6 @@ There can and should be individuals who spend almost all of their time on pure r
 More broadly, there's a broad sense today that innovation, especially in the physical world, is slowing (<a href="http://danwang.co/why-is-peter-thiel-pessimistic-about-technological-innovation/">Peter Thiel</a> may be the most notable proponent of this claim).
 A century ago, Americans could build whole networks of subways with comparatively primitive technology; now, something as simple as <a href="https://www.vox.com/policy-and-politics/2017/1/1/14112776/new-york-second-avenue-subway-phase-2">building a single subway station</a> has become a Herculean task.
 I don't mean to draw too direct of a causal connection between the end of Old MIT and the decline in real-world innovation, but perhaps a new school focused on unglamorous, nuts-and-bolts innovation rather than holistic education is exactly what the US needs now.
-</p>
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220905_pypes.html'>Potential Energy Surfaces in Python</a></h2><i>September 5, 2022</i>
-<p>
-    Organic chemists often think in terms of <a href="https://corinwagen.github.io/public/blog/20220815_rate_determining_span.html">potential energy surfaces</a>, especially when plotting the results of a computational study.
-    Unfortunately it is non-trivial to generate high-quality potential energy surfaces. It's not too difficult to sketch something crude in ChemDraw or Powerpoint, but getting the actual
-    barrier heights correct and proportional has always seemed rather tedious to me.
-</p>
-
-<p>
-    I've admired the smooth potential energy surfaces from the <a href="https://baik-laboratory.com/publications">Baik group</a> for years, and so several months ago I decided to try and write my own
-    program to generate these diagrams. I initially envisioned this as a python package (with the dubiously clever name of <i>pypes</i>), but it turned out to be simpler than expected, such that I 
-    haven't actually ever turned it into a library. It's easier to just copy and paste the code into various Jupyter notebooks as needed.
-</p>
-
-<p>
-    Here's the code:
-</p>
-
-<pre class=code-block>
-# get packages
-import numpy as np
-import scipy.interpolate as interp
-import matplotlib.pyplot as plt
-
-# make matplotlib look good
-plt.rc('font', size=11, family="serif")
-plt.rc('axes', titlesize=12, labelsize=12)
-plt.rc(['xtick', 'ytick'], labelsize=11)
-plt.rc('legend', fontsize=12)
-plt.rc('figure', titlesize=14)
-
-%matplotlib inline
-%config InlineBackend.figure_format='retina'
-
-# x and y positions. y in kcal/mol, if you want, and x in the range [0,1].
-Y = [2.49, 3.5, 0, 20.2, 19, 21.5, 20, 20.3, -5]
-X = [0, 0.15, 0.3, 0.48, 0.55, 0.63, 0.70, 0.78, 1]
-
-# labels for points. False if you don't want a label
-label = ["label1", False, "label2", "label3", "label4", "label5", "label6", "label7", "label8"]
-
-#### shouldn't need to modify code below this point too much...
-
-# autodetect which labels correspond to transition states
-TS = []
-for idx in range(len(Y)):
-    if idx == 0 or idx == len(Y)-1:
-        TS.append(False)
-    else:
-        TS.append((Y[idx] > Y[idx+1]) and (Y[idx] > Y[idx-1]))
-
-# sanity checks
-assert len(X) == len(Y), "need X and Y to match length"
-assert len(X) == len(label), "need right number of labels"
-
-# now we start building the figure, axes first
-f = plt.figure(figsize=(8,8))
-ax = f.gca()
-xgrid = np.linspace(0, 1, 1000)
-ax.spines[['right', 'bottom', 'top']].set_visible(False)
-
-YMAX = 1.1*max(Y)-0.1*min(Y)
-YMIN = 1.1*min(Y)-0.1*max(Y)
-
-plt.xlim(-0.1, 1.1)
-plt.tick_params(axis='x', which='both', bottom=False, top=False, labelbottom=False)
-plt.ylim(bottom=YMIN, top=YMAX)
-ax.plot(-0.1, YMAX,"^k", clip_on=False)
-
-# label axes
-plt.ylabel("Gibbs Free Energy (kcal/mol)")
-plt.xlabel("Reaction Coordinate")
-
-# plot the points
-plt.plot(X, Y, "o", markersize=7, c="black")
-
-# add labels
-for i in range(len(X)):
-    if label[i]:
-        delta_y = 0.6 if TS[i] else -1.2
-        plt.annotate(
-            label[i],
-            (X[i], Y[i]+delta_y),
-            fontsize=12,
-            fontweight="normal",
-            ha="center",
-        )
-
-# add connecting lines
-for i in range(len(X)-1):
-    idxs = np.where(np.logical_and(xgrid&gt;=X[i], xgrid&lt;=X[i+1]))
-    smoother = interp.BPoly.from_derivatives([X[i], X[i+1]], [[y, 0] for y in [Y[i], Y[i+1]]])
-    plt.plot(xgrid[idxs], smoother(xgrid[idxs]), ls="-", c="black", lw=2)
-
-# finish up!
-plt.tight_layout()
-plt.show()
-</pre>
-
-<p>
-The output looks like this:
-</p>
-
-<figure>
-  <img class="centered-img" src="../img/20220905_pes.png" style="width:550px;"/>
-  <figcaption>The potential energy surface generated by the above code.</figcaption>
-</figure>
-
-<p>
-If you like how this looks, feel free to use this code; if not, modify it and make it better! I'm sure this isn't the last word in potential-energy-surface creation, but it's good enough for me.
 </p>
 </div><div class='previous-link'><a href='blog_p11.html'>previous page</a></div><div class='next-link'><a href='blog_p13.html'>next page</a></div><br>
   </body>
