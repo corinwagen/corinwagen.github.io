@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      Bitter Lessons in Chemistry
+    </title>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="language" content="en">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--twitter-->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@github" />
+    <meta name="twitter:title" content="Bitter Lessons in Chemistry" />
+    <meta name="twitter:description" content="What Richard Sutton has to say about computational chemistry today." />
+    <meta name="twitter:image" content="https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Ottheinrich_Folio293r_Rev10.jpg/1024px-Ottheinrich_Folio293r_Rev10.jpg" />
+
+    <link rel="stylesheet" href="../../static/style.css">
+
+    <link rel="alternate" type="application/rss+xml" title="RSS feed for the blog" href="/rss.xml">
+
+    <!--google-->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MTNZ0ZSG3W"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MTNZ0ZSG3W');
+    </script>
+
+  </head>
+  <body>
+    <ul class="menu-list">
+      <li class="menu-item"><a href="../main/index.html" class="menu-link menu-title">Corin Wagen</a></li>
+      <li class="menu-item"><a href="../main/index.html#about" class="menu-link">About</a></li>
+      <li class="menu-item"><a href="../main/index.html#projects" class="menu-link">Projects</a></li>
+      <!--<li class="menu-item"><a href="../main/index.html#past_work" class="menu-link">Past Work</a></li>-->
+      <li class="menu-item">
+        <a href="../main/blog_p1.html" class="menu-link">Blog</a>
+        <a href='../main/archive.html' class="menu-link">(Archive)</a>
+      </li>   
+    </ul>
+    <h1> Bitter Lessons in Chemistry </h1>
+    <i>December 1, 2023</i>
+    
+<br>
+<br>
+<p class=epigraph>
+“And I took the little scroll from the hand of the angel and ate it. It was sweet as honey in my mouth, but when I had eaten it my stomach was made bitter.”
+</p>
+<p class=epigraph-byline>
+–Revelation 10:10
+</p>
+
+<figure>
+  <img class=centered-img src=https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Ottheinrich_Folio293r_Rev10.jpg/1024px-Ottheinrich_Folio293r_Rev10.jpg style="width:450px;" />
+</figure>
+
+<p>
+As machine learning becomes more and more important to chemistry, it’s worth reflecting on Richard Sutton’s 2019 blog post about the “bitter lesson.” In <a href=http://www.incompleteideas.net/IncIdeas/BitterLesson.html>this now-famous post</a>, Sutton argues that “the biggest lesson that can be read from 70 years of AI research is that general methods that leverage computation are ultimately the most effective, and by a large margin.” This might sound obvious, but it’s not:
+</p>
+
+<blockquote>
+[The bitter lesson] is a big lesson. As a field, we still have not thoroughly learned it, as we are continuing to make the same kind of mistakes. To see this, and to effectively resist it, we have to understand the appeal of these mistakes. We have to learn the bitter lesson that building in how we think we think does not work in the long run. The bitter lesson is based on the historical observations that 1) AI researchers have often tried to build knowledge into their agents, 2) this always helps in the short term, and is personally satisfying to the researcher, but 3) in the long run it plateaus and even inhibits further progress, and 4) breakthrough progress eventually arrives by an opposing approach based on scaling computation by search and learning. <u>The eventual success is tinged with bitterness, and often incompletely digested, because it is success over a favored, human-centric approach.</u> <i>(emphasis added)</i>
+</blockquote>
+
+<p>
+How might the bitter lesson be relevant in chemistry? One example is computer-assisted retrosynthesis in organic synthesis, i.e. figuring out how to make a given target from commercial starting materials. This task was first attempted by Corey’s LHASA program (<a href=https://pure.mpg.de/rest/items/item_2549520/component/file_3325899/content>1</a>, <a href=https://www.nobelprize.org/uploads/2018/06/corey-lecture.pdf>2</a>), and more recently has been addressed by Bartosz Gryzbowski’s <a href=https://www.cell.com/chem/pdf/S2451-9294(18)30085-8.pdf>Synthia</a>. Despite considerable successes, both efforts have operated through manual encoding of human chemical intuition. If Sutton is to be believed, we should be pessimistic about the scalability and viability of such approaches relative to pure search-based alternatives in the coming years.
+</p>
+
+<p>
+Another example is machine-learned force fields (like ANI or NequIP). While one could argue that equivariant neural networks like <i>e3nn</i> aren’t so much incorporating domain-specific knowledge as exploiting relevant symmetries (much like convolutional neural networks exploit translational symmetry in images), there’s been a movement in recent years to combine chemistry-specific forces (e.g. long-range Coulombic forces) with neural networks: Parkhill’s <a href=https://pubs.rsc.org/en/content/articlelanding/2018/sc/c7sc04934j>TensorMol</a> did this back in 2018, and more recently <a href=https://www.nature.com/articles/s41467-021-27340-2>Dral</a>, <a href=https://arxiv.org/abs/2301.08734>Piquemal</a>, and <a href=https://pubs.acs.org/doi/full/10.1021/jacs.3c07628>Levitt &amp; Fain</a> (<a href=https://twitter.com/olexandr/status/1730604569028092081>among others</a>) have published on this as well. While I’m no expert in this area, the bitter lesson suggests that we should be skeptical about the long-term viability of efforts, and instead just throw more data at chemistry-agnostic models. 
+</p>
+
+<p>
+A key assumption of the bitter lesson is that “over a slightly longer time than a typical research project, massively more computation inevitably becomes available.” This idea has also been discussed by Andrej Karpathy, who <a href=https://karpathy.github.io/2022/03/14/lecun1989/>reproduced</a> Yann LeCun’s landmark 1989 backpropagation paper last year using state-of-the-art techniques and reflected on how the field has progressed since then. In particular, Karpathy discussed how the last three decades of progress in ML can help us envision what the next three decades might look like:
+</p>
+
+<blockquote>
+Suppose that the lessons of this exercise remain invariant in time. What does that imply about deep learning of 2022? What would a time traveler from 2055 think about the performance of current networks?
+<ul>
+<li>
+2055 neural nets are basically the same as 2022 neural nets on the macro level, except bigger.
+</li>
+<li>
+Our datasets and models today look like a joke. Both are somewhere around 10,000,000X larger.
+</li>
+<li>
+One can train 2022 state of the art models in ~1 minute by training naively on their personal computing device as a weekend fun project.
+</li>
+<li>
+Today’s models are not optimally formulated, and just changing some of the details of the model, loss function, augmentation or the optimizer we can about halve the error.
+</li>
+<li>
+Our datasets are too small, and modest gains would come from scaling up the dataset alone.
+</li>
+<li>
+Further gains are actually not possible without expanding the computing infrastructure and investing into some R&D on effectively training models on that scale.
+</li>
+</ul>
+</blockquote>
+
+<p>
+If we take this seriously, we might expect that chemical ML will not be able to advance much farther without bigger datasets and bigger models. Today, experimental datasets rarely exceed 10<sup>4</sup>–10<sup>5</sup> data points, and even computational datasets typically comprise 10<sup>7</sup> data points or fewer—compare this to the ~10<sup>13</sup> tokens <a href=https://www.reddit.com/r/LocalLLaMA/comments/14wbmio/gpt4_details_leaked/>reportedly used to train GPT-4</a>! It’s not obvious how to get experimental datasets that are this large. HTE and robotics will help, but five orders of magnitude is a big ask. Even all of Reaxys doesn’t get you to 10<sup>8</sup>, poor data quality notwithstanding. (It’s probably not a coincidence that DNA-encoded libraries, which can actually have hundreds of millions of data points, also pair nicely with ML: I’ve written about this <a href=https://corinwagen.github.io/public/blog/20230403_industry.html>before</a>.)
+</p>
+
+<p>
+In contrast, computation permits the predictable generation of high-quality datasets. If Sutton is right about the inevitable availability of “massively more computation,” then we can expect it to become easier and easier to run hitherto expensive calculations like DFT in parallel to generate huge datasets, and to enable more and more downstream applications like chemical machine learning. With the right infrastructure (like Rowan, hopefully), it should be possible to turn computer time into high-quality chemical data with almost no non-financial scaling limit: <a href=https://pubs.acs.org/doi/10.1021/ci300415d>we’re certainly not going to run out of molecules</a>.
+</p>
+
+<p>
+The advent of big data, though, heralds the decline of academic relevance. Julian Togelius and Georgios Yannakakis wrote about this earlier this year in a piece on <a href=https://arxiv.org/abs/2304.06035?s=03>“survival strategies for depressed AI academics,”</a> which discusses the fact that “the gap between the amount of compute available to ordinary researchers and the amount available to stay competitive is growing every year.” For instance, GPT-4 reportedly cost c. $60 million to train, far surpassing any academic group’s budget. Togelius and Yannakakis provide a lot of potential solutions, some sarcastic (“give up”) and others quite constructive—for instance, lots of interpretability work (<a href=https://transformer-circuits.pub/2023/monosemantic-features/index.html>like this</a>) is done on toy models that don’t require GPT-4 levels of training. Even the most hopeful scenarios they present, however, still leave academics with a rather circumscribed role in the ML ecosystem. 
+</p>
+ 
+<p>
+The present academic era of chemical machine learning can thus be taken as a sign of the field’s immaturity. When will chemical ML reach a Suttonian era where scaling is paramount and smaller efforts become increasingly futile? I’m not sure, but my guess is that it will happen when (and only when) there are clear commercial incentives for developing sophisticated models, enabling companies to sink massive amounts of capital into training and development. This clearly hasn’t happened yet, but it also might not be as far away as it seems (<a href=https://www.nature.com/articles/s41586-023-06735-9>cf.</a>). It’s an interesting time to be a computational chemist…
+</p>
+
+
+    <br>
+    <br>
+    <i>If you want email updates when I write new posts, you can subscribe <a href=https://cwagen.substack.com/>on Substack.</a></i>
+  </body>
+  <br>
+  <br>
+  <footer>
+    <a href="mailto:corin.wagen+blog@gmail.com">email</a>
+    <a href="https://github.com/corinwagen">github</a>
+    <a href="https://twitter.com/CorinWagen">twitter</a>
+    <div style="float:right;">
+      <a href="/rss.xml">rss</a>
+      <a href="https://cwagen.substack.com">substack</a>
+    </div>
+  </footer>
+</html>
