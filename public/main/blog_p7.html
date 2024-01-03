@@ -34,7 +34,284 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p6.html'>previous page</a></div><div class='next-link'><a href='blog_p8.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230413_new_ways.html'>New Ways To Read The Blog: RSS and Substack</a></h2><i>April 13, 2023</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p6.html'>previous page</a></div><div class='next-link'><a href='blog_p8.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230417_dimensionality_reduction.html'>Dimensionality Reduction in Cheminformatics</a></h2><i>April 17, 2023</i>
+<p>
+In many applications, including cheminformatics, it’s common to have datasets that have too many dimensions to analyze conveniently. For instance, <a href=https://www.rdkit.org/UGM/2012/Landrum_RDKit_UGM.Fingerprints.Final.pptx.pdf>chemical fingerprints</a> are typically 2048-length binary vectors, meaning that “chemical space” as encoded by fingerprints is 2048-dimensional. 
+</p>
+
+<p>
+To more easily handle these complex datasets (and to bypass the <a href=https://en.wikipedia.org/wiki/Curse_of_dimensionality>“curse of dimensionality”</a>), it’s common practice to use a dimensionality reduction algorithm to convert the data to a low-dimensional space. In this post I want to compare and contrast three approaches to dimensionality reduction, and discuss the challenges with low-dimensional embeddings in general.
+</p>
+
+<h2>
+Dimensionality Reduction Algorithms
+</h2>
+
+<p>
+There are many approaches to dimensionality reduction, but I’m only going to talk about three here: PCA, tSNE, and UMAP.
+</p>
+
+<p>
+<a href=https://en.wikipedia.org/wiki/Principal_component_analysis>Principal component analysis</a> (PCA) is perhaps the most famous dimensionality reduction algorithm, and is commonly used in a variety of scientific fields. PCA works by transforming the data into a new set of coordinates such that the first coordinate vector explains the largest amount of the variance, the second coordinate vector the next most variance, and so on and so forth. It’s pretty common for the first 5–20 dimensions to capture &gt;99% of the variance, meaning that the subsequent dimensions can essentially be discarded wholesale. 
+</p>
+
+<p>
+<a href=https://en.wikipedia.org/wiki/T-distributed_stochastic_neighbor_embedding>tSNE</a> (t-distributed stochastic neighbor embedding) and <a href=https://umap-learn.readthedocs.io/en/latest/how_umap_works.html>UMAP</a> (uniform manifold approximation and projection) are alternative dimensionality reduction approaches, based on much more complex algorithms. To quote Wikipedia: 
+</p>
+
+<blockquote>
+The t-SNE algorithm comprises two main stages. First, t-SNE constructs a probability distribution over pairs of high-dimensional objects in such a way that similar objects are assigned a higher probability while dissimilar points are assigned a lower probability. Second, t-SNE defines a similar probability distribution over the points in the low-dimensional map, and it minimizes the Kullback–Leibler divergence (KL divergence) between the two distributions with respect to the locations of the points in the map.
+</blockquote>
+
+<p>
+UMAP, at a high level, works in a very similar way, but uses some fancy topology to construct a “fuzzy simplicial complex” representation of the data in high-dimensional space, and then projects this representation down into a lower dimension (<a href=https://pair-code.github.io/understanding-umap/>more detailed explanation</a>). Practically, UMAP is a lot faster than tSNE, and is becoming the algorithm of choice for most cheminformatics applications. (Although, in fairness, there are <a href=https://arxiv.org/abs/1712.09005>ways to make tSNE faster</a>.)
+</p>
+
+<h2>
+Data Visualization 
+</h2>
+
+<p>
+For the purposes of this post, I chose to study Abbie Doyle’s set of <a href=https://pubs.acs.org/doi/10.1021/jacs.1c12203>2683 aryl bromides</a> (obtained from Reaxys, with various filters applied). I used the RDKIT7 fingerprint to generate a 2048-bit encoding of each aryl bromide, computed a distance matrix using Tanimoto/Jaccard distance, and then used each dimensionality reduction technique to generate a 2-dimensional embedding.
+</p>
+
+<p>
+Let’s look at PCA first:
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20230417_pca_plot.png" style="width:400px;" />
+  <figcaption> 
+  2D plot of aryl bromide chemical space using PCA.
+  </figcaption>
+</figure>
+
+<p>
+PCA generally creates fuzzy-looking blobs, which sometimes show some amount of meaningful structure but don’t really display many sharp boundaries.
+</p>
+
+<p>
+Now, let’s compare to tSNE:
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20230417_tsne_plot.png" style="width:400px;" />
+  <figcaption> 
+  2D plot of aryl bromide chemical space using tSNE (perplexity 20).
+  </figcaption>
+</figure>
+
+<p>
+tSNE creates “blob-of-blob” plots which show many tight clusters arranged together in some sort of vague pattern. The size and position of the clusters can be tuned by changing the “perplexity” hyperparameter (see <a href=https://stats.stackexchange.com/questions/399868/why-does-larger-perplexity-tend-to-produce-clearer-clusters-in-t-sne>this StackOverflow post</a> for more discussion, and <a href=https://distill.pub/2016/misread-tsne/?s=03>this excellent post</a> for demonstrations of how tSNE can be misleading).
+</p>
+
+<p>
+What about UMAP?
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20230417_umap_plot.png" style="width:400px;" />
+  <figcaption> 
+  2D plot of aryl bromide chemical space using UMAP (30 neighbors, 0.1 minimum distance).
+  </figcaption>
+</figure>
+
+<p>
+UMAP also creates tight tSNE-like clusters, but UMAP plots generally have a much more variable overall shape—the clusters themselves are tighter and scattered across more space. (These considerations are complicated by the fact that UMAP has multiple tunable hyperparameters, meaning that the exact appearance of the plot is substantially up to the end user.)
+</p>
+
+<p>
+The debate between tSNE and UMAP is spirited (<a href=https://www.biorxiv.org/content/10.1101/2019.12.19.877522v1.full.pdf>e.g.</a>), but for whatever reason people in chemistry almost exclusively use UMAP. (See, for instance, pretty much every paper I taked about <a href=https://corinwagen.github.io/public/blog/20230118_meta_optimization.html>in this post</a>.)
+</p>
+
+<p>
+An important thing that I’m not showing here, but which bears mentioning, is that the clusters in all three plots are actually chemically meaningful. For instance, each cluster in the tSNE plot generally corresponds to a different functional group: carboxylic acids, alkynes, etc. So the graphs do in some real sense correspond to the intuition we have about molecular similarity, which is good! (You can use <a href=https://github.com/wjm41/molplotly>molplotly</a> to visualize these plots very easily.)
+</p>
+
+<h2>
+Distance Preservation
+</h2>
+
+<p>
+How well are distances from the high-dimensional space preserved in the 2D embedding? Obviously the distances won’t all be the same, but ideally the mapping would be monotonic: if distance A is greater than distance B in the high-dimensional space, we would like distance A to also be greater than distance B in the low-dimensional space. 
+</p>
+
+<p>
+We can measure this with <a href=https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient>Spearman correlation</a>, which is like a Pearson correlation (AKA “r-squared”) but without the assumption of linearity. A Spearman correlation coefficient of 1 indicates a perfect monotonic relationship, while a coefficient of 0 indicates no relationship. Let’s plot the pairwise distances from each embedding against the true distances and compare the Spearman coefficients:
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20230417_spearman_plots.png" style="width:300px;" />
+  <figcaption> 
+  Comparison of distances in high-dimensional space against distances in embedding space, and associated Spearman coefficients. (Only one in every hundred points is plotted, but all points are used for the Spearman coefficient calculation.)
+  </figcaption>
+</figure>
+
+<p>
+In each case, the trend is in the right direction (i.e. increased distance in high-dimensional space is correlated with increased distance in low-dimensional space), but the relationship is far from monotonic. It’s clear that there will be plenty of cases where two points will be close in low-dimensional space and far in high-dimensional space. 
+</p>
+
+<p>
+Does this mean that UMAP, tSNE, and PCA are all failing? To understand this better, let’s plot a histogram of all the distances in each space:
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20230417_dist_hist.png" style="width:400px;" />
+  <figcaption> 
+  Histogram of all distances in each space. Distances have been scaled to the range [0,1] to match distances obtained with the Jaccard metric.
+  </figcaption>
+</figure>
+
+<p>
+We can see that the 2048-dimensional space has a very distinct histogram. Most of the compounds are pretty different from one another, and—crucially—most of the distances are about the same (0.8 or so). In chemical terms, this means that most of the fingerprints share a few epitopes in common, but otherwise are substantially different, which is unsurprising since fingerprints in general are quite sparse. 
+</p>
+
+<p>
+Unfortunately, “lots of equidistant points” is an extremely tough pattern to recapitulate in a low-dimensional space. We can see why with a toy example: in 2D space, we can only have 3 equidistant points (an equilateral triangle), and in 3D space, we can only have 4 equidistant points (a tetrahedron). More generally, if we want <i>N</i> equidistant points, we need to be in <b>R</b><sup><i>N</i>-1</sup> (<i>N</i>-1 dimensional Euclidean space). We can <a href=https://en.wikipedia.org/wiki/Johnson%E2%80%93Lindenstrauss_lemma>relax this requirement</a> a little bit if we’re willing to accept approximate equidistance, but the general principle still holds: it’s hard to recapitulate lots of equidistant points in a low-dimensional space. 
+</p>
+
+<p>
+As expected, then, we can see that the histogram of each of our algorithms looks very different from the ideal distance histogram.
+</p>
+
+<h2>
+Local Structure
+</h2>
+
+<p>
+Both tSNE and UMAP take the nearest neighbors of each point explicitly into account, and claim to preserve the local structure of the points as much as possible. To put these claims to the test, I looked at the closest 30 neighbors of each point in high-dimensional space, and then checked how many of those neighbors made it into the closest 30 neighbors in low-dimensional space. 
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20230417_neighbor_hist.png" style="width:400px;" />
+  <figcaption> 
+  Histogram of how many of the closest 30 neighbors of each point are recapitulated after dimensionality reduction.
+  </figcaption>
+</figure>
+
+<p>
+We can see that PCA only preserves about 30–40% of each point’s neighbors, whereas PCA and UMAP generally preserve 60% of the neighbors: not perfect, but much better.
+</p>
+
+<p>
+I chose to look at 30 neighbors somewhat arbitrarily: what happens if we change this number?
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20230417_neighborhood_scan.png" style="width:400px;" />
+  <figcaption> 
+  The percent of neighbors recapitulated correctly, as neighborhood size increases.
+  </figcaption>
+</figure>
+
+<p>
+We can see that UMAP and tSNE both preserve about 60% of the neighbors across a wide range of neighborhood sizes, while PCA gets better as we zoom out more. (At the limit where we consider all 2683 points as neighbors, every method will trivially achieve perfect accuracy.) tSNE does much better than UMAP for small neighborhoods; I’m not sure why!
+</p>
+
+<p>
+Another way to think about this is in terms of the <a href=https://scikit-learn.org/stable/auto_examples/model_selection/plot_precision_recall.html>precision–recall tradeoff</a>. In classification, “precision” refers to a classifier’s ability to avoid false positives, while “recall” refers to a classifier’s ability to avoid false negatives. What does this mean in the context of embedding? 
+</p>
+
+<p>
+Imagine looking at all points in the neighborhood of our central point in high-dimensional space, and then comparing to the points within a certain radius of our point in low-dimensional space. As we increase the radius, we expect to see more of the correct neighbor points in low-dimensional space, but we also expect to see more “incorrect neighbors” that aren’t really there in the high-dimensional space. (<a href=https://jmlr.org/papers/volume11/venna10a/venna10a.pdf>This paper</a> discusses these issues nicely, as does <a href=https://coursepages2.tuni.fi/mttts17/wp-content/uploads/sites/136/2020/03/drv_2020_lecture_7.pdf>this presentation</a>.)
+</p>
+
+<p>
+So low radii lead to high precision (most of the points are really neighbors) but low recall (we’re not finding most of the neighbors), while high radii lead to low precision and high recall. We can thus study the performance of our embedding by graphing the precision–recall curve for various neighborhood sizes. The better the embedding, the closer the curve will come to the top right:
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20230417_precision_recall.png" style="width:400px;" />
+  <figcaption> 
+  Precision–recall tradeoff for all three methods.
+  </figcaption>
+</figure>
+
+<p>
+We can see that tSNE does better in the high precision/low recall area of the curve (as we saw in the previous graph), but otherwise tSNE and UMAP are quite comparable. In contrast, PCA is just abysmal.
+</p>
+
+<p>
+The big conclusion of this section is that, if you’re doing something that depends on the local structure of the data, you should avoid PCA. 
+</p>
+
+<h2>
+Do Higher Dimensions Help Things? 
+</h2>
+
+<p>
+Since the root of our issues here is trying to represent a 2048-dimensional distance matrix in 2 dimensions, one might wonder if we could do better by expanding to 3, 4, or more dimensions. This would make visualization tricky, but might still be suitable for other operations (like clustering). 
+</p>
+
+<p>
+tSNE gets very, very slow in higher dimensions, so I focused on PCA and UMAP for this study. I started out by comparing the Spearman correlation for PCA and UMAP up to 20 dimensions:
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20230417_spearman_dim.png" style="width:400px;" />
+  <figcaption> 
+  Precision–recall tradeoff for all three methods.
+  </figcaption>
+</figure>
+
+<p>
+Surprisingly, UMAP doesn’t seem to get any better in high dimensions, but PCA does. (Changing the number of neighbors didn’t help UMAP at all.)
+</p>
+
+<p>
+How do our other metrics look with high-dimensional PCA?
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20230417_10dim_dist_hist.png" style="width:400px;" />
+  <figcaption> 
+  Distance histogram for PCA with 2–10 dimensions.
+  </figcaption>
+</figure>
+
+<p>
+As we increase the number of dimensions, the distance histogram starts to approach the correct distribution. 
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20230417_10dim_neighbor_hist.png" style="width:400px;" />
+  <figcaption> 
+  Neighbor histogram for PCA with 2–10 dimensions.
+  </figcaption>
+</figure>
+
+<p>
+We also start to do a better job capturing the local structure of the graph, although we’re still not as good as tSNE or UMAP even at 10 dimensions. 
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20230417_10dim_precision_recall.png" style="width:400px;" />
+  <figcaption> 
+  Precision–recall curve for PCA with 2–10 dimensions.
+  </figcaption>
+</figure>
+
+<p>
+And our precision–recall graph is still pretty dismal when compared to tSNE or UMAP. So, it seems like if distances are what matters, then high-dimensional PCA is an appealing choice—but if local structure is what matters, tSNE or UMAP is still superior.
+</p>
+
+<h2>
+Conclusions
+</h2>
+
+<p>
+My big takeaway from all of this is: dimensionality reduction is a lossy process, and one where you always have to make tradeoffs. You’re fundamentally throwing away information, and that always has a cost: there’s no such thing as a free lunch. As such, if you don’t have to perform dimensionality reduction, then my inclination would be to avoid it. (People in single-cell genomics seem to have come to <a href=https://www.biorxiv.org/content/10.1101/2021.08.25.457696v4.full.pdf>a similar conclusion</a>.)
+</p>
+
+<p>
+If you really need your data to be in a low-dimensional space (e.g. for plotting), then keep in mind what you’re trying to study! PCA seems to do a slightly better job with distances (although I’m sure there are more sophisticated strategies for distance-preserving dimensionality reduction), while tSNE and UMAP seem to do much, much better with local structure. 
+</p>
+
+<i>
+Thanks to Michael Tartre for helpful conversations, and the students in Carnegie Mellon’s “Digital Molecular Design Studio” class for their thought-provoking questions on these topics.  
+</i>
+
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230413_new_ways.html'>New Ways To Read The Blog: RSS and Substack</a></h2><i>April 13, 2023</i>
 <p>
 <i>
 (This is more of a housekeeping post than an actual post with content; apologies.)
@@ -277,94 +554,6 @@ Reading the literature is—in the short term—pointless, sometimes frustrating
 Thanks to Ari Wagen and Joe Gair for reading drafts of this post.
 </i>
 
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230320_domain_arbitrage.html'>Domain Arbitrage</a></h2><i>March 20, 2023</i>
-<p>
-It’s a truth well-established that interdisciplinary research is good, and we all should be doing more of it (e.g. <a href=https://beta.nsf.gov/funding/learn/research-types/learn-about-interdisciplinary-research>this NSF page</a>). I’ve always found this to be a bit uninspiring, though. “Interdisciplinary research” brings to mind a fashion collaboration, where the project is going to end up being some strange chimera, with goals and methods taken at random from two unrelated fields.
-</p>
-
-<p>
-Rather, I prefer the idea of “domain arbitrage.”<sup><a href="#fn1">1</a></sup> Arbitrage, in economics, is taking advantage of price differences in different markets: if bread costs $7 in Cambridge but $4 in Boston, I can buy in Boston, sell in Cambridge, and pocket the difference. Since this is easy and requires very little from the arbitrageur, physical markets typically lack opportunities for substantial arbitrage. In this case, the efficient market hypothesis works well.
-</p>
-
-<p>
-Knowledge markets, however, are much less efficient than physical markets—many skills which are cheap in a certain domain are expensive in other domains. For instance, fields that employ organic synthesis, like chemical biology or polymer chemistry, have much less synthetic expertise than actual organic synthesis groups. The knowledge of how to use a Schlenk line properly is cheap within organic chemistry but expensive everywhere else. And organic chemists certainly don’t have a monopoly on scarce skills: trained computer scientists are very scarce in most scientific fields, as are statisticians, despite the growing importance of software and statistics to almost every area of research.
-</p>
-
-<p>
-Domain arbitrage, then, is taking knowledge that’s cheap in one domain to a domain where it’s expensive, and profiting from the difference. I like this term better because it doesn’t imply that the goal of the research has to be interdisciplinary—instead, you’re solving problems that people have always wanted to solve, just now with innovative methods. And the concept of arbitrage highlights how this can be beneficial for the practitioner. You’re bringing new insights to your field so you can help your own research and make cool discoveries, not because you’ve been told that interdisciplinary work is good in an abstract way.
-</p>
-
-<p>
-There are many examples of domain arbitrage,<sup><a href="#fn2">2</a></sup> but perhaps my favorite is the recent black hole image, which was largely due to work by Katie Bouman (formerly a graduate student at MIT, <a href=http://users.cms.caltech.edu/~klbouman/>now a professor at Caltech</a>):
-</p>
-
-
-<figure>
-  <img class="centered-img" src="../img/20230320_black_hole.jpg" style="width:350px;" />
-  <figcaption> 
-  The black hole picture, extracted from noisy radio telescope data by Bouman’s new algorithms.
-  </figcaption>
-</figure>
-
-<p>
-What’s surprising is that Bouman didn’t have a background in astronomy at all: she “hardly knew what a black hole was” (<a href=https://www.pbs.org/newshour/science/katie-bouman-hardly-knew-what-a-black-hole-was-her-algorithm-helped-us-see-one>in her words</a>) when she started working on the project. Instead, Bouman’s work drew on her background in computer vision, adapting statistical image models to the task of reconstructing astronomical images. In <a href=https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Bouman_Computational_Imaging_for_CVPR_2016_paper.pdf>a 2016 paper</a>, she explicitly credits computer vision with the insights that would later lead to the black hole image, and concludes by stating that “astronomical imaging will benefit from the crossfertilization of ideas with the computer vision community.”
-</p>
-
-<p>
-If we accept that domain arbitrage is important, why doesn’t it happen more often? I can think of a few reasons: some fundamental, some structural, and some cultural. On the fundamental level, domain arbitrage requires knowledge of two fields of research at a more-than-superficial level. This is relatively common for adjacent fields of research (like organic chemistry and inorganic chemistry), but becomes increasingly rare as the distance between the two fields grows. It’s not enough to just try and read journals from other fields occasionally—without the proper context, other fields are simply unintelligible. Given how hard achieving competence in a single area of study can be, we should not be surprised that those with a working knowledge of multiple fields are so scarce.
-</p>
-
-<p>
-The structure of our research institutions also makes domain arbitrage harder. In theory, a 15-person research group could house scientists from a variety of backgrounds: chemists, biologists, mathematicians, engineers, and so forth, all focused on a common research goal. In practice, the high rate of turnover in academic positions makes this challenging. Graduate students are only around for 5–6 years, postdocs for fewer, and both positions are typically filled by people hoping to learn things, not by already competent researchers. Thus, senior lab members must constantly train newer members in various techniques, skills, and ways of thinking so that institutional knowledge can be preserved.
-</p>
-
-<p>
-This is hard but doable for a single area of research, but quickly becomes untenable as the number of fields increases. A lab working in two fields has to pass down twice as much knowledge, with the same rate of personnel turnover. In practice, this often means that students end up deficient in one (or both) fields. As Derek Lowe put it <a href=https://www.science.org/content/blog-post/pipeline-1060>when discussing chemical biology</a> in 2007:
-</p>
-
-<blockquote>
-I find a lot of [chemical biology] very interesting (though not invariably), and some of it looks like it could lead to useful and important things. My worry, though, is: what happens to the grad students who do this stuff? They run the risk of spending too much time on biology to be completely competent chemists, and vice versa.
-</blockquote>
-
-<p>
-To me, this seems like a case in which the two goals of the research university—to teach students and to produce research—are at odds. It’s easier to teach students in single-domain labs, but the research that comes from multiple domains is superior. It’s not easy to think about how to address this without fundamental change to the structure of universities (although perhaps others have more creative proposals than I).<sup><a href="#fn3">3</a></sup>
-</p>
-
-<p>
-But, perhaps most frustratingly, cultural factors also contribute to the rarity of domain arbitrage. Many scientific disciplines today define themselves not by the questions they’re trying to solve but by the methods they employ, which disincentivizes developing innovative methods. For example, many organic chemists feel that biocatalysis shouldn’t be considered organic synthesis, since it employs enzymes and cofactors instead of more traditional catalysts and reagents, even though organic synthesis and biocatalysis both address the same goal: making molecules. While it’s somewhat inevitable that years of lab work leaves one with a certain affection for the methods one employs, it’s also irrational.
-</p>
-
-<p>
-Now, one might reasonably argue that precisely delimiting where one scientific field begins and another ends is a pointless exercise. Who’s to say whether biocatalysis is better viewed as the domain of organic chemistry or biochemistry? While this is fair, it’s also true that the scientific field one formally belongs to matters a great deal. If society deems me an organic chemist, then overwhelmingly it is other organic chemists who will decide if I get a PhD, if I obtain tenure as a professor, and if my proposals are funded.<sup><a href="#fn4">4</a></sup>
-</p>
-
-<p>
-Given that the success or failure of my scientific career thus depends on the opinion of other organic chemists, it starts to become apparent why domain arbitrage is difficult. If I attempt to solve problems in organic chemistry by introducing techniques from another field, it’s likely that my peers will be confused or skeptical by my work, and hesitate to accept it as “real” organic chemistry (see, for instance, the biocatalysis scenario above). Conversely, if I attempt to solve problems in other domains with the tools of organic chemistry, my peers will likely be uninterested in the outcome of the research, even if they approve of the methods employed. So from either angle domain arbitrage is disfavored.
-</p>
-
-<p>
-The factors discussed here don’t serve to completely halt domain arbitrage, as successful arbitrageurs like Katie Bouman or Frances Arnold demonstrate, but they do act to inhibit it. If we accept the claim that domain arbitrage is good, and we should be working to make it more common, what then should we do to address these problems? One could envision a number of structural solutions, which I won’t get into here, but on a personal level the conclusion is obvious: if you care about performing cutting-edge research, it’s important to learn things outside the narrow area that you specialize in and not silo yourself within a single discipline.
-</p>
-
-<i>
-Thanks to Shlomo Klapper and Darren Zhu for helpful discussions. Thanks also to Ari Wagen, Eric Gilliam, and Joe Gair for editing drafts of this post; in particular, Eric Gilliam pointed out the cultural factors discussed in the conclusion of the post.
-</i>
-
-<h3>Footnotes</h3>
-<ol class=footnotes>
-  <li id="fn1">
-  I did not coin this term—credit goes to Shlomo Klapper. I do think this is the first time it's been used in writing, however.
-  </li>
-  <li id="fn2">
-  I'll actually go a step farther and propose the Strong Theorem of Domain Arbitrage: All non-incremental scientific discoveries arise either from domain arbitrage or random chance. I don't want to defend it here, but I think there's a reasonable chance that this is true.
-  </li>
-  <li id="fn3">
-  Collaborations between differently skilled labs help with this problem, but the logistical and practical challenges involved in collaboration make this an inefficient solution. Plus, the same cultural challenges still confront the individual contributors. 
-  </li>
-  <li id="fn4">
-  <a href=https://twitter.com/Stephen_Curry/status/1637496308935057409>This tweet</a>, quoting the Nielsen/Qiu metascience essay <a href=https://corinwagen.github.io/public/blog/20221026_structural_diversity.html>which I wrote about before</a>, seems relevant.
-  </li>
-</ol>
 </div><div class='previous-link'><a href='blog_p6.html'>previous page</a></div><div class='next-link'><a href='blog_p8.html'>next page</a></div><br>
   </body>
   <br>

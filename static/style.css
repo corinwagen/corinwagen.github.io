@@ -184,3 +184,9 @@ div#project-container {
   margin-right: auto;
   text-align: right;
 }
+
+iframe {
+  margin: 1em auto;
+  border: 0;
+  display: block;
+}
