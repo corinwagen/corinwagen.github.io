@@ -73,6 +73,10 @@ The most important data was obtained by George Olah and co-workers, who pioneere
 Computational chemistry, which became able to tackle problems like this in the late 1980s and early 1990s, also supported the nonclassical structure of the norbornyl cation. <a href=https://pubs.acs.org/doi/abs/10.1021/ja00186a073>A 1990 paper</a> used HF/6-31G(d) calculations in Gaussian 86 to show that the symmetric structure was a minimum on the potential energy surface. Here’s a scan I ran at the B3LYP-D3BJ/6-31G(d) level of theory, showing that the energy increases as the “classical” C–C bond forms:
 </p>
 
+<p>
+<i>(This iframe doesn't work well on the phone - still a work in progress, sorry.)</i>
+</p>
+
 <iframe src=https://labs-dev.rowansci.com/iframe/scans/6e36bd88-1235-43e8-a505-91ac79d1bbf6 style="width:100%;height:400px;"></iframe>
 
 <p>
@@ -80,7 +84,7 @@ Subsequent work has confirmed that Winstein was almost completely correct about 
 </p>
 
 <p>
-A paper from Ken Houk and co-workers, <a href=https://pubs.acs.org/doi/10.1021/acs.joc.3c02325>published a few days ago in <i>JOC</i></a>, addresses this issue by directly modeling the solvolysis process through <i>ab initio</i> molecular dynamics with explicit acetic acid solvent. In the solvolysis of the exo sulfonate, the authors find the nonclassical cation is formed on average within 9 femtoseconds of C–O bond cleavage, which is about as quickly as is physically possible. Once formed, the cation is entirely nonclassical: “classical 2-norbornyl cations are a negligible component of norbornyl cations in solution," thus addressing the last objection of classical cation partisans.
+A paper from Ken Houk and co-workers, <a href=https://pubs.acs.org/doi/10.1021/acs.joc.3c02325>published a few days ago in <i>JOC</i></a>, addresses this issue by directly modeling the solvolysis process through <i>ab initio</i> molecular dynamics with explicit acetic acid solvent. In the solvolysis of the <i>exo</i> sulfonate, the authors find the nonclassical cation is formed on average within 9 femtoseconds of C–O bond cleavage, which is about as quickly as is physically possible. Once formed, the cation is entirely nonclassical: “classical 2-norbornyl cations are a negligible component of norbornyl cations in solution," thus addressing the last objection of classical cation partisans.
 </p>
 
 <figure>
