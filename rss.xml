@@ -58,16 +58,22 @@ The most important data was obtained by George Olah and co-workers, who pioneere
 <figure>
   <img class=centered-img src=https://corinwagen.github.io/public/img/20240103_olah.png style="width:350px;" />
   <figcaption>
-    <sup>13</sup>C NMR spectra at –159 ºC, showing the equivalence of C1 and C2. At –80 ºC, rapid Wagner–Meerwein rearrangements render C1, C2, and C6 equivalent. (This is a good use case for carbon NMR!)
+    <sup>13</sup>C NMR spectra at –159 ºC, showing the equivalence of C1 and C2. At –80 ºC, rapid Wagner–Meerwein rearrangements render C1, C2, and C6 equivalent. 
+    Data taken from <a href=https://onlinelibrary.wiley.com/doi/10.1002/anie.199513931>Olah's Nobel lecture</a>.
+    (This is a good use case for carbon NMR!) 
   </figcaption>
 </figure>
 
 <figure>
   <img class=centered-img src=https://corinwagen.github.io/public/img/20240103_pes.png style="width:350px;" />
   <figcaption>
-    Carbon 1s photoelectron spectrum of <i>tert</i>-butyl carbocation (left), showing a characteristic carbenium peak on the left, and the analogous spectrum for the norbornyl cation showing the absence of the carbenium peak.
+    Carbon 1s photoelectron spectrum of <i>tert</i>-butyl carbocation (left), showing a characteristic carbenium peak on the left, and the analogous spectrum for the norbornyl cation showing the absence of the carbenium peak. Data taken from <a href=https://onlinelibrary.wiley.com/doi/10.1002/anie.199513931>Olah's Nobel lecture</a>.
   </figcaption>
 </figure>
+
+<p><b>
+Note: <a href=https://twitter.com/dasingleton/status/1742754148221649214>On Twitter/X</a>, Dan Singleton argues that the controversy was largely settled by 1982 and attributes this to the <a href=https://pubs.acs.org/doi/10.1021/ar00096a003>Saunders/Olah NMR experiments</a> and <a href=https://pubs.acs.org/doi/pdf/10.1021/ar00096a001>Cyril Grob's work in this area</a>, which I didn't mention. I appreciate the correction and welcome any further additions to the record.
+</b></p>
 
 <p>
 Computational chemistry, which became able to tackle problems like this in the late 1980s and early 1990s, also supported the nonclassical structure of the norbornyl cation. <a href=https://pubs.acs.org/doi/abs/10.1021/ja00186a073>A 1990 paper</a> used HF/6-31G(d) calculations in Gaussian 86 to show that the symmetric structure was a minimum on the potential energy surface. Here’s a scan I ran at the B3LYP-D3BJ/6-31G(d) level of theory, showing that the energy increases as the “classical” C–C bond forms:
