@@ -4,6 +4,16 @@
           <link>https://corinwagen.github.io</link>
           <title>Corin Wagen</title>
           <item>
+              <title>Wavefront Propagation for Dihedral Scans</title>
+              <link>public/blog/20240111_wavefront.html</link>
+              <description><![CDATA[
+Today, I want to highlight a really nice paper from Lee-Ping Wang and coworkers: "Driving Torsional Scans with Wavefront Propagation."
+
+The authors of this paper set out to study dihedral scans, which are commonly used
+]]></description>
+              <pubDate>Thu, 11 Jan 2024 00:00:00 +0000</pubDate>
+          </item>
+          <item>
               <title>Physical Organic Chemistry: Alive or Dead?</title>
               <link>public/blog/20240105_phys_org.html</link>
               <description><![CDATA[
@@ -6347,12 +6357,12 @@ Update 12/16/2022: see <a href="https://corinwagen.github.io/public/blog/2022121
               <link>public/blog/20221206_definite_games_indefinite_optimism.html</link>
               <description><![CDATA[
 <p>
-One of the more thought-provoking pieces I read last year was Alex Danco’s post <a href=”https://alexdanco.com/2021/01/11/why-the-canadian-tech-scene-doesnt-work/”>“Why the Canadian Tech Scene Doesn’t Work,”</a> which dissects the structural and institutional factors that make Silicon Valley so much more effective at spawning successful companies than Toronto.
+One of the more thought-provoking pieces I read last year was Alex Danco’s post <a href="https://alexdanco.com/2021/01/11/why-the-canadian-tech-scene-doesnt-work/">“Why the Canadian Tech Scene Doesn’t Work,”</a> which dissects the structural and institutional factors that make Silicon Valley so much more effective at spawning successful companies than Toronto.
 I’ll briefly summarize the piece’s key arguments here, connect it to some ideas from <i>Zero to One</i>, and finish by drawing some conclusions for academia.
 </p>
 
 <p>
-Danco’s key insight is applying James Carse’s distinction between <a href=”https://en.wikipedia.org/wiki/Finite_and_Infinite_Games”>finite and infinite games</a> to entrepreneurship. What makes a game “finite” or “infinite”?
+Danco’s key insight is applying James Carse’s distinction between <a href="https://en.wikipedia.org/wiki/Finite_and_Infinite_Games">finite and infinite games</a> to entrepreneurship. What makes a game “finite” or “infinite”?
 </p>
 
 <blockquote>
@@ -6394,7 +6404,7 @@ Quite in character with our love of milestones, Canada loves anything with struc
 </blockquote>
 
 <p>
-While Danco limits himself to comparing Canada and Silicon Valley, this failure mode is sadly not confined to Canada. Indeed, many of his observations are directly applicable to academic research. The large number of finite games in academia—publishing papers, writing a dissertation, submitting grants, getting tenure—tends to crowd out the more impactful infinite games that lead to real, meaningful progress, and promotes incremental projects with a high chance of success. (This is simply Charles Hummel’s <a href=”https://www.theartofsimple.net/fighting-the-tyranny-of-the-urgent-at-home/”>“tyranny of the urgent”</a> by a different name.)
+While Danco limits himself to comparing Canada and Silicon Valley, this failure mode is sadly not confined to Canada. Indeed, many of his observations are directly applicable to academic research. The large number of finite games in academia—publishing papers, writing a dissertation, submitting grants, getting tenure—tends to crowd out the more impactful infinite games that lead to real, meaningful progress, and promotes incremental projects with a high chance of success. (This is simply Charles Hummel’s <a href="https://www.theartofsimple.net/fighting-the-tyranny-of-the-urgent-at-home/">“tyranny of the urgent”</a> by a different name.)
 </p>
 
 <p>
