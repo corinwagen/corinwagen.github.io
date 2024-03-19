@@ -4,16 +4,6 @@
           <link>https://corinwagen.github.io</link>
           <title>Corin Wagen</title>
           <item>
-              <title>Wavefront Propagation for Dihedral Scans</title>
-              <link>public/blog/20240111_wavefront.html</link>
-              <description><![CDATA[
-Today, I want to highlight a really nice paper from Lee-Ping Wang and coworkers: "Driving Torsional Scans with Wavefront Propagation."
-
-The authors of this paper set out to study dihedral scans, which are commonly used
-]]></description>
-              <pubDate>Thu, 11 Jan 2024 00:00:00 +0000</pubDate>
-          </item>
-          <item>
               <title>Physical Organic Chemistry: Alive or Dead?</title>
               <link>public/blog/20240105_phys_org.html</link>
               <description><![CDATA[
