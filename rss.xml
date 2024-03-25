@@ -46,7 +46,7 @@ Astute readers will notice differences from how simulations in the life sciences
 </p>
 
 <p>
-SolidWorks-style computation is also prospective, not retrospective. In other words, the goal of the simulation is to generate subsequent experimental hits, not figures for publication, meaning that successful computational studies might never even be reported. This is different from the DFT section of the average organic chemistry paper, which is typically performed by a different team after all experimental results are complete. This isn’t bad, but ex post studies are different from actually using computations <i>ex ante</i> to design molecules.
+SolidWorks-style computation is also prospective, not retrospective. In other words, the goal of the simulation is to generate subsequent experimental hits, not figures for publication, meaning that successful computational studies might never even be reported. This is different from the DFT section of the average organic chemistry paper, which is typically performed by a different team after all experimental results are complete. This isn’t bad, but <i>ex post</i> studies are different from actually using computations <i>ex ante</i> to design molecules.
 </p>
 
 <p>
