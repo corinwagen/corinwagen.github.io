@@ -34,7 +34,82 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p3.html'>previous page</a></div><div class='next-link'><a href='blog_p5.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230804_abundance.html'>How Common Are Different Functional Groups?</a></h2><i>August 4, 2023</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p3.html'>previous page</a></div><div class='next-link'><a href='blog_p5.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230820_ts_polarizable.html'>Transition States Are Polarizable</a></h2><i>August 20, 2023</i>
+<p><i>
+Recently in off-blog content: I coauthored <a href=https://www.freaktakes.com/p/the-past-and-present-of-computer>an article with Eric Gilliam</a> on how LLMs can assist in hypothesis generation and help us all become more like Sharpless. Check it out!
+</i></p>
+
+<p>
+The Pauling model for enzymatic catalysis states that enzymes are “antibodies for the transition state”—in other words, they preferentially bind to the transition state of a given reaction, rather than the reactants or products. This binding interaction stabilizes the TS, thus lowering its energy and accelerating the reaction.  
+</p>
+
+<p>
+This is a pretty intuitive model, and one which is often employed when thinking about organocatalysis, particularly noncovalent organocatalysis. (It’s a bit harder to use this model when the mechanism changes in a fundamental way, as with many organometallic reactions.) Many transition states have distinctive features, and it’s fun to think about what interactions could be engineered to recognize and stabilize only these features and nothing else in the reaction mixture. 
+</p>
+
+<p>
+(For instance, chymotrypsin contains a dual hydrogen-bond motif called the “<a href=https://en.wikipedia.org/wiki/Oxyanion_hole>oxyanion hole</a>” which stabilizes developing negative charge in the Burgi–Dunitz TS for alcoholysis of amides. The negative charge is unique to the tetrahedral intermediate and the high-energy TSs to either side, so reactant/product inhibition isn’t a big issue. This motif can be mimicked by dual hydrogen-bond donor organocatalysts like the one my PhD lab specialized in.) 
+</p>
+
+<p>
+The downside of this approach to catalyst design is that each new sort of reaction mechanism requires a different sort of catalyst. One TS features increasing negative charge at one place, while another features increasing positive charge at another, and a third is practically charge-neutral the whole way through. What if there were some feature that was common to all transition states? 
+</p>
+
+<p>
+A recent <a href=https://chemrxiv.org/engage/chemrxiv/article-details/64def1de694bf1540c8b1e3c?s=03>preprint</a> from Diptarka Hait and Martin Head-Gordon suggests an interesting answer to this question: polarizability. (Diptarka, despite just finishing his PhD, is a <a href=https://scholar.google.com/citations?user=R2WrGKMAAAAJ&hl=en>prolific</a> scientist with a ton of different interests, and definitely someone to keep an eye on.) The authors tackle the question of when precisely a stretching bond can be considered “broken.” An intuitive answer might be “the transition state,” but as the paper points out, plenty of bond-breaking potential energy surfaces lack clear transition states (e.g. H<sub>2</sub>, pictured below in red). 
+</p>
+
+<figure>
+  <img class=centered-img src=../img/20230820_polariz.png style="width:450px;" />
+  <figcaption>
+  Hydrogen PES (red), with various polarizability components shown in blue.
+  </figcaption>
+</figure>
+
+<p>
+Instead, the authors propose that polarizability is a good way to study this question. As seen in the following graph, polarizability (particularly α<sub>||</sub>, the component parallel to the bond axis) first increases as a bond is stretched, and then decreases, with a sharp and easily identifiable maximum about where a bond might be considered to be broken. This metric tracks with the conventional PES metric in cases where the PES is well-defined (see Fig. 5), which is comforting. Why does this occur?
+</p>
+
+<blockquote>
+The evolution of α [polarizability] can be rationalized in the following manner. Upon initially stretching H2 from equilibrium, the bonding electrons fill up the additional accessible volume, resulting in a more diffuse (and thus more polarizable) electron density. Post bond cleavage however, the electrons start localizing on individual atoms, leading to a decrease in polarizability.
+</blockquote>
+
+<p>
+In other words, electrons that are “caught in the act” of reorganizing between different atoms are more polarizable, whereas electrons which have settled into their new atomic residences are less polarizable again.
+</p>
+
+<p>
+This is cool, but how can we apply this to catalysis? As it happens, there are already a few publications (<a href=https://pubs.acs.org/doi/abs/10.1021/jo960521y>1</a>, <a href=https://pubs.acs.org/doi/abs/10.1021/jo960521y>2</a>) from Dennis Dougherty and coworkers dealing with exactly this question. They show that cyclophanes are potent catalysts for S<sub>N</sub>2-type reactions that both create and destroy cations, and argue that polarizability, rather than any charge-recognition effect, undergirds the observed catalysis:
+</p>
+
+<blockquote>
+Since transition states have long, weak bonds, they are expected to be more polarizable than ground-state substrates or products. The role of the host is to surround the transition state with an electron-rich-system that is polarizable and in a relatively fixed orientation, so that induced dipoles in both the host and the transition state are suitably aligned… Note that in this model, it is not sufficient that polarizability contributes to binding. Polarizability must be more important for binding transition states than for binding ground states. Only in this way can it enhance catalysis.
+</blockquote>
+
+<p>
+To defend this argument, the authors prepare a series of variously substituted cyclophanes, and show that while Hammett-type electronic tuning of the aryl rings has relatively small effects, adding more heavy atoms always increases the rate, with the biggest effect observed with bromine (the heaviest element attempted). Heavier atoms are more polarizable, so this supports the argument that polarizability, rather than any specific electrostatic effect, is responsible for catalysis. 
+</p>
+
+<figure>
+  <img class=centered-img src=../img/20230820_cyclophane.png style="width:450px;" />
+  <figcaption>
+  The cyclophanes used as catalysts: Y=Br is the best.
+  </figcaption>
+</figure>
+
+<p>
+The Dougherty work is performed on a very specific model system, and the absolute rate accelerations seen aren’t massive (about twofold increase relative to the protio analog), so it’s not clear that this will actually be a promising avenue for developing mechanism-agnostic catalysts. 
+</p>
+
+<p>
+But I think this line of research is really interesting, and merits further investigation. Pericyclic reactions, which involve large electron clouds and multiple forming–breaking bonds and often feature minimal development of partial charges, seem promising targets for this sort of catalysis—what about the carbonyl–ene reaction or something similar? The promise of new catalytic strategies that complement existing mechanism-specific interactions is just too powerful to leave unstudied. 
+</p>
+
+<i>
+Thanks to Joe Gair for originally showing me the Dougherty papers referenced.
+</i>
+
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230804_abundance.html'>How Common Are Different Functional Groups?</a></h2><i>August 4, 2023</i>
 <p>
 Since the ostensible purpose of organic methodology is to develop reactions that are useful in the real world, the utility of a method is in large part dictated by the accessibility of the starting materials. If a compound is difficult to synthesize or hazardous to work with, then it’s difficult to convince people to use it in a reaction (e.g. most diazoalkanes). Organic chemists are pragmatic, and would usually prefer to run a reaction that starts from a commercial and bench-stable starting material. 
 </p>
@@ -622,90 +697,6 @@ What Eric proposes in his piece, and what I’m arguing here, is that scientific
 </p>
 
 <i>Thanks to Ari Wagen for reading a draft of this piece.</i>
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230710_pka.html'>pKa and Nonpolar Media</a></h2><i>July 10, 2023</i>
-<p>
-The concept of p<i>K</i><sub>a</sub> is introduced so early in the organic chemistry curriculum that it’s easy to overlook what a remarkable idea it is.
-</p>
-
-<p>
-<i>
-Briefly, for the non-chemists reading this: p</i>K<i><sub>a</sub> is defined as the negative base-10 logarithm of the acidity constant of a given acid H–A:
-</i>
-</p>
-
-<p>
-p<i>K</i><sub>a</sub> := -log<sub>10</sub>([HA]/[A-][H+]) 
-</p>
-
-<p>
-<i>
-Unlike pH, which describes the acidity of a bulk solution, p</i>K<i><sub>a</sub> describes the intrinsic proclivity of a molecule to shed a proton—a given molecule in a given solvent will always have the same p</i>K<i><sub>a</sub>, no matter the pH. This makes p</i>K<i><sub>a</sub> a very useful tool for ranking molecules by their acidity (e.g. <a href=http://ccc.chem.pitt.edu/wipf/MechOMs/evans_pKa_table.pdf>the Evans p</i>K<i><sub>a</sub> table</a>).
-</i>
-</p>
-
-<p>
-The claim implicit in the definition of p<i>K</i><sub>a</sub> is that a single parameter suffices to describe the acidity of each molecule.<sup><a href="#fn1">1</a></sup> In general, this isn’t true in chemistry—there’s no single “reactivity” parameter which describes how reactive a given molecule is. For various regions of chemical space a two-parameter model can <a href=https://www.cup.lmu.de/oc/mayr/reaktionsdatenbank/>work</a>, but in general we don’t expect to be able to evaluate the efficacy of a given reaction by looking up the reactivity values of the reactants and seeing if they’re close enough. 
-</p>
-
-<p>
-Instead, structure and reactivity interact with each other in complex, high-dimensional ways. A diene will react with an electron-poor alkene and not an alcohol, while acetyl chloride doesn’t react with alkenes but will readily acetylate alcohols, and a free radical might ignore both the alkene and the alcohol and abstract a hydrogen from somewhere else. Making sense of this confusing morass of different behaviors is, on some level, what organic chemistry is all about. The fact that the reactivity of different functional groups depends on reaction conditions is key to most forms of synthesis!
-</p>
-
-<p>
-But p<i>K</i><sub>a</sub> isn’t so complicated. If I want to know whether acetic acid will protonate pyridine in a given solvent, all I have to do is look up the p<i>K</i><sub>a</sub> values for acetic acid and pyridinium (pyridine’s conjugate acid). If pyridinium has a higher p<i>K</i><sub>a</sub>, protonation will be favored; otherwise, it’ll be disfavored. More generally, one can predict the equilibrium distribution of protons amongst <i>N</i> different sites from a list of the corresponding p<i>K</i><sub>a</sub>s. 
-</p>
-
-<p>
-Why is p<i>K</i><sub>a</sub> so well-behaved? The key assumption underlying the above definition is that ions are free and do not interact with one another. This allows us to neglect any specific ion–ion interactions, and makes the scale universal: if the pyridinium cation and the acetate anion never interact, then I can learn everything I need to about pyridinium acetate just by measuring the p<i>K</i><sub>a</sub>s of pyridine and acetic acid in isolation. 
-</p>
-
-<p>
-This assumption is quite good in solvents like water or DMSO, which excel at stabilizing charged species, but progressively breaks down as one travels to the realm of nonpolar solvents. As ions start to pair with themselves, specific molecule–molecule interactions become important. The relative size of the anions can matter: in a nonpolar solvent, a small anion will be better stabilized by a small cation than by a large, diffuse cation, meaning that e.g. acetate will appear more acidic when protonating smaller molecules. Other more quotidian intermolecular interactions, like hydrogen bonding and π-stacking, can also play a role.
-</p>
-
-<p>
-And the ions aren’t the only thing that can stick together: aggregation of acids is often observed in nonpolar solvents. Benzenesulfonic acid <a href=https://link.springer.com/article/10.2116/analsci.15.303>forms a trimer</a> in benzonitrile solution, which is still pretty polar, and alcohols and carboxylic acids are known to aggregate under a variety of conditions as well.<sup><a href="#fn2">2</a></sup> Even seemingly innocuous species like tetrabutylammonium chloride will aggregate at high concentrations (<a href=https://pubs.acs.org/doi/pdf/10.1021/ja9723139>ref</a>, <a href=https://pubs.rsc.org/en/content/articlelanding/1995/c3/c39950002513>ref</a>).
-</p>
-
-<p>
-To reliably extend p<i>K</i><sub>a</sub> scales to nonpolar solvents, one must thus deliberately choose compounds which resist aggregation. As the dielectric constant drops, so does the number of such compounds. The clearest demonstration of this I’ve found is a series of papers (<a href=https://pubs.acs.org/doi/10.1021/jo9713013>1</a>, <a href=https://pubs.acs.org/doi/10.1021/jo0343477>2</a>) by p<i>K</i><sub>a</sub> guru Ivo Leito measuring the acidity of a series of fluorinated compounds in heptane:
-</p>
-
-<figure>
-  <img class=centered-img src=../img/20230710_leito.png style="width:350px;" />
-  <figcaption>
-  A portion of the scale, showing the compounds employed.
-  </figcaption>
-</figure>
-
-<p>
-This effort, while heroic, demonstrates the futility of measuring p<i>K</i><sub>a</sub> in nonpolar media from the standpoint of the synthetic chemist. If only weird fluoroalkanes engineered not to aggregate can have p<i>K</i><sub>a</sub> values, then the scale may be analytically robust, but it’s hardly useful for designing reactions! 
-</p>
-
-<p>
-The key point here is that the difficulty of measuring p<i>K</i><sub>a</sub> in nonpolar media is not an analytical barrier which can be surmounted by new and improved technologies, but rather a fundamental breakdown in the idea of p<i>K</i><sub>a</sub> itself. Even the best p<i>K</i><sub>a</sub> measurement tool in the world can’t determine the p<i>K</i><sub>a</sub> of HCl in hexanes, because no such value exists—the concept itself is borderline nonsensical. Chloride will ion-pair with everything in hexanes, hydrogen chloride will aggregate with itself, chloride will stick to hydrogen chloride, and so forth. Asking for a p<i>K</i><sub>a</sub> in this context just doesn't make much sense.<sup><a href="#fn3">3</a></sup>
-</p>
-
-<p>
-It’s important to remember, however, that just because the p<i>K</i><sub>a</sub> scale no longer functions in nonpolar solvents doesn’t mean that acids don’t have different acidities. Triflic acid in toluene will still protonate just about <a href=https://pubs.acs.org/doi/abs/10.1021/ol061174+>everything</a>, whereas acetic acid will not. Instead, chemists wishing to think about acidity in nonpolar media have to accept that no one-dimensional scale will be forthcoming. The idealized world of p<i>K</i><sub>a</sub> we’re accustomed to may no longer function in nonpolar solvents, but chemistry itself still works just fine.
-</p>
-
-<i>
-Thanks to Ivo Leito for discussing these topics with me over Zoom, and to Joe Gair for reading a draft of this post.
-</i>
-
-<h3>Footnotes</h3>
-<ol class=footnotes>
-  <li id="fn1">
-    Really, each proton.
-  </li>
-  <li id="fn2">
-   Ivo Leito called carboxylic acids "the world champions of aggregation" when I asked him about these issues.
-  </li>
-  <li id="fn3">
-    Even experimentally nonsensical p<i>K</i><sub>a</sub>s can be simulated, though: Jorgensen <a href=https://pubs.acs.org/doi/10.1021/ja00256a053>famously</a> used free energy perturbation to compute the p<i>K</i><sub>a</sub> of ethane in water.
-  </li>
-</ol>
 </div><div class='previous-link'><a href='blog_p3.html'>previous page</a></div><div class='next-link'><a href='blog_p5.html'>next page</a></div><br>
   </body>
   <br>

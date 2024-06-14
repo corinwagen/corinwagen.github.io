@@ -34,7 +34,103 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p14.html'>previous page</a></div><div class='next-link'><a href='blog_p16.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220810_viewpoints_on_simulation.html'>Combating Computational Nihilism</a></h2><i>August 10, 2022</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p14.html'>previous page</a></div><div class='next-link'><a href='blog_p16.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220815_rate_determining_span.html'>The Rate-Determining Span</a></h2><i>August 15, 2022</i>
+<p>
+One common misconception in mechanistic organic chemistry is that reactions are accelerated by speeding up the rate-determining step. 
+This mistaken belief can lead to an almost monomaniacal focus on determining the nature of the rate-determining step.
+In fact, it's more correct to think of reactions in terms of the <u>rate-determining span</u>: the difference between the resting state and the highest-energy transition state.
+(I thank Eugene Kwan's <a href=https://ekwan.github.io/pdfs/chem106/28%20-%20First-Order%20Kinetics.pdf>notes</a> for introducing me to this idea.)
+</p>
+
+<p>
+In this post, I hope to demonstrate the veracity of this concept by showing that, under certain idealized assumptions, the existence of a low-energy intermediate has no effect on rate. Consider the following system:
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20220815_scheme.png" style="width:375px;" />
+  <figcaption> Concerted and stepwise mechanisms. </figcaption>
+</figure>
+
+<p>
+We can imagine plotting these two mechanisms on a potential energy surface:
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20220815_rds.png" style="width:450px;" />
+  <figcaption> Concerted and stepwise mechanisms, on a PES. </figcaption>
+</figure>
+
+<p>
+In this example, <b>X</b> = <b>Y</b> + <b>Z</b>; the energy of the transition state and ground state are the same in both cases, and only the presence (or absence) of an intermediate differentiates the two potential energy surfaces. We will now compute the rate of product formation in both cases.
+Using the <a href="https://en.wikipedia.org/wiki/Eyring_equation">Eyring–Polyani equation</a>, it's straightforward to arrive at an overall rate for the concerted reaction as a function of the barrier:
+</p>
+
+<br>
+<p>
+k = k<sub>B</sub>T/h * exp(-<b>X</b>/RT)
+</p>
+<p>
+rate<sub>concerted</sub> = k * [SM]
+</p>
+<p>
+rate<sub>concerted</sub> = k<sub>B</sub>T/h * exp(-<b>X</b>/RT) * [SM]
+</p>
+<br>
+
+<p>
+The stepwise case is only slightly more complicated. Assuming that the barrier to formation of the intermediate is much lower than the barrier to formation of the product, and that the intermediate is substantially lower in energy than the rate-limiting transition state, we can apply the <a href="https://www-jmg.ch.cam.ac.uk/tools/magnus/kineticnotes.html">pre-equilibrium approximation</a>:
+</p>
+
+<br>
+<p>
+rate<sub>stepwise</sub> = k<sub>2</sub> * [INT] 
+</p>
+<p>
+k<sub>2</sub> = k<sub>B</sub>T/h * exp(-<b>Z</b>/RT)
+</p>
+<p>
+rate<sub>stepwise</sub> = k<sub>B</sub>T/h * exp(-<b>Z</b>/RT) * [INT]
+</p>
+<br>
+
+<p>
+Solving for [INT] is straightforward, and we can plug the result in to get our final answer:
+</p>
+
+<br>
+<p>
+<b>Y</b> = -RT * ln([INT]/[SM])
+</p>
+<p>
+[INT] = exp(-<b>Y</b>/RT)*[SM]
+</p>
+<p>
+rate<sub>stepwise</sub> = k<sub>B</sub>T/h * exp(-<b>Z</b>/RT) * exp(-<b>Y</b>/RT) * [SM] 
+</p>
+<p>
+rate<sub>stepwise</sub> = k<sub>B</sub>T/h * exp(-<b>X</b>/RT) * [SM] = rate<sub>concerted</sub>
+</p>
+<br>
+
+<p>
+As promised, the rates are the same—where the preequilibrium approximation holds, the existence of an intermediate has no impact on rate.
+All that matters is the relative energy of the transition state and the ground state.
+</p>
+
+<p>
+This method of thinking is particularly useful for rationalizing tricky Hammett trends. For instance, it's known that electron-rich indoles <a href="https://pubs.acs.org/doi/abs/10.1021/jacs.7b06811">react much faster</a> in Brønsted-acid-catalyzed Pictet–Spengler reactions, even though these reactions proceed through rate-determining elimination from a carbocation. Since electron-poor carbocations are more acidic, simple analysis of the rate-determining step predicts the opposite trend.
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20220815_ps.png" style="width:650px;" />
+  <figcaption> Brønsted-acid-catalyzed Pictet–Spengler reactions. </figcaption>
+</figure>
+
+<p>
+However, if we ignore the intermediate, it's clear that the transition state contains much more carbocationic character than the ground state, and so electron-donating groups will stabilize the transition state relative to the ground state and thereby accelerate the reaction. Thinking about intermediates is a great way to get confused; to understand trends in reactivity, all you need to consider is the transition state and the ground state.
+</p>
+
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220810_viewpoints_on_simulation.html'>Combating Computational Nihilism</a></h2><i>August 10, 2022</i>
 <p>
 The growing accessibility of computational chemistry has, unfortunately, led to a preponderance of papers with bad computations. Organic chemists are all too familiar with the “DFT section” of an otherwise high-quality publication which typically contains a transition-state structure or two, some sort of enigmatic cartoon purporting to explain the observed selectivity, and perhaps an uninterpretable NCIPLOT cited as evidence for the preceding claims.<sup><a href="#fn1">1</a></sup>
 </p>
@@ -427,105 +523,6 @@ Another conclusion from this area of thinking is that federally funded scientist
       Thanks to <a href="https://twitter.com/DominikJKubicki/status/1549809467247689728">Dominik Kubicki</a> for pointing this out.
     </li>
   </ul>
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220708_apotheosis_of_2d_ir.html'>The Apotheosis of 2D Infrared Spectroscopy</a></h2><i>July 8, 2022</i>
-<p>
-  While IR spectroscopy is still taught in introductory organic chemistry classes, it has been almost completely replaced by NMR spectroscopy and mass spectrometry for 
-  routine structural assignments. Still, IR spectroscopy offers unique advantages to the mechanistic chemist: the short timescale of IR allows for the 
-  observation of transient molecular interactions even when slower techniques like NMR only yield time-averaged data, 
-  and IR absorbances can easily be perturbed by isotopic substitution while leaving the underlying potential-energy surface unchanged. 
-</p>
-
-<p>
-  These advantages are nicely illustrated in the IR spectrum of a mixture of phenol, benzene, and CCl<sub>4</sub>, 
-  which shows two peaks corresponding to free phenol (2665 cm<sup>-1</sup>) and phenol complexed to benzene (2631 cm<sup>-1</sup>). 
-  (The phenolic proton was replaced by deuterium, moving the O–D stretch away from C–H stretches and into a vacant region of the spectrum.) 
-  From the standpoint of assessing purity, it might be upsetting that a pure compound shows two peaks; 
-  from the standpoint of a mechanistic chemist, the ability to distinguish two different solvation environments experimentally is incredible.
-</p>
-
-<figure>
-  <img class="centered-img" src="../img/20220708_1d_ir.png" style="width:400px;" alt="IR spectrum of phenol in benzene/CCl4" />
-  <figcaption> IR spectrum of phenol in benzene/CCl<sub>4</sub> (Fayer Figure 2). </figcaption>
-</figure>
-
-<p>
-  Unfortunately, measuring this spectrum tells us about the thermodynamics of the equilibrium, but not the kinetics; 
-  there’s not a good way to determine how fast these two species are exchanging from these data.<sup><a href="#fn1">1</a></sup> 
-  In 2005, <a href=https://www.science.org/doi/10.1126/science.1116213>Fayer and coworkers</a> developed a pump–probe infrared spectroscopy method called “2D IR” to tackle this problem. 
-  In 2D IR, the system is excited, allowed to evolve for a variable length of time <i>T<sub>w</sub></i>, 
-  and then triggered to emit a vibrational “echo” (in analogy to spin-echo NMR experiments) 
-  which still contains phase information from the original excitation. 
-  (There are a lot of <a href=https://pubs.acs.org/doi/pdf/10.1021/ar068010d>non-trivial spectroscopic details</a> here which I don’t really understand.) 
-</p>
-
-<figure>
-  <img class="centered-img" src="../img/20220708_2d_ir.png" style="width:320px;" alt="2D IR spectrum of phenol in benzene/CCl4" />
-  <figcaption> 2D IR spectrum of phenol in benzene/CCl<sub>4</sub> (Fayer Figure 3). </figcaption>
-</figure>
-
-<p>
-  The net result of this is a two-dimensional plot showing initial and final frequencies, in which cross-peaks represent molecules which have moved between one state and another during 
-  <i>T<sub>w</sub></i>. 
-  By surveying a range of <i>T<sub>w</sub></i> values, the kinetics of exchange can be quantitatively determined: in this case, the time constant τ was found to be 8 ± 2 ps. 
-  This result might not seem thrilling (“fast exchange is fast”), but this experiment can be used to measure rates of phenol dissociation from electronically-varied aromatic rings, 
-  or <a href=https://web.stanford.edu/group/fayer/articles/351.pdf>compared to results from molecular dynamics simulations</a> for benchmarking purposes. 
-</p>
-
-<p>
-  While many groups are now using 2D IR, <a href=https://pubs.acs.org/doi/abs/10.1021/jacs.2c00154>this recent paper</a> 
-  from Tokmakoff and coworkers studying superconcentrated electrolytes stood out to me as particularly exceptional. 
-  In superconcentrated solutions like those found in batteries (e.g. 15 M LiTFSI in acetonitrile), the extreme salt concentration leads to high viscosity and substantial aggregation, 
-  leading to questions about how charge transport in batteries occurs. 
-  Some simulations seem to suggest that, rather than “vehicular diffusion” wherein a cation diffuses along with its solvent shell, 
-  charge transport occurs through “structural diffusion” involving breaking/reforming of cation–solvent interactions. 
-  (This is analogous to the Grotthuss mechanism of proton transport in water.)
-</p>
-
-<figure>
-  <img class="centered-img" src="../img/20220708_transport_mechs.png" style="width:450px;" alt="different transport mechanisms" />
-  <figcaption> Illustration of different transport mechanisms (Tokmakoff Figure 8). </figcaption>
-</figure>
-
-<p>
-  Since distinct C≡N stretches are visible for cation-bound and free acetonitrile, it might seem straightforward to simply measure time evolution of the cross-peaks 
-  and thereby determine the rate of solvent exchange. 
-  Unfortunately studying exchange in the bulk solvent is complicated by the fact that direct vibrational energy transfer can occur through collisions, 
-  meaning that cross-peaks are observed even in the absence of exchange. 
-  The authors solve this problem by using a mixture of D<sub>3</sub>CCN and D<sub>3</sub>C<sup>13</sup>CN: 
-  while cross-peaks between the heavy and light isotopologues can only occur through energy transfer, 
-  cross-peaks between the same isotopologue can also occur through chemical exchange.<sup><a href="#fn2">2</a></sup> 
-</p>
-
-<figure>
-  <img class="centered-img" src="../img/20220708_2d_ir_tokmakoff.png" style="width:600px;" alt="2D IR of electrolyte" />
-  <figcaption> 2D IR measurement of 1.9 M LiTFSI in acetonitrile (Tokmakoff Figure 5). </figcaption>
-</figure>
-
-<p>
-  They find that the time evolution of all cross-peaks is identical under all conditions, 
-  indicating that solvent exchange must be slower than energy transfer (~20 ps) for any cation or concentration studied. 
-  This suggests that, contrary to a variety of theoretical studies, structural-diffusion mechanisms for cation transport are quite slow and unlikely to be relevant for these electrolytes. 
-</p>
-
-<p>
-  This study is a beautiful example of designing a cutting-edge spectroscopic experiment to solve a key scientific problem, 
-  and reminds me how much we still don’t know about “simple” systems like ionic solutions. 
-  I would love to see techniques like this applied to study reactive intermediates in the ground state, e.g. Olah-style superacid solutions! 
-  More broadly, it’s exciting to see how 2D IR can advance in less than two decades from being limited to simple model systems to 
-  now being used to tackle the biggest open questions in chemistry. What new techniques being developed today will rise to prominence in the coming decades?
-</p>
-
-<i>Thanks to Joe Gair for reading a draft of this.</i>
-
-<h3>Footnotes</h3>
-<ol class=footnotes>
-  <li id="fn1">
-    For a different way to extract rates from vibrational spectra, see <a href=https://pubs.acs.org/doi/abs/10.1021/ja00882a048>this work</a> on line-broadening analysis.
-  </li>
-  <li id="fn2">
-    Deuterated acetonitrile is used owing to <a href=https://pubs.acs.org/doi/10.1021/acs.jpcb.1c09572>complications with Fermi resonances</a> in protio-acetonitrile.
-  </li>
-</ol>
 </div><div class='previous-link'><a href='blog_p14.html'>previous page</a></div><div class='next-link'><a href='blog_p16.html'>next page</a></div><br>
   </body>
   <br>
