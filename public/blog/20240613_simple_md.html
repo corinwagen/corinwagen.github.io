@@ -45,7 +45,7 @@
     
 <p>
 Scientific software can be confusing, particularly when you're doing something that the software isn't primarily intended for. 
-I often find myself wanting to run quick-and-dirty molecular dynamics simulations on small organic molecules, but I've struggled to find an easy way to do this using open-source tools. 
+I often find myself wanting to run quick-and-dirty molecular dynamics simulations on small organic molecules, but I've struggled to find an easy way to do this using open-source tools like OpenMM. 
 </p>
 
 <p>
@@ -62,7 +62,7 @@ This is particularly frustrating since I feel like I should be equipped to succe
 Yet despite all this, I've probably tried and failed to use OpenMM for my research a half-dozen times over the past five years (<a href=https://github.com/openmm/openmm/issues/2937>evidence</a>). I always get bogged down somewhere: I don't have PDB files for my compounds, or I can't figure out how to get the forcefield parameters right for a small molecule, or I just get lost in a sea of similar-sounding classes and objects. Part of the problem here is that all the "intro to MD" tutorials seem to assume that you're hoping to run an MD simulation on a protein from the PDB—so if you have an .xyz file, it's not obvious how to proceed.
 </p>
 
-<p> Nevertheless, I've finally succeeded. Here's the code, with minor annotations intersperced:</p>
+<p> Nevertheless, I've finally succeeded. Here's the code, with minor annotations interspersed:</p>
 
 <pre class=code-block>
 from openff.toolkit import Molecule, Topology
