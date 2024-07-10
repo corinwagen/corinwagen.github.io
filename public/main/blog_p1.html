@@ -36,11 +36,11 @@
     </ul>
     <h1 class='blogroll-header'>Blog</h1><div class='next-link'><a href='blog_p2.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20240710_dissimilar_clustering.html'>Choosing Maximally Dissimilar Molecules</a></h2><i>July 10, 2024</i>
 <p>
-I've been playing around with generating non-equilbrium conformations by molecular dynamics recently, and I've been thinking about how to best parse the outputs of a dynamics simulation. A technique I've seen quite often in the literature is "choose a dissimilar subset of conformers by RMSD"—for instance, here's what <a href=https://www.nature.com/articles/s41597-022-01882-6>the SPICE paper</a> says: 
+I've been playing around with generating non-equilibrium conformations by molecular dynamics recently, and I've been thinking about how to best parse the outputs of a dynamics simulation. A technique I've seen quite often in the literature is "choose a dissimilar subset of conformers by RMSD"—for instance, here's what <a href=https://www.nature.com/articles/s41597-022-01882-6>the SPICE paper</a> says: 
 </p>
 
 <blockquote>
-  For each of the 677 molecules, the dataset includes 50 conformations of which half are low energy and half are high energy. To generate them, RDKit 2020.09.327 was first used to generate 10 diverse conformations. Each was used as a starting point for 100 ps of molecular dynamics at a temperature of 500 K using OpenMM 7.628 and the Amber1429 force field. A conformation was saved every 10 ps to produce 100 candidate high energy conformations. <b>From these, a subset of 25 was selected that were maximally different from each other as measured by all atom RMSD.</b>
+  For each of the 677 molecules, the dataset includes 50 conformations of which half are low energy and half are high energy. To generate them, RDKit 2020.09.3 was first used to generate 10 diverse conformations. Each was used as a starting point for 100 ps of molecular dynamics at a temperature of 500 K using OpenMM 7.6 and the Amber14 force field. A conformation was saved every 10 ps to produce 100 candidate high energy conformations. <b>From these, a subset of 25 was selected that were maximally different from each other as measured by all atom RMSD.</b>
 </blockquote>
 
 <p>
