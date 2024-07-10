@@ -4,6 +4,89 @@
           <link>https://corinwagen.github.io</link>
           <title>Corin Wagen</title>
           <item>
+              <title>Choosing Maximally Dissimilar Molecules</title>
+              <link>public/blog/20240710_dissimilar_clustering.html</link>
+              <description><![CDATA[
+<p>
+I've been playing around with generating non-equilbrium conformations by molecular dynamics recently, and I've been thinking about how to best parse the outputs of a dynamics simulation. A technique I've seen quite often in the literature is "choose a dissimilar subset of conformers by RMSD"—for instance, here's what <a href=https://www.nature.com/articles/s41597-022-01882-6>the SPICE paper</a> says: 
+</p>
+
+<blockquote>
+  For each of the 677 molecules, the dataset includes 50 conformations of which half are low energy and half are high energy. To generate them, RDKit 2020.09.327 was first used to generate 10 diverse conformations. Each was used as a starting point for 100 ps of molecular dynamics at a temperature of 500 K using OpenMM 7.628 and the Amber1429 force field. A conformation was saved every 10 ps to produce 100 candidate high energy conformations. <b>From these, a subset of 25 was selected that were maximally different from each other as measured by all atom RMSD.</b>
+</blockquote>
+
+<p>
+This makes a good amount of sense: you want to choose conformers which cover as much chemical space as possible so that you get information about the PES as efficiently as possible, and RMSD is a cheap and reasonable way to do this. But how do you actually do this in practice? Nothing super helpful came up after a quick Google search, so I wrote a little script myself:
+</p>
+
+<pre class=code-block>
+import cctk
+import numpy as np
+from sklearn.cluster import AgglomerativeClustering
+import sys
+import tqdm
+import copy
+
+e = cctk.XYZFile.read_file(sys.argv[1]).ensemble
+molecules = e.molecule_list()
+
+rmsd_matrix = np.zeros((len(molecules), len(molecules)))
+comparison_atoms = molecules[0].get_heavy_atoms()
+
+def compute_rmsd(mol1: cctk.Molecule, mol2: cctk.Molecule) -> float:
+    geom1 = copy.deepcopy(mol1.geometry[comparison_atoms])
+    geom1 -= geom1.mean(axis=0)
+
+    geom2 = copy.deepcopy(mol2.geometry[comparison_atoms])
+    geom2 -= geom2.mean(axis=0)
+
+    return cctk.helper_functions.compute_RMSD(geom1, geom2)
+
+
+for i in tqdm.tqdm(range(len(molecules))):
+    for j in range(i + 1, len(molecules)):
+        rmsd_matrix[i, j] = compute_rmsd(molecules[i], molecules[j])
+        rmsd_matrix[j, i] = rmsd_matrix[i, j]
+
+clustering = AgglomerativeClustering(
+    n_clusters=50,
+    metric="precomputed",
+    linkage="average"
+)
+clustering.fit(rmsd_matrix)
+
+selected_molecules: list[int] = []
+for cluster_id in range(50):
+    cluster_indices = np.where(clustering.labels_ == cluster_id)[0]
+    selected_molecule = cluster_indices[
+        np.argmin(rmsd_matrix[cluster_indices].sum(axis=1))
+    ]
+    selected_molecules.append(selected_molecule)
+
+e2 = cctk.ConformationalEnsemble()
+for idx in selected_molecules:
+    e2.add_molecule(molecules[idx])
+
+cctk.XYZFile.write_ensemble_to_file(sys.argv[2], e2)
+print("done!")
+</pre>
+
+<p> 
+This script uses <a href=https://scikit-learn.org/stable/modules/generated/sklearn.cluster.AgglomerativeClustering.html>agglomerative clustering</a> to sort conformations into clusters, but could easily be adapted to work with other algorithms.
+To run this script, simply paste into into a file (<span class=code>choose_dissimilar.py</span>) and run:
+</p>
+
+<pre class=code-block>
+python choose_dissimilar.py input.xyz output.xyz
+</pre>
+
+<p>
+This will dump 50 output conformers into <span class=code>output.xyz</span>. Hopefully this saves someone some time... happy computing!
+</p>
+]]></description>
+              <pubDate>Wed, 10 Jul 2024 00:00:00 +0000</pubDate>
+          </item>
+          <item>
               <title>Running Simple MD Simulations</title>
               <link>public/blog/20240613_simple_md.html</link>
               <description><![CDATA[
