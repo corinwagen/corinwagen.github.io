@@ -4,6 +4,88 @@
           <link>https://corinwagen.github.io</link>
           <title>Corin Wagen</title>
           <item>
+              <title>Robots Won&#39;t Solve Organic Synthesis</title>
+              <link>public/blog/20240917_robotics.html</link>
+              <description><![CDATA[
+<p>
+Abhishaike Mahajan recently wrote <a href=https://www.owlposting.com/p/generative-ml-in-chemistry-is-bottlenecked>an excellent piece</a> on how generative ML in chemistry is bottlenecked by synthesis (<i>disclaimer: I gave some comments on the piece, so I may be biased</i>). One of the common reactions to this piece has been that self-driving labs and robotics will soon solve this problem—this is a pretty common sentiment, and one that I’ve heard a lot. 
+</p>
+
+<p>
+Unfortunately, I think that the strongest version of this take is wrong: organic synthesis won’t be “solved” by just replacing laboratory scientists with robots, because (1) figuring out what reactions to run is hard and (2) running reactions is even harder and (3) we need scientific advances to fix this, not just engineering. 
+</p>
+
+<h2>
+Predicting What Reactions To Run Is Hard
+</h2>
+
+<p>
+Organic molecules are typically made through a sequence of reactions, and figuring out how to make a molecule involves both the strategic question of which reactions to run in what order and the tactical question of how to run each reaction. 
+</p>
+
+<p>
+There’s been a ton of work on both of these problems, and it’s certainly true that computer-assisted retrosynthesis tools have come a long way in the last decade! But retrosynthesis is one of those problems that’s (relatively) easy to be good at and almost impossible to be great at. In part, this is because data in this field tends to be very bad: publications and patents are full of irreproducible or misreported reactions, and negative results are virtually never reported. (<a href=https://www.science.org/content/blog-post/sorta-artificial-intelligence>This post</a> by Derek Lowe is a good overview of some of the problems that the field faces.)
+</p>
+
+<p>
+But also, the problems are just hard! I got the chance to try out one of the leading retrosynthesis software packages back in my career as an organic chemist, and when we fed it some of the tough synthetic problems we were facing, it gave us all the logical suggestions that we had already tried (unsuccessfully) and then began suggesting insane reactions to us. I can’t really blame the model for not being able to invent new chemistry—but this illustrates the limits of what pure retrosynthesis can accomplish, absent new scientific discoveries.
+</p>
+
+<p>
+The tactical problem of optimizing reaction conditions is also difficult. In cases where there are a lot of continuous variables (like temperatures or concentrations), conventional optimization methods like design-of-experiments can work well—but where reagents or catalysts are involved, optimization becomes significantly more challenging. Lots of cheminformatics/small-data ML work has been done in this area, but it’s still not straightforward to reliably take a reaction drawn on paper and get it to work in the lab. 
+</p>
+
+<h2>
+Running Reactions Is Even Harder
+</h2>
+
+<p>
+All of the above problems are, in principle, solvable. Where I think robotics is likely to struggle even more is in the actual execution of these routes. Synthetic organic chemistry is an arcane and specialized craft that typically requires at least five years of training to be decent at—most published reaction procedures assume that the reader is themselves a trained organic chemist, and omit most of the “obvious” details that are needed to unambiguously specify a sequence of steps. (The incredibly detailed procedures in <a href=https://www.orgsyn.org/><i>Organic Syntheses</i></a> illustrate just how much is missing from the average publication.)
+</p>
+
+<p>
+My favorite illustration of how irreproducible organic chemistry can be is BlogSyn, a brief project that aimed to anonymously assess how easily published reactions could be reproduced. <a href=https://blog-syn.blogspot.com/2013/02/blog-syn-002-pd-catalyzed-c-3-selective.html>The second BlogSyn post</a> found that a reported olefination of pyridine could not be reproduced—the original author of the paper, Jin-Quan Yu (Scripps) responded, and the shape of reaction tube was ultimately found to be critical to reaction success.
+</p>
+
+<p>
+<a href=https://blog-syn.blogspot.com/2013/02/blog-syn-003-benzylic-oxidation-of_18.html>The third BlogSyn post</a> found that an IBX-mediated benzylic oxidation reported by Phil Baran (also of Scripps) could not be reproduced at all as written. Phil and his co-authors responded pretty aggressively, and after several weeks of back-and-forth <a href=https://blog-syn.blogspot.com/2013/03/blog-syn-003a-secret-ingredient.html>it was ultimately found</a> that the reaction could be reproduced after modifying virtually every parameter. A comment from Phil’s co-author Tamsyn illustrates some of the complexities at play:
+</p>
+
+<blockquote>
+There is in [BlogSyn’s] discussion a throw away comment about the 2-methylnaphthalene not being volatile. Have you never showered and then left your hair to dry at room temperature? – water evaporates at RT, just as 2-methylnaphthalene does at 95 ºC. I suggest to you that at the working temperatures of this reaction, the biggest problem may be substrate evaporation (or “hanging out” on the colder parts of the flask as Phil said)... We need fluorobenzene to reflux in these reactions and in so-doing wash substrate back into the reaction from the walls of the vessel, but it clearly slows/inhibits the reaction also – so, we need to tune this balance carefully and with patience. Scale will have a big influence on how well this process works.
+</blockquote>
+
+<p>
+Tamsyn is, of course, right—volatile substrates can evaporate, and part of setting up a reaction is thinking about the vapor pressure of your substrates and how you can address this. But this sort of thinking requires a trained chemist, and isn’t easily automated. There are a million judgment calls to make in organic synthesis—what concentration to use, how quickly to add the reagent, how to work up the reaction, what extraction solvent to use, and so on—and it’s hard enough to teach first-year graduate students how to do all this, let alone robots. Perhaps at the limit as robots achieve AGI this will be possible, but for now these remain difficult problems. 
+</p>
+
+<h2>
+We Need Scientific Advances To Fix This
+</h2>
+
+<p>
+What can be done, then? 
+</p>
+
+<p>
+From a synthetic point of view, we need more robust reactions. Lots of academics work on reaction development, but the list of truly reliable reactions remains miniscule: amide couplings, Suzuki couplings, addition to Ellman auxiliaries, SuFFEx chemistry, and so on. From a practical point of view, every reaction like this is worth a thousand random papers with a terrible substrate scope (<a href=https://onlinelibrary.wiley.com/doi/full/10.1002/1521-3773%2820010601%2940%3A11%3C2004%3A%3AAID-ANIE2004%3E3.0.CO%3B2-5>Sharpless said it better in 2001 than I ever could</a>; see also <a href=https://pubs.acs.org/doi/10.1021/acs.jmedchem.5b01409>this 2015 study</a> about how basically no new reactions are used in industry). Approaches like skeletal editing are incredibly exciting, but there’s a limit to how impactful any non-general methodology can be.
+</p>
+
+<p>
+Perhaps even more important is finding better methods for reaction purification. Purification is one of those topics which doesn’t get a lot of academic attention, but being able to efficiently automate purification unlocks a whole new set of possibilities. Solid-phase synthesis (which makes purification as simple as rinsing off some beads) has always seen some amount of use in organic chemistry, but a lot of commonly-used reactions aren’t compatible with solid support: either new supports or new reactions could address this problem. There are also cool approaches like Marty Burke’s <a href=https://www.nature.com/articles/s44160-024-00558-w?fromPaywallRec=false>“catch-and-release”</a> boronate platform which haven’t yet seen broad adoption.
+</p>
+
+<p>
+Ultimately, I share the dream of the robotics enthusiasts: if we’re able to make organic synthesis routine, we can stop worrying about how to make molecules and start thinking about what to make! I’m very optimistic about the opportunity of new technologies to address synthetic bottlenecks and enable higher-throughput data generation in chemistry. But getting to this point will take not only laboratory automation but also a ton of scientific progress in organic chemistry, and the first step in solving these problems is actually taking them seriously and recognizing that they’re unsolved.
+</p>
+
+<i>
+  Thanks to Abhishaike Mahajan and Ari Wagen for helpful comments about this post.
+</i>
+]]></description>
+              <pubDate>Tue, 17 Sep 2024 00:00:00 +0000</pubDate>
+          </item>
+          <item>
               <title>Choosing Maximally Dissimilar Molecules</title>
               <link>public/blog/20240710_dissimilar_clustering.html</link>
               <description><![CDATA[
