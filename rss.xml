@@ -6697,6 +6697,10 @@ Today I want to engage in some shameless self-promotion and highlight how <a hre
 </p>
 
 <p>
+<b>Updated October 2024 with some more shameless self-promotion: you can now run even faster and more advanced conformer searches for free through <a href=rowansci.com>Rowan</a>, my computational chemistry startup. <a href=https://rowansci.com/tools/conformers>Here's some more information</a> about Rowan's conformational searching capabilities!</b>
+</p>
+
+<p>
 Conformational searching is a really crucial task in computational chemistry, because pretty much everything else you do depends on having the correct structure in the computer. In simple cases you can just draw out every conformer manually, but as the system under study gains degrees of freedom it becomes increasingly impractical to think through every possibility.
 </p>
 
