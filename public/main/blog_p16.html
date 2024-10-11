@@ -34,7 +34,98 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p15.html'>previous page</a></div><div class='next-link'><a href='blog_p17.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220728_consulting_as_grad_school.html'>Consulting as Private-Sector Graduate School</a></h2><i>July 28, 2022</i><p>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p15.html'>previous page</a></div><div class='next-link'><a href='blog_p17.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220805_singleton_saturday_decarboxylation.html'>Singleton Saturday: Dynamics at the Border Between General- and Specific-Acid Catalysis</a></h2><i>August 6, 2022</i>
+<p>
+<i>
+This is the first in what will hopefully become a series of blog posts focusing on the fascinating work of Dan Singleton (professor at Texas A&amp;M). My goal is to provide concise and accessible summaries of his work and highlight conclusions relevant to the mechanistic or computational chemist. 
+</i>
+</p>
+
+<p>
+A central theme in mechanistic chemistry is the question of concertedness: if two steps occur simultaneously (“concerted”) or one occurs before the other (“stepwise”). One common way to visualize these possibilities is to plot the reaction coordinate of each step on two axes to form a 2D More O’Ferrall–Jencks (<a href="https://en.wikipedia.org/wiki/More_O%27Ferrall%E2%80%93Jencks_plot">MOJ</a>) plot. On an MOJ plot, a perfectly concerted reaction looks like a straight line, since the two steps occur together, while a stepwise reaction follows the border of the plot, with an intermediate located at one of the corners:
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20220805_moj.png" style="width:450px;" alt="generic MOJ plot" />
+  <figcaption> Generic More O'Ferrall–Jencks plot for general- and specific-acid catalysis (Figure 1 in the paper) </figcaption>
+</figure>
+
+<p>
+In the context of acid catalysis, where a Brønsted acid activates a substrate towards further transformations, the concerted mechanism is known as “general-acid catalysis” and the stepwise mechanism is known as “specific-acid catalysis.” This case is particularly interesting because the timescales of heavy-atom motion and proton motion are somewhat different, as can be seen by comparing typical O–H and C–O IR stretching frequencies:
+</p>
+<p>
+1/(3500 cm<sup>-1</sup> * 3e10 cm/s) = 9.5 fs for O–H bond vibration
+</p>
+<p>
+1/(1200 cm<sup>-1</sup> * 3e10 cm/s) = 28 fs for C–O bond vibration
+</p>
+
+<p>
+Since these timescales are so different, it’s impossible for the two steps to proceed perfectly synchronously, since the proton transfer will be done before heavy-atom motion is even half complete; in other words, the slope of the reaction’s path on the MOJ diagram can’t be 1. <i>Ceteris paribus</i>, then, one might expect stepwise specific-acid mechanisms to be favored. In some cases, however, the putative intermediate would be so unstable that its lifetime ought to be roughly zero (an <a href="https://pubs.acs.org/doi/10.1021/ar50150a001">enforced concerted mechanism</a>, to paraphrase Jencks). 
+</p>
+
+<p>
+In <a href="https://pubs.acs.org/doi/full/10.1021/jacs.7b02148">this week's paper</a>, Aziz and Singleton investigate the mechanism of one such example, the decarboxylation of benzoylacetic acid, which in the stepwise limit proceeds through a bizarre-looking zwitterion:
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20220805_mech.png" style="width:450px;" alt="mechanistic possibilities" />
+  <figcaption> Concerted vs. stepwise mechanisms for decarboxylation of benzoylacetic acid (taken from the paper)</figcaption>
+</figure>
+
+<p>
+Distinguishing concerted and stepwise mechanisms is, in general, a very tough question. In rare cases an intermediate can actually be observed spectroscopically, but inability to observe the intermediate proves nothing: the intermediate could be 10 kcal/mol above the ground state (leading to a vanishingly low concentration) or could persist only briefly before undergoing subsequent reactions. Accordingly, other techniques must be used to study the mechanisms of these reactions. 
+</p>
+
+<p>
+In this case, the authors measured the <sup>12</sup>C/<sup>13</sup>C kinetic isotope effects using their group’s 
+<a href="https://pubs.acs.org/doi/10.1021/ja00141a030">natural abundance method</a>. Heavy-atom kinetic isotope effects are one of the best ways to study these sorts of mechanistic questions because isotopic perturbation is at once <a href="https://pubs.acs.org/doi/full/10.1021/jacs.1c07351">extremely informative</a> and very gentle, causing minimal perturbation to the potential energy surface (unlike e.g. a Hammett study). The KIEs they found are shown below:
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20220805_kies.png" style="width:450px;"/>
+  <figcaption> Kinetic isotope effects for decarboxylation of benzoylacetic acid (Figure 2 from the paper)</figcaption>
+</figure>
+
+<p>
+These KIEs match the computed structure shown below nicely, which shows that proton transfer precedes C–C bond breaking: 
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20220805_ts.png" style="width:400px;"/>
+  <figcaption> Transition state for decarboxylation of benzoylacetic acid (M06-2X/6-311+G**) (taken from the paper)</figcaption>
+</figure>
+
+<p>
+To probe the stepwise/concerted nature of this reaction, the authors conducted quasiclassical <i>ab initio</i> molecular dynamics, propagating trajectories forwards and backwards from the transition state. Surprisingly, the dynamics show that proton transfer is complete before C–C bond scission occurs, forming an intermediate (<b>6</b>) which persists for, on average, 3.4 O–H bond vibrations despite not being a minimum on the PES. This reaction therefore inhabits the border between general- and specific-acid catalysis—proton transfer does occur before decarboxylation, but the intermediate species (in the nomenclature of <a href="https://www.pnas.org/doi/full/10.1073/pnas.1209316109">Houk and Doubleday</a>, a “dynamic intermediate”) is incredibly ephemeral.
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20220805_trajs.png" style="width:450px;"/>
+  <figcaption> Results of quasiclassical trajectories showing the existence of a dynamic intermediate (<b>6</b>) before C–C bond breakage occurs (Figure 4a from the paper)</figcaption>
+</figure>
+
+<p>
+This surprising scenario occurs because of the different timescales of the two elementary mechanistic steps, as discussed above. In the words of the authors:
+</p>
+
+<blockquote>
+It is well understood in chemistry that concerted multibond reactions often involve highly asynchronous bonding changes. However, the normal understanding of asynchronous concerted reactions is that the bonding changes overlap. If otherwise, why should the reaction be concerted at all? This view fails to take into account the differing physics of the heavy-atom versus proton motions. <b>Because of the uneven contribution of the motions, their separation is arguably intrinsic and unavoidable whenever the reaction is highly asynchronous.</b> <i>(emphasis added)</i>
+</blockquote>
+
+<p>
+Aziz and Singleton also observe a curious phenomenon in the quasiclassical trajectories, wherein some trajectories initiated backwards from the (late) transition state fully form the C–C bond before reverting to enol + CO<sub>2</sub>. This phenomenon, termed “deep recrossing,” occurs because the oxygen of the carboxylate is unable to receive the proton, stalling the reaction in the region of the unstable zwitterion; unable to progress forward, the species simply extrudes CO<sub>2</sub> and reverts back to the enol. Thus, even though the O–H bond is formed after the C–C bond (in the reverse direction) and little O–H movement occurs in the TS, inability to form the O–H bond prevents productive reaction, just like one might expect for a concerted TS.
+</p>
+
+<p>
+The picture that emerges, then, is a reaction which “wants” to be concerted, owing to the absence of a stable intermediate along the reaction coordinate, but ends up proceeding through a stepwise mechanism because of the speed of proton transfer. Importantly, the dynamic intermediate “undergoes a series of relevant bond vibrations, as would any intermediate, and it can proceed from this structure in either forward or backward directions”: it is, in meaningful ways, an intermediate.
+</p>
+
+<p>
+Given the ubiquity of proton transfer in organic chemistry, it is likely that many more reactions proceed through this sort of rapidly stepwise mechanism than is commonly appreciated. One case which I find particularly intriguing is “E<sub>2</sub>” reactions, which typically feature proton transfer to a strong base (e.g. potassium <i>tert</i>-butoxide) at the same time as C–Br or C–I bond dissociation. How do these reactions actually proceed on the femtosecond timescale? Is it possible that, <a href="https://pubs.acs.org/doi/pdf/10.1021/ar50059a003">as Bordwell proposed</a>, many E<sub>2</sub> reactions are actually stepwise? So much remains to be learned.
+</p>
+
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220728_consulting_as_grad_school.html'>Consulting as Private-Sector Graduate School</a></h2><i>July 28, 2022</i><p>
   As an undergraduate student in the sciences at MIT, contempt for management consulting was commonplace. 
   Consulting was the path for people who had ambition devoid of any real interests, 
   the “sellout road” where you made endless Powerpoints instead of providing any tangible improvement to the world. 
@@ -425,97 +516,6 @@ Another conclusion from this area of thinking is that federally funded scientist
   and finally cancel each job by building the <i>scancel</i> commands with <a href=https://www.man7.org/linux/man-pages/man1/xargs.1.html>xargs</a>.
   (This should be easily modifiable for other workload managers.)
 </p>
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220628_plenty_of_room_at_the_bottom.html'>Plenty of Room at the Bottom</a></h2><i>June 28, 2022</i>
-<p>
-  <a href=https://edoc.ub.uni-muenchen.de/15211/1/Sailer_Christian.pdf>This thesis</a>, from Christian Sailer at Ludwig Maximilian University in Munich, 
-  is one of the most exciting studies I’ve read this year. 
-</p>
-
-<p>
-  Sailer and coworkers are able to generate benzhydryl carbocations from photolysis of the corresponding phosphonium salts, and can monitor their 
-  formation and lifetime via femtosecond transient absorption spectroscopy. 
-  (There are some technical challenges which I’ll omit here.) 
-  They then use this platform to study the addition of alcohols to these cations and obtain nice kinetic data on some shockingly fast reactions:
-</p>
-
-<figure>
-  <img class="centered-img" src="../img/20220628_electrophile.png" style="width:400px;" alt="rates of reactions with electrophiles" />
-  <figcaption> Rates of reaction between methanol and various cations (page 77). </figcaption>
-</figure>
-
-<p>
-  Although these species are extremely reactive, substituent effects are still paramount: 
-  adding two methyl groups to stabilize the benzhydryl carbocation extends its lifetime by 6.3x, whereas adding two electron-withdrawing fluorines shortens its lifetime by 5.6x. 
-  The most electrophilic species studied, (dfp)<sub>2</sub>CH<sup>+</sup>, reacts with methanol in only 2.6 ps! 
-  These findings demonstrate how even an extremely reactive carbocation like Ph<sub>2</sub>CH<sup>+</sup> doesn’t react at the rate of diffusion with nucleophiles; 
-  although this reaction is almost instant on an absolute scale, there are still tens or hundreds of unproductive alcohol–carbocation interactions before product is finally formed.
-</p>
-
-<p>
-  In contrast to Sailer’s results on the electrophile, which align nicely with results from more conventional kinetic measurements, different alcohols behave very differently:
-</p>
-
-<figure>
-  <img class="centered-img" src="../img/20220628_nucleophile.png" style="width:350px;" alt="rates of reactions with nucleophiles" />
-  <figcaption> Rates of reaction between mfp(Ph)CH<sup>+</sup> and various alcohols (page 75). </figcaption>
-</figure>
-
-<p>
-  This rate difference is surprising, since Mayr’s measurements demonstrate that there’s no conventional difference in nucleophilicity between these species—and intuitively, 
-  one wouldn’t expect adding additional carbons to substantially hinder approach to the oxygen. 
-  However, as Sailer notes, larger molecules rotate and reorient much more slowly than smaller molecules. 
-  This is evident from a number of different physical properties: larger alcohols form more viscous liquids and have slower dielectric relaxation times 
-  (how long it takes them to reorient in response to a new charge).
-</p>
-
-<table>
-  <tr>
-    <th> alcohol </th> 
-    <th> viscosity (<a href=http://murov.info/orgsolvents.htm>ref</a>) </th>
-    <th> dielectric relaxation time (<a href=https://pubs.acs.org/doi/pdf/10.1021/j100048a004>ref</a>) </th>
-    <th> reaction time (above) </th>
-  </tr>
-  <tr>
-    <td> methanol </td>
-    <td> 0.54 cP </td>
-    <td> 5.0 ps </td>
-    <td> 22 ps </td>
-  </tr>
-  <tr>
-    <td> ethanol </td>
-    <td> 1.08 cP </td>
-    <td> 16 ps </td>
-    <td> 41 ps </td>
-  </tr>
-  <tr>
-    <td> <i>n</i>-propanol </td>
-    <td> 1.95 cP </td>
-    <td> 26 ps </td>
-    <td> 62 ps </td>
-  </tr>
-  <tr>
-    <td> <i>iso</i>-propanol </td>
-    <td> 207 cP </td>
-    <td> </td>
-    <td> 106 ps</td>
-  </tr>
-  </tr>
-</table>
-
-<p>
-  Sailer thus concludes that, as the timescale of reaction approaches the timescale of molecular motion, nucleophile reorientation becomes rate-limiting. 
-  This is a really cool conclusion, and highlights how the environment that reacting molecules “see” differs from our macroscopic chemical intuition: 
-  although we think of reorientation as barrierless, for very fast reactions reorientation is actually slower than bond formation.
-  (Philosophically related, in my mind, is Dan Singleton’s <a href=https://pubs.acs.org/doi/10.1021/jacs.0c06295>work on non-instantaneous solvent relaxation</a>, 
-  and how this influences the stability of reactive intermediates.)
-</p>
-
-<p>
-  Thus, this work simultaneously highlights both similarities and differences between ultrafast reactions and their benchtop congeners. 
-  My hope is that future studies can find ways to move beyond just benzhydryl cations and study elementary questions of selectivity with different nucleophiles (e.g. addition/elimination). 
-  The ability to observe what is typically the “invisible” step in S<sub>N</sub>1 is incredibly powerful, and I think we’ve barely scratched the surface with what we can learn from measurements like these.
-</p>
-
 </div><div class='previous-link'><a href='blog_p15.html'>previous page</a></div><div class='next-link'><a href='blog_p17.html'>next page</a></div><br>
   </body>
   <br>
