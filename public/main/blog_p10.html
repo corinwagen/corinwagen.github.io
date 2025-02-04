@@ -34,7 +34,95 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p9.html'>previous page</a></div><div class='next-link'><a href='blog_p11.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230314_nmr_microreview.html'>Computational NMR Prediction: A Microreview</a></h2><i>March 14, 2023</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p9.html'>previous page</a></div><div class='next-link'><a href='blog_p11.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230320_domain_arbitrage.html'>Domain Arbitrage</a></h2><i>March 20, 2023</i>
+<p>
+It’s a truth well-established that interdisciplinary research is good, and we all should be doing more of it (e.g. <a href=https://beta.nsf.gov/funding/learn/research-types/learn-about-interdisciplinary-research>this NSF page</a>). I’ve always found this to be a bit uninspiring, though. “Interdisciplinary research” brings to mind a fashion collaboration, where the project is going to end up being some strange chimera, with goals and methods taken at random from two unrelated fields.
+</p>
+
+<p>
+Rather, I prefer the idea of “domain arbitrage.”<sup><a href="#fn1">1</a></sup> Arbitrage, in economics, is taking advantage of price differences in different markets: if bread costs $7 in Cambridge but $4 in Boston, I can buy in Boston, sell in Cambridge, and pocket the difference. Since this is easy and requires very little from the arbitrageur, physical markets typically lack opportunities for substantial arbitrage. In this case, the efficient market hypothesis works well.
+</p>
+
+<p>
+Knowledge markets, however, are much less efficient than physical markets—many skills which are cheap in a certain domain are expensive in other domains. For instance, fields that employ organic synthesis, like chemical biology or polymer chemistry, have much less synthetic expertise than actual organic synthesis groups. The knowledge of how to use a Schlenk line properly is cheap within organic chemistry but expensive everywhere else. And organic chemists certainly don’t have a monopoly on scarce skills: trained computer scientists are very scarce in most scientific fields, as are statisticians, despite the growing importance of software and statistics to almost every area of research.
+</p>
+
+<p>
+Domain arbitrage, then, is taking knowledge that’s cheap in one domain to a domain where it’s expensive, and profiting from the difference. I like this term better because it doesn’t imply that the goal of the research has to be interdisciplinary—instead, you’re solving problems that people have always wanted to solve, just now with innovative methods. And the concept of arbitrage highlights how this can be beneficial for the practitioner. You’re bringing new insights to your field so you can help your own research and make cool discoveries, not because you’ve been told that interdisciplinary work is good in an abstract way.
+</p>
+
+<p>
+There are many examples of domain arbitrage,<sup><a href="#fn2">2</a></sup> but perhaps my favorite is the recent black hole image, which was largely due to work by Katie Bouman (formerly a graduate student at MIT, <a href=http://users.cms.caltech.edu/~klbouman/>now a professor at Caltech</a>):
+</p>
+
+
+<figure>
+  <img class="centered-img" src="../img/20230320_black_hole.jpg" style="width:350px;" />
+  <figcaption> 
+  The black hole picture, extracted from noisy radio telescope data by Bouman’s new algorithms.
+  </figcaption>
+</figure>
+
+<p>
+What’s surprising is that Bouman didn’t have a background in astronomy at all: she “hardly knew what a black hole was” (<a href=https://www.pbs.org/newshour/science/katie-bouman-hardly-knew-what-a-black-hole-was-her-algorithm-helped-us-see-one>in her words</a>) when she started working on the project. Instead, Bouman’s work drew on her background in computer vision, adapting statistical image models to the task of reconstructing astronomical images. In <a href=https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Bouman_Computational_Imaging_for_CVPR_2016_paper.pdf>a 2016 paper</a>, she explicitly credits computer vision with the insights that would later lead to the black hole image, and concludes by stating that “astronomical imaging will benefit from the crossfertilization of ideas with the computer vision community.”
+</p>
+
+<p>
+If we accept that domain arbitrage is important, why doesn’t it happen more often? I can think of a few reasons: some fundamental, some structural, and some cultural. On the fundamental level, domain arbitrage requires knowledge of two fields of research at a more-than-superficial level. This is relatively common for adjacent fields of research (like organic chemistry and inorganic chemistry), but becomes increasingly rare as the distance between the two fields grows. It’s not enough to just try and read journals from other fields occasionally—without the proper context, other fields are simply unintelligible. Given how hard achieving competence in a single area of study can be, we should not be surprised that those with a working knowledge of multiple fields are so scarce.
+</p>
+
+<p>
+The structure of our research institutions also makes domain arbitrage harder. In theory, a 15-person research group could house scientists from a variety of backgrounds: chemists, biologists, mathematicians, engineers, and so forth, all focused on a common research goal. In practice, the high rate of turnover in academic positions makes this challenging. Graduate students are only around for 5–6 years, postdocs for fewer, and both positions are typically filled by people hoping to learn things, not by already competent researchers. Thus, senior lab members must constantly train newer members in various techniques, skills, and ways of thinking so that institutional knowledge can be preserved.
+</p>
+
+<p>
+This is hard but doable for a single area of research, but quickly becomes untenable as the number of fields increases. A lab working in two fields has to pass down twice as much knowledge, with the same rate of personnel turnover. In practice, this often means that students end up deficient in one (or both) fields. As Derek Lowe put it <a href=https://www.science.org/content/blog-post/pipeline-1060>when discussing chemical biology</a> in 2007:
+</p>
+
+<blockquote>
+I find a lot of [chemical biology] very interesting (though not invariably), and some of it looks like it could lead to useful and important things. My worry, though, is: what happens to the grad students who do this stuff? They run the risk of spending too much time on biology to be completely competent chemists, and vice versa.
+</blockquote>
+
+<p>
+To me, this seems like a case in which the two goals of the research university—to teach students and to produce research—are at odds. It’s easier to teach students in single-domain labs, but the research that comes from multiple domains is superior. It’s not easy to think about how to address this without fundamental change to the structure of universities (although perhaps others have more creative proposals than I).<sup><a href="#fn3">3</a></sup>
+</p>
+
+<p>
+But, perhaps most frustratingly, cultural factors also contribute to the rarity of domain arbitrage. Many scientific disciplines today define themselves not by the questions they’re trying to solve but by the methods they employ, which disincentivizes developing innovative methods. For example, many organic chemists feel that biocatalysis shouldn’t be considered organic synthesis, since it employs enzymes and cofactors instead of more traditional catalysts and reagents, even though organic synthesis and biocatalysis both address the same goal: making molecules. While it’s somewhat inevitable that years of lab work leaves one with a certain affection for the methods one employs, it’s also irrational.
+</p>
+
+<p>
+Now, one might reasonably argue that precisely delimiting where one scientific field begins and another ends is a pointless exercise. Who’s to say whether biocatalysis is better viewed as the domain of organic chemistry or biochemistry? While this is fair, it’s also true that the scientific field one formally belongs to matters a great deal. If society deems me an organic chemist, then overwhelmingly it is other organic chemists who will decide if I get a PhD, if I obtain tenure as a professor, and if my proposals are funded.<sup><a href="#fn4">4</a></sup>
+</p>
+
+<p>
+Given that the success or failure of my scientific career thus depends on the opinion of other organic chemists, it starts to become apparent why domain arbitrage is difficult. If I attempt to solve problems in organic chemistry by introducing techniques from another field, it’s likely that my peers will be confused or skeptical by my work, and hesitate to accept it as “real” organic chemistry (see, for instance, the biocatalysis scenario above). Conversely, if I attempt to solve problems in other domains with the tools of organic chemistry, my peers will likely be uninterested in the outcome of the research, even if they approve of the methods employed. So from either angle domain arbitrage is disfavored.
+</p>
+
+<p>
+The factors discussed here don’t serve to completely halt domain arbitrage, as successful arbitrageurs like Katie Bouman or Frances Arnold demonstrate, but they do act to inhibit it. If we accept the claim that domain arbitrage is good, and we should be working to make it more common, what then should we do to address these problems? One could envision a number of structural solutions, which I won’t get into here, but on a personal level the conclusion is obvious: if you care about performing cutting-edge research, it’s important to learn things outside the narrow area that you specialize in and not silo yourself within a single discipline.
+</p>
+
+<i>
+Thanks to Shlomo Klapper and Darren Zhu for helpful discussions. Thanks also to Ari Wagen, Eric Gilliam, and Joe Gair for editing drafts of this post; in particular, Eric Gilliam pointed out the cultural factors discussed in the conclusion of the post.
+</i>
+
+<h3>Footnotes</h3>
+<ol class=footnotes>
+  <li id="fn1">
+  I did not coin this term—credit goes to Shlomo Klapper. I do think this is the first time it's been used in writing, however.
+  </li>
+  <li id="fn2">
+  I'll actually go a step farther and propose the Strong Theorem of Domain Arbitrage: All non-incremental scientific discoveries arise either from domain arbitrage or random chance. I don't want to defend it here, but I think there's a reasonable chance that this is true.
+  </li>
+  <li id="fn3">
+  Collaborations between differently skilled labs help with this problem, but the logistical and practical challenges involved in collaboration make this an inefficient solution. Plus, the same cultural challenges still confront the individual contributors. 
+  </li>
+  <li id="fn4">
+  <a href=https://twitter.com/Stephen_Curry/status/1637496308935057409>This tweet</a>, quoting the Nielsen/Qiu metascience essay <a href=https://corinwagen.github.io/public/blog/20221026_structural_diversity.html>which I wrote about before</a>, seems relevant.
+  </li>
+</ol>
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230314_nmr_microreview.html'>Computational NMR Prediction: A Microreview</a></h2><i>March 14, 2023</i>
 <p>
 Recently, I’ve been working to assign the relative configuration of some tricky diastereomers, which has led me to do a bit of a deep dive into the world of computational NMR prediction. Having spent the last week or so researching the current state-of-the-art in simulating experimental <sup>1</sup>H NMR spectra, I’m excited to share some of my findings.
 </p>
@@ -435,133 +523,6 @@ This point might seem discouraging, but I mean it in quite the opposite way. <i>
 <em>
 Jan Jensen was kind enough to <a href=https://twitter.com/janhjensen/status/1628063110572507136>reply to this post on Twitter</a> with a few thoughts and clarifications, which are worth reading.
 </em>
-
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230215_science_engineering.html'>Science and Engineering</a></h2><i>February 15, 2023</i>
-<blockquote><i>
-In science, if you know what you are doing, you should not be doing it. In engineering, if you do not know what you are doing, you should not be doing it.
-</i></blockquote>
-
-<p style="text-align:right;">
-—Richard Hamming
-</p>
-
-<p>
-What’s the difference between science and engineering? 
-</p>
-
-<p>
-Five years ago, I would have said something along the lines of “engineers study known unknowns, scientists study unknown unknowns” (with apologies to <a href=https://en.wikipedia.org/wiki/There_are_unknown_unknowns>Donald Rumsfeld</a>), or made a distinction between expanding the frontiers of knowledge (science) and settling already-explored territory (engineering).
-</p>
-
-<p>
-These thoughts seem broadly consistent with what others think. Boston University’s <a href=https://www.bu.edu/eng/about-eng/meet-the-dean/engineering-is-not-science/>College of Engineering</a> says:
-</p>
-
-<blockquote>
-Engineers are not a sub-category of scientists. So often the two terms are used interchangeably, but they are separate, albeit related, disciplines. Scientists explore the natural world and show us how and why it is as it is. Discovery is the essence of science. Engineers innovate solutions to real-world challenges in society. While it is true that engineering without science could be haphazard; without engineering, scientific discovery would be a merely an academic pursuit.
-</blockquote>
-
-<p>
-And the <a href=https://www.nspe.org/resources/press-room/resources/frequently-asked-questions-about-engineering>National Society of Professional Engineers</a> says:
-<p>
-
-<blockquote>
-Science is knowledge based on observed facts and tested truths arranged in an orderly system that can be validated and communicated to other people. Engineering is the creative application of scientific principles used to plan, build, direct, guide, manage, or work on systems to maintain and improve our daily lives.
-</blockquote>
-
-<p>
-As I’ve started thinking more about the structure of the modern research system, and what its proper scope and purpose should be, I’ve grown increasingly skeptical of these distinctions. The claim I want to make in this post is that, following the above definitions of engineering, <u>most chemistry is engineering</u>. I don’t think this is bad! In fact, I think that many chemists could benefit from borrowing from an engineering mindset, and should consider incorporating this perspective in their self-conception.
-<p>
-
-<h2>
-Much of Organic Chemistry is Engineering
-</h2>
-
-<p>
-I want to return to the BU and NSPE definitions, because I think they’re concise and well-written, and take as gospel that scientists “explore the natural world and show us how and why it is as it is,” while engineers “innovate solutions to real-world challenges in society” (we’ll revisit issues of definition later). In short, developing something you want other people to use makes you an engineer. Which branches of modern organic chemistry are science, and which are engineering? 
-<p>
-
-<p>
-Method development—one of my core interests—seems like a good candidate for “engineering.” Researchers in this space identify unsolved problems in organic synthesis, develop methods or catalysts to solve these problems, and then (in many cases) advertise, license, &amp; sell their solutions to consumers! (If you don’t believe me, just look at the <a href=https://www.sigmaaldrich.com/US/en/collections/professor-product-portal>“Organic Synthesis” tab</a> of the Sigma-Aldrich Professor Product Portal.) If these products weren’t molecules and were instead mechanical gadgets, nothing about this would be obviously scientific.
-<p>
-
-<p>
-And the problems chosen are identified almost purely on the basis of what might be useful to potential users. There’s no clearer illustration of this than the recent gold rush to identify synthetic routes to bicyclic arene bioisosteres, which are useful in medicinal chemistry. Five years ago, I can’t think of a single paper making these compounds; now, I can find nine in high-profile journals just from the past year or so (<a href=https://www.nature.com/articles/s41586-022-05290-z.pdf>1</a>,
-<a href=https://www.nature.com/articles/s41557-022-00979-0.pdf>2</a>,
-<a href=https://pubs.acs.org/doi/pdf/10.1021/jacs.2c09733>3</a>,
-<a href=https://pubs.acs.org/doi/pdf/10.1021/jacs.2c11501>4</a>,
-<a href=https://pubs.acs.org/doi/pdf/10.1021/acscatal.2c03498>5</a>,
-<a href=https://pubs.acs.org/doi/pdf/10.1021/acs.orglett.1c03681>6</a>,
-<a href=https://pubs.acs.org/doi/pdf/10.1021/acs.orglett.2c03606>7</a>,
-<a href=https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/anie.202205103>8</a>,
-<a href=https://www.nature.com/articles/s41557-023-01135-y>9</a>).
-<p>
-
-<p>
-Mechanistic and physical organic chemistry—another love of mine—present a tougher case, since in most cases the outcome of the studies is only knowledge. But I’m still not sure that this makes this field scientific! Let me illustrate why with an example. 
-<p>
-
-<p>
-An automotive engineer may be confused by why a given transmission is not working. He/she may formulate a hypothesis, take the transmission apart, perform various experiments on its constituent pieces, validate or disprove the initial hypothesis, and generally conduct a thorough mechanistic investigation to understand the origin of the problem. But does that make him/her a scientist?
-<p>
-
-<p>
-The answer, I think, is no. The subject matter is not scientific, so no amount of scientific thinking can make the work science. Similarly, I’d argue that investigating the mechanism of a system invented and developed by humans—like a Pd-catalyzed cross-coupling reaction—doesn’t count as science. (Does application of the scientific method automatically make one a scientist? See below for a continued discussion.)
-<p>
-
-<p>
-In contrast, something that I think is a truly scientific area of investigation is the study of enzyme structure and function. Despite extensive study and many Nobel prizes, we’re still learning about how enzymes operate and how they achieve such extraordinary reactivity and selectivity. (For an example of this sort of work, see Arieh Warshel’s <a href=https://pubs.acs.org/doi/full/10.1021/cr0503106>review</a> on electrostatic effects in enzyme catalysis, and references therein.)
-<p>
-
-<p>
-I don’t think I understand all areas of chemistry well enough to fairly judge whether they’re better understood as engineering or science, so I’ll leave this as an exercise to the reader: What motivates your research? Are you mainly driven by a desire to understand the natural order of things, or do you aim to develop technology to make the world better? Both are important, and neither answer is bad—but if your main goal is inventing a new molecule, material, algorithm, or medicine, you might consider thinking of yourself as more of an engineer than a scientist.
-<p>
-
-<h2>
-Do Different Definitions Clarify Matters?
-</h2>
-
-<p>
-Since the claim that “most chemistry is engineering” is weird, we might consider alternative definitions to solve this problem.
-<p>
-
-<p>
-One appealing definition: “a scientist is anyone who uses the scientific method.” As I discussed above, in the case of the automotive engineer, lots of people use the scientific method who clearly aren’t scientists: engineers, yes, but also detectives, doctors, and many other people. Indeed, according to this definition almost anyone who acquires data to shed light on a problem is “doing science.” So I don’t think this is a very good definition.
-<p>
-
-<p>
-Another definition might be: “if you’re closely involved with science, you’re a scientist, even if the work you’re doing isn’t literally pushing the frontiers of knowledge forward.” I’m sympathetic to this definition, but I still find it hard to separate scientists and engineers here. What makes an engineer optimizing a new flow reactor less of a scientist than the chemist optimizing a new catalyst? Are they both scientists? What about people who work on chip design and fabrication, or people who design analytical instruments, or people who use them? I can’t find any clean way to divide scientists from engineers that recapitulates the conventional usage of the terms.
-<p>
-
-<h2>
-Why Does This Matter?
-</h2>
-
-<p>
-I think the root of this confusion is that <u>the nature of scientific fields has changed over the past half-century</u>. Organic chemistry hasn’t always been largely engineering; a century ago, the structure of natural products and the nature of the chemical bond were mysteries, truly the domain of science, and these issues were studied by chemists. As we’ve grown to understand our field better and better, our work has shifted from science to engineering—the true mysteries in chemistry are now few and far between, and the challenge facing today’s chemists is how to use centuries of accumulated knowledge to better society. But because of our lineage, we think of ourselves as scientists, and have managed to disguise the true nature of our work so well that we’ve deceived even ourselves.
-</p>
-
-<p>
-By this point, it should be obvious that I don’t think science is superior to engineering. In fact, I’m glad to work in an area that’s largely engineering! But the way that an engineer ought to approach their work is different from the way a scientist ought to approach their work. In writing this piece, I came across a 1996 <a href=https://dl.acm.org/doi/10.1145/227234.227243>article</a> by Frederick Brooks, who argued that computer science was better understood as an engineering discipline and defended the importance of this claim: 
-</p>
-
-<blockquote>
-If our discipline has been misnamed, so what? Surely computer science is a harmless conceit. What’s in a name? Much. Our self-misnaming hastens various unhappy trends.
-<br><br>
-First, it implies that we accept a perceived pecking order that respects natural scientists highly and engineers less so, and that we seek to appropriate the higher station for ourselves. That is a self-serving gambit, hence dubious….
-<br><br>
-Second, sciences legitimately take the discovery of facts and laws as a proper end in itself. A new fact, a new law is an accomplishment, worthy of publication…. But in design, in contrast with science, novelty in itself has no merit. If we recognize our artifacts as tools, we test them by their usefulness and their costs, not their novelty.
-<br><br>
-Third, we tend to forget our users and their real problems, climbing into our ivory towers to dissect tractable abstractions of those problems, abstractions that may have left behind the essence of the real problem. 
-</blockquote>
-
-<p>
-I think Brooks’s summary is simple and elegant. If we judge the value of our work based on the utility of our tools, rather than the novelty of our ideas, we’ll spend our time on different problems and get excited about different advances. There’s room for both scientists and engineers in chemistry—but at the margin, I think our field would benefit from becoming less like science, and more like engineering.
-</p>
-
-<i>
-Thanks to Michael Nielsen, Joe Gair, Ari Wagen, and Michael Tartre for editing drafts of this post. Michael Tartre sent me the Richard Hamming quote, and Phil Brooks sent me his grandfather’s article.
-</i>
 
 </div><div class='previous-link'><a href='blog_p9.html'>previous page</a></div><div class='next-link'><a href='blog_p11.html'>next page</a></div><br>
   </body>
