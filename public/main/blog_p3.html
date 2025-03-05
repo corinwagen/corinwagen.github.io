@@ -34,7 +34,75 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p2.html'>previous page</a></div><div class='next-link'><a href='blog_p4.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20240105_phys_org.html'>Physical Organic Chemistry: Alive or Dead?</a></h2><i>January 5, 2024</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p2.html'>previous page</a></div><div class='next-link'><a href='blog_p4.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20240325_solidworks.html'>The SolidWorks Model of Simulation</a></h2><i>March 25, 2024</i>
+<p>
+<i>Apologies for the long hiatus: we've had some health issues in the family, and startup life has been particularly overwhelming. With any luck, I'll be able to return to a more regular posting frequency soon.</i>
+</p>
+
+<p>
+What’s the right relationship between theory, computation, and experiment? Much has been written on this. In this piece, I want to put forward an answer that I think is underrated in the life sciences—what I call the “SolidWorks model” of simulation. 
+</p>
+
+<p>
+For the unfamiliar, SolidWorks is a program which allows engineers to design objects in the computer: the user can create a 3D model of their device, figure out the measurements that allow the parts to fit together in the desired way, and then go into the lab and actually build everything. (I’m not a SolidWorks power user, but I spent a semester messing around with it in high school and I’ve been thinking back on this recently.)
+</p>
+
+
+<figure>
+  <img class=centered-img src="https://blogs.solidworks.com/solidworksblog/wp-content/uploads/sites/2/2019/10/screenshot1.png" style="width:550px;" />
+  <figcaption>A screenshot of SolidWorks.</figcaption>
+</figure>
+
+<p>
+What are the distinctive features of SolidWorks? 
+</p>
+
+<ul>
+<li>
+<b>SolidWorks doesn’t predict overall success.</b> If you’re designing a new gearbox in SolidWorks, you can check that the parts will fit together, but you don’t know if it will run efficiently or not. Modeling is not supposed to replace actually building and testing the part.
+</li>
+<li>
+<b>SolidWorks can be used by normal engineers, not dedicated computer experts.</b> It’s quick and easy to model things, so modeling becomes a part of the regular engineering/design workflow. You can model a part, make it, adjust the model, make it again, and so on and so forth. 
+</li>
+<li>
+<b>SolidWorks assists human intuition instead of trying to replace it.</b> SolidWorks only draws what you tell it to, which means all the ideas still come from humans—to the extent that SolidWorks increases productivity, it does so by helping people understand what they’re working on more clearly. This comports with Richard Hamming’s idea that “the purpose of computing is insight, not numbers.”
+</li>
+</ul>
+
+<p>
+Astute readers will notice differences from how simulations in the life sciences are typically conducted. It’s rare in chemistry or biology to have computations and experiments performed in the same research group, let alone by the same person—but this is crucial to SolidWorks-style simulation, where experimental scientists must quickly gain insight from their computations. If someone from a different team has to get around to answering their request or a job takes overnight to run, the experimental scientist will move on and modeling will be excluded from the design/build/test cycle.
+</p>
+
+<p>
+SolidWorks-style computation is also prospective, not retrospective. In other words, the goal of the simulation is to generate subsequent experimental hits, not figures for publication, meaning that successful computational studies might never even be reported. This is different from the DFT section of the average organic chemistry paper, which is typically performed by a different team after all experimental results are complete. This isn’t bad, but <i>ex post</i> studies are different from actually using computations <i>ex ante</i> to design molecules.
+</p>
+
+<p>
+I don’t mean to suggest that the SolidWorks paradigm is objectively correct: there are many ways in which theory, computation, and experiment can usefully interact, and I think it’s great that there are scientists using careful <i>ex post</i> computations to interpret perplexing experimental results or running massive virtual screens to design new molecules entirely <i>in silico</i>. I myself have worked on plenty of projects like this and hope to conduct more in the future.
+</p>
+
+<p>
+But I do think that SolidWorks-style computation is pretty underrated today. There are few computational tools that non-experts can really use, and the average experimental scientists might not interact with computation even once in an average week (except perhaps when meeting with someone from a different lab or team). Even when experimentalists have the technical skills to run calculations, the friction involved in connecting to a computing cluster, generating input files, monitoring jobs, etc often makes it impractical to really run calculations and experiments in tandem.
+</p>
+
+<p>
+In fact, I’d argue that the most useful predictive computational tool for organic chemists has probably been the ChemDraw “Predict NMR” button. The predictions are laughably crude by today’s standards, but ChemDraw NMR has a few key advantages: (1) you don’t have to program anything or look at a terminal window to use it, (2) there aren’t any options for end users to mess around with, so you can’t do anything wrong, and (3) it runs instantly from a software package everyone already has, so it fits right into your workflow. These factors are collectively more important than accuracy—ChemDraw NMR is accurate enough to be useful, and far more convenient than fancier approaches. 
+</p>
+
+<figure>
+  <img class=centered-img src="https://bitesizebio.com/wp-content/uploads/2016/11/Figure-6-NMR-Prediction.jpg" style="width:400px;" />
+  <figcaption>A screenshot of ChemDraw's NMR prediction widget.</figcaption>
+</figure>
+
+<p>
+This seems like a scenario where publication pressure leads to misaligned incentives. Scientific publications emphasize novelty, accuracy, and performance, not pragmatic considerations like “how easy is it to run this software in the middle of the workday” or “how confusing are the parameters to understand.” And for pioneering computational workflows that ought not to be run without a deep understanding of the science, that’s probably appropriate. But pragmatic considerations matter for casual users. 
+</p>
+
+<p>
+If it’s not obvious by now, one of our big visions for Rowan is “SolidWorks for organic chemistry”—to the extent that there are people who are designing and creating new molecules, we think that it’s important that they are able to think intelligently about the molecules that they’re designing. This means making software that can deliver actionable insights while being fast and simple enough for experimentalists to use. While this is a massive project, it’s not impossibly large, and we’re optimistic that Rowan can quickly become helpful to experimental chemists. If you think this vision is exciting and have ideas for how we can bring it to life, let us know!
+</p>
+
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20240105_phys_org.html'>Physical Organic Chemistry: Alive or Dead?</a></h2><i>January 5, 2024</i>
 <p>
 In <a href=https://corinwagen.github.io/public/blog/20240103_norbornyl.html>Wednesday’s post</a>, I wrote that “traditional physical organic chemistry is barely practiced today,” which <a href=https://twitter.com/FindlaterGroup/status/1742734408782876949>attracted some controversy on X</a>. Here are some responses:
 </p>
@@ -446,125 +514,6 @@ The advent of big data, though, heralds the decline of academic relevance. Julia
 The present academic era of chemical machine learning can thus be taken as a sign of the field’s immaturity. When will chemical ML reach a Suttonian era where scaling is paramount and smaller efforts become increasingly futile? I’m not sure, but my guess is that it will happen when (and only when) there are clear commercial incentives for developing sophisticated models, enabling companies to sink massive amounts of capital into training and development. This clearly hasn’t happened yet, but it also might not be as far away as it seems (<a href=https://www.nature.com/articles/s41586-023-06735-9>cf.</a>). It’s an interesting time to be a computational chemist…
 </p>
 
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20231125_working_backwards.html'>Book Review: Working Backwards</a></h2><i>November 25, 2023</i>
-<p>
-I took a pistol course in undergrad, and while I was a poor marksman I enjoyed the experience. In particular, I was surprised by how meditative the act of shooting was. As our instructor explained, much of good shooting comes down to not doing anything when you pull the trigger. When you’re not firing, it’s easy to point a gun at a target and line up the sights, but as you pull the trigger you subconsciously anticipate the noise and movement of the pistol blast, which makes you flinch and pull the gun off-target. Being a good shooter thus requires consciously learning to counteract what your instincts tell you to do.
-</p>
-
-<p>
-If you believe Bill Carr and Colin Bryar’s book on Amazon, <a href=https://www.amazon.com/Working-Backwards-Insights-Stories-Secrets/dp/1250267595><i>Working Backwards</i></a>, Amazon’s success can be understood in similar terms. According to Carr and Bryar, Amazon alone among the West Coast zaibatsu has succeeded not because of some big technical or social insight (Google Search, Windows) but because of a long series of canny business decisions. Bezos has said something similar: “Amazon doesn't have one big advantage, so we have to braid a rope out of many small advantages.” The implication is that you too can build an Amazon-quality firm; you don’t need any flashes of mad genius, just the ability to eke out small advantages through savvy management.
-</p>
-
-<p>
-(This might seem like an insane claim, but it’s worth noting that Amazon has indeed launched a ton of successful and loosely coupled businesses: in addition to their core commerce business, there’s AWS, Amazon Robotics, Kindle, Prime Video, Fire TV, and a bunch of other stuff. Contrast this to Google’s recent track record…)
-</p>
-
-<p>
-What’s more, Carr and Bryar go on to argue that Amazon’s business acumen is driven not by some inscrutable Bezos magic but by adherence to a simple set of principles. And these principles aren’t esoteric or Amazon-specific—almost any business can follow them. The reason so few businesses have copied Amazon’s success is simply because each principle defies human nature in some way. Just like pistol shooting requires one to unlearn one’s instincts and pull the trigger without moving any other muscles, being an “Amazonian” business requires discarding what you think you understand about building a business and going back to basics.
-</p>
-
-<p>
-So, what are these magic principles?
-</p>
-
-<h2>
-1. Focus on Customers, Not Competitors
-</h2>
-
-<p>
-Focusing on competitors is human nature—in a competition, we judge ourselves based on our rivals, and like to imagine how we’ll defeat them. But success in business comes from satisfied customers, not vanquished foes, and keeping a relentless focus on users/customers is key to building something great. This is hardly Amazon-specific wisdom: “build something people want” is <a href=https://www.ycombinator.com/library/4D-yc-s-essential-startup-advice>venerable YC advice</a>, and <i>Zero to One</i> also makes the point that competition is bad and focusing on it counterproductive. Perhaps the fact that so many different people feel the need to emphasize this point speaks to how counterintuitive it is: were it widely adopted, it wouldn’t be repeated.
-</p>
-
-<p>
-Plenty of people outside business also get this wrong. A few weeks ago, a friend was explaining how he feels that many computational chemists are making software not for users but for other computational chemists. This is a case in which writing papers leads to different incentives than releasing products: papers are reviewed by one’s peers (other computational chemists), while products are ultimately reviewed by users. Hopefully Rowan doesn’t make this mistake…
-</p>
-
-<h2>
-2. “Bar Raisers”: External Vetos in Hiring
-</h2>
-
-<p>
-Amazon includes a person called a “Bar Raiser” involved in all hiring decisions, who isn’t the hiring manager (the person who is trying to acquire a new team member) but who has final veto power on any potential hire. The hiring manager is hiring because they need help in the short term, so they’re typically willing to engage in wishful thinking and lower their standards—but the Bar Raiser (who’s just another Amazon employee, with a bit of extra training) has no such incentives and can make sure that no poor performers are hired, which is better for Amazon in the long run.
-</p>
-
-<p>
-I like this idea because it’s a nice example of mechanism design: just a little bit of internal red-teaming which (according to the book) works quite well. (Red teaming is another one of those “good but counterintuitive practices” which seems underutilized—see <a href=https://open.substack.com/pub/statecraftnotes/p/how-to-predict-the-future?r=5jsaw&selection=302a6711-1b29-4791-aedc-0320932bac7a&utm_campaign=post-share-selection&utm_medium=web>the discussion</a> in a recent <i>Statecraft</i> interview.)
-</p>
-
-<h2>
-3. Problem-Focused, Not Skills-Focused
-</h2>
-
-<p>
-It’s natural to think about what we should do next in terms of what we’re good at: “I’m good at X, how can I use X to solve a problem?” Carr and Bryar argue that “working forwards” in this way is stupid, because only at the end do you think about who (if anyone) might care if you succeed. “Working backwards” from problem to solution is a much better strategy: first you articulate what you might need to accomplish to produce a compelling solution, and then you think about if you can do it. Inside Amazon, most potential new projects start out by drafting what the press release might be if the project were finished, and then working backwards from the press release to what the product must be. (Most products envisioned in this way never actually get developed, which is exactly the point of the exercise.)
-</p>
-
-<p>
-<a href=https://intra.ece.ucr.edu/~rlake/Whitesides_writing_res_paper.pdf>George Whitesides</a> has advocated for a similar way to approach science: first write the paper, then conduct the experiments. Lots of scientists I know find this repulsive, or contrary to how science should be practiced, but it always seemed shrewd to me—if you can’t make an interesting paper out of what you’re doing, why are you doing it? (Exploratory work can be tough to outline in this way, but there should be several potential papers in such cases, not none.)
-</p>
-
-<h2>
-4. Single-Threaded Leadership
-</h2>
-
-<p>
-As organizations scale, it becomes tougher and tougher to allow teams to work autonomously, and responsibility and authority for almost all projects ends up bestowed upon the same small number of people. This makes insightful innovation hard: to quote Amazon SVP of Devices Dave Limp, “the best way to fail at inventing something is by making it somebody’s part-time job.” Amazon’s solution is the idea of single-threaded leadership (STL, probably someone’s idea of C++ humor). Organizations need to be arranged such that individual teams can respond to their problems intelligently and independently, planning and shipping features on their own, and each team needs to have a “single-threaded leader” solely responsible for leading that team.
-</p>
-
-<p>
-Instituting STL takes a good amount of initial planning, since dividing up a giant monolith into loosely coupled components is tough both for software and for humans, and it’s not in the nature of authorities to relinquish control. If done properly, though, this allows innovation to happen much faster than if every decision is bottlenecked by reliance on the C-suite. (It’s sorta like federalism for businesses.)
-</p>
-
-<p>
-This idea matters for labs, too: some research groups rely on their PI for scientific direction in every project, while others devolve a lot of authority to individual students. The latter seem more productive to me.
-</p>
-
-<h2>
-5. Bias Towards Action
-</h2>
-
-<p>
-Humans are by nature conservative, and sins of commission frequently feel worse than sins of omission—making a bad decision can cost you your job, while not making a good decision often goes unnoticed (the <a href=https://marginalrevolution.com/marginalrevolution/2015/08/is-the-fda-too-conservative-or-too-aggressive.html>“invisible graveyard”</a>). To counteract this, Amazon expects leaders to display a “Bias for Action.” In their words:
-</p>
-
-<blockquote>
-Speed matters in business. Many decisions and actions are reversible and do not need extensive study. We value calculated risk-taking.
-</blockquote>
-
-<p>
-Again, this echoes classic startup advice: “launch now,” “do things that don’t scale,” &amp;c.
-</p>
-
-<h2>
-6. No Powerpoint!
-</h2>
-
-<p>
-In June 2004, Amazon banned PowerPoint presentations from meetings, instead expecting presenters to compose six-page documents which the entire team would read, silently, at the beginning of each meeting. Why? A few reasons:
-</p>
-
-<ul>
-<li>
-PowerPoint lends itself poorly to complex or nuanced ideas, whereas written documents can contain more information and more complete chains of reasoning.
-</li>
-<li>
-PowerPoint leads to “slick,” well-rehearsed presentations where the presenter’s style and charisma matters as much as the underlying ideas.
-</li>
-<li>
-Writing enforces greater clarity of thought than speaking.
-</li>
-<li>
-PowerPoint makes the audience passive, while reading makes the audience active participants in the ideas. People like to be passive, and it’s fun to hear an inspiring presentation, but in the long run it’s better for everyone to actually engage.
-</li>
-</ul>
-
-<p>
-I’m pretty sympathetic to these criticisms. Most high-stakes academic events today revolve around oral presentations, not papers—although papers still matter, doctorates, job offers, and tenure are awarded largely on the merits of hour-long talks (<a href=https://www.youtube.com/watch?v=n7HeQGQQ0q8>e.g.</a>). As a result, I spent a ridiculous amount of my PhD just refining and hearing feedback on my presentations, much of which had nothing to do with the underlying scientific ideas. Perhaps this focus on showmanship over substance explains why so little science today seems genuinely transformational. (It’s also worth noting that presenting, much more so than writing, favors charismatic Americans over the meek or foreign.)
-</p>
-
-<p>
-There are, of course, more than just these six ideas in <i>Working Backwards</i>, but I think this gives a pretty good sense of what the book is like. Overall, I’d recommend this book: it was interesting throughout (unlike most business-y books), and even if nothing in its covers is truly new under the sun, the ideas inside are good enough to be worth reviewing periodically.
-</p>
 </div><div class='previous-link'><a href='blog_p2.html'>previous page</a></div><div class='next-link'><a href='blog_p4.html'>next page</a></div><br>
   </body>
   <br>
