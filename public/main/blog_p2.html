@@ -34,7 +34,122 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p1.html'>previous page</a></div><div class='next-link'><a href='blog_p3.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20240917_robotics.html'>Robots Won't Solve Organic Synthesis</a></h2><i>September 17, 2024</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p1.html'>previous page</a></div><div class='next-link'><a href='blog_p3.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20241011_gems.html'>Are Forcefields Able To Describe Protein Dynamics?</a></h2><i>October 11, 2024</i><p>
+<i>
+  This post assumes some knowledge of molecular dynamics and forcefields/molecular mechanics. For readers unfamiliar with these topics, Abhishaike Mahajan has <a href=https://www.owlposting.com/p/a-primer-on-molecular-dynamics>a great guide to these topics</a> on his blog.
+</i>
+</p>
+
+<p>
+Although forcefields are commonplace in all sorts of biomolecular simulation today, there’s a growing body of evidence showing that they often give unreliable results. For instance, here’s <a href=https://arxiv.org/pdf/1705.04308>Geoff Hutchison</a> criticizing the use of forcefields for small-molecule geometry optimizations:
+</p>
+
+<blockquote>
+  The use of classical MM methods for optimizing molecular structures having multiple torsional degrees of freedom is only advised <b>if the precision and accuracy of the final structures and rankings obtained from the conformer searches is of little or no concern</b>... current small molecule force fields should not be trusted to produce accurate potential energy surfaces for large molecules, even in the range of “typical organic compounds.” <i>(emphasis added)</i>
+</blockquote>
+
+<p>
+Here’s a few other scattered case studies where forcefields have failed:
+</p>
+
+<ul>
+  <li>
+    Plenty of studies have shown that forcefields often produce nonsensical or completely incorrect torsional profiles for organic molecules: <a href=https://pubs.acs.org/doi/10.1021/ci800419j>Gleeson et al showed this in 2009</a>, Hutchison discusses it in the above study, and papers are still demonstrating this today with state-of-the-art forcefields (e.g. the <a href=https://arxiv.org/abs/2312.15211>MACE-OFF23 paper</a>).
+  </li>
+  <li>
+    Similarly, <a href=https://www.nature.com/articles/s41598-018-21070-0>Friederich and co-workers</a> have shown that forcefields which treat each dihedral angle independently (e.g. virtually all commonly-used forcefields) produce very poor results for plenty of common systems, and that explicit dihedral coupling is required to treat these systems accurately.
+  </li>
+  <li>
+    <a href=https://pubs.acs.org/doi/10.1021/acs.jctc.0c00801>MD simulations of a UUCG RNA tetraloop are inaccurate</a>, and the errors cannot be easily fixed owing to the “concerted effect of multiple ff inaccuracies that are coupled and amplifying each other.”
+  </li>
+  <li>
+    The structure and dynamics of a model DNA mini-dumbbell system studied by <a href=https://pubs.acs.org/doi/10.1021/acs.jctc.3c00130>Winkler and co-workers in 2023</a> depends dramatically on the exact forcefield employed, and none of them seem particularly accurate.
+  </li>
+  <li>
+    <a href=https://core.ac.uk/download/pdf/82649571.pdf>A study by D. E. Shaw and coworkers</a> found that the mechanism of protein-folding simulations depends on the forcefield employed, as does the properties of the unfolded state.
+  </li>
+</ul>
+
+<p>
+This list could be a lot longer, but I think the point is clear—even for normal, bio-organic molecules, forcefields often give bad or unreliable answers.
+</p>
+
+<p>
+Despite all these results, though, it’s tough to know how bad the problem really is because there have been lots of scientific questions that can only be studied with forcefields. Studying protein conformational motion, for instance, is one of the tasks that forcefields have traditionally been developed for, and the scale and size of the systems in question makes it really challenging to study any other way. So although researchers can show that different forcefields give different answers, it’s tough to quantify how close any of these answers is to the truth, and it’s always been possible to hope that a good forcefield really is describing the underlying motion of the system quite well. 
+</p>
+
+<p>
+It’s for this reason that I’ve been so fascinated by <a href=https://www.science.org/doi/epdf/10.1126/sciadv.adn4397>this April 2024 work from Oliver Unke and co-workers</a>, which studies the dynamics of peptides and proteins using neural network potentials (NNPs). NNPs allow scientists to approach the accuracy of quantum chemical calculations in a tiny fraction of the time by training ML models to reproduce the output of high-level QM-based simulations: although NNPs are still significantly slower than forcefields, they’re typically about 3–6 orders of magnitude faster than the corresponding high-level calculations would be, with only slightly lower accuracy. 
+</p>
+
+<figure>
+  <img class=centered-img src="../img/20241010_intro.png" style="width:550px;" />
+  <figcaption>
+    A nice overview of the paper.
+  </figcaption>
+</figure>
+
+<p>
+In this case, Unke and co-workers train a <a href=https://www.nature.com/articles/s41467-021-27504-0>SpookyNet</a>-based NNP to reproduce PBE0/def2-TZVPPD+MBD reference data comprising fragments from the precise systems under study. (MBD refers to <a href=https://manual.q-chem.com/5.2/Ch5.S7.SS5.html>Tkatchenko’s many-body dispersion correction</a>, which can be thought of as a fancier alternative to pairwise dispersion corrections like D3 or D4.) In total, about 60 million atom-labeled data points were used to train the NNPs used in this study—which reportedly took 110,000 hours of CPU time to compute, equivalent to 12 CPU-years! 
+</p>
+
+<p>
+(This might be a nitpick, but I don’t love the use of PBE0 here. Range-separated hybrids are crucial for producing consistent and accurate results for large zwitterionic biomolecules (see e.g. <a href=https://pubs.acs.org/doi/full/10.1021/acs.jctc.4c00712>this recent work from Valeev</a>), so it’s possible that the underlying training data isn’t as accurate as it seems.)
+</p>
+
+<p>
+The authors find that the resulting NNPs (“GEMS”) perform much better than existing forcefields in terms of overall error metrics: for instance, GEMS has an MAE of 0.45 meV/atom on snapshots of AceAla15Nme structures taken from MD simulations, while Amber has an MAE of 2.27 meV/atom. <b>What’s much more interesting, however, is that GEMS gives significantly different dynamics than forcefields!</b> While Amber simulations of AceAla15Nme predict that a stable α-helix will form at 300 K, GEMS predicts that a mixture of α- and 3<sub>10</sub> helices exist, which is exactly what’s seen in Ala-rich peptides experimentally. The CHARMM and GROMOS forcefields also get this system wrong, suggesting that GEMS really is significantly more accurate than forcefields at modeling the structure of peptides.
+</p>
+
+<figure>
+  <img class=centered-img src="../img/20241010_ala15.png" style="width:550px;" />
+  <figcaption>
+    Amber-based simulations stay in one configuration, while GEMS-based simulations are significantly more flexible. 
+  </figcaption>
+</figure>
+
+<p>
+The authors next study crambin, a small 46-residue protein which is frequently chosen as a model system in papers like this. Similar to what was seen with the Ala<sub>15</sub> helices, crambin is significantly more flexible when modeled by GEMS than when modeled with Amber (see below figure). The authors conduct a variety of other analyses, and argue that there are “qualitative differences between simulations with conventional FFs and GEMS on all timescales.” <b>This is an incredibly significant result, and one that casts doubt on literal decades of forcefield-based MD simulations.</b> Think about what this means for <a href=https://www.dennisgong.com/blog/Relay/>Relay’s MD-based platform</a>, for instance!
+</p>
+
+<figure>
+  <img class=centered-img src="../img/20241010_crambin.png" style="width:550px;" />
+  <figcaption>
+A UMAP plot of protein motion through conformational space. (Yes, <a href=https://x.com/lpachter/status/1431325969411821572>we all know UMAP is bad</a>, but this is still a nice plot!)
+  </figcaption>
+</figure>
+
+<p>
+Why do Amber and GEMS differ so much here? Here’s what Unke and coworkers think is going on:
+</p>
+
+<blockquote>
+AmberFF is a conventional FF, and as such, models bonded interactions with harmonic terms. Consequently, structural fluctuations on small timescales are mostly related to these terms. Intermediate-scale conformational changes as involved in, for example, the “flipping” of the dihedral angle in the disulfide bridges of crambin, on the other hand, can only be mediated by (nonbonded) electrostatic and dispersion terms, because the vast majority of (local) bonded terms stay unchanged for all conformations. On the other hand, GEMS makes no distinction between bonded and non-bonded terms, and individual contributions are not restricted to harmonic potentials or any other fixed functional form. Consequently, it can be expected that large structural fluctuations for AmberFF always correspond to “rare events” associated with large energy barriers, whereas GEMS dynamics arise from a richer interplay between chemical bonds and nonlocal interactions.
+</blockquote>
+
+<p>
+The overall idea that (1) forcefields impose an unphysical distinction between bonded and non-bonded interactions, and (2) this distinction leads to strange dynamical effects makes sense to me. There’s parts of this discussion that I don’t fully understand—what’s to stop a large structural fluctuation in Amber from having a small barrier? Aren’t all high-barrier processes “rare events” irrespective of where the barrier comes from?
+</p>
+
+<p>
+There are some obvious caveats here that mean this sort of strategy isn’t ready for widespread adoption yet. These aren’t foundation models; the authors create a new model for each peptide and protein under study by adding system-specific fragments to the training data and retraining the NNP. This takes “between 1 and 2 weeks, depending on the system,” not counting the cost of running all the DFT calculations, so this is far too expensive and slow for routine use. While this might seem like a failure, I think it’s worth reflecting on how tough this problem is. Crambin alone has thousands of degrees of freedom, not counting the surrounding water molecules, and accurately reproducing the results of the Schrodinger equation for this system is an incredible feat. The fact that we can’t automatically also solve this problem in a zero-shot manner for every other protein is hardly a failure, particularly because it seems very likely that scaling these models will dramatically improve their generalizability! 
+</p>
+
+<p>
+The other big limitation is inference speed: the SpookyNet-based NNPs are about 250x slower than a conventional forcefield, so it’s much tougher to access the long timescales that are needed to simulate processes like protein folding. There are a lot of techniques that can help address these problems: <a href=https://arxiv.org/abs/2409.01931>NNPs can become faster</a> and not require system-specific retraining, <a href=https://pubs.acs.org/doi/abs/10.1021/acs.jpcb.3c05928>coarse graining</a> can reduce the number of particles in the system, and <a href=https://arxiv.org/abs/2208.01893>Boltzmann generators</a> can reduce the number of evaluations needed. So the future is bright, but there’s clearly a lot of ML engineering and applied research that will be needed to help NNP-based simulations scale.
+</p>
+
+<p>
+But overall, I think this is a very significant piece of work, and one that should make anyone adjacent to forcefield-based MD pause and take note. One day it will be possible to run simulations like this just as quickly as people run regular MD simulations today, and I can’t wait to see what comes of that.
+</p>
+
+<p>
+<i>
+Thanks to Abhishaike Mahajan for helpful feedback on this post.
+</i>
+</p>
+
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20240917_robotics.html'>Robots Won't Solve Organic Synthesis</a></h2><i>September 17, 2024</i>
 <p>
 Abhishaike Mahajan recently wrote <a href=https://www.owlposting.com/p/generative-ml-in-chemistry-is-bottlenecked>an excellent piece</a> on how generative ML in chemistry is bottlenecked by synthesis (<i>disclaimer: I gave some comments on the piece, so I may be biased</i>). One of the common reactions to this piece has been that self-driving labs and robotics will soon solve this problem—this is a pretty common sentiment, and one that I’ve heard a lot. 
 </p>
@@ -526,67 +641,6 @@ Although I don’t think this version of DiffLinker is going to replace humans a
 
 <p>
 I also suspect that DiffLinker, like other generative chemical models, will increase the demand for accurate physics-based methods for refining and validating the output predictions. DiffLinker’s grasp of potential energy surfaces is presumably worse than DFT or other dedicated ML potentials, and a hybrid workflow where DiffLinker generates structures and a higher-quality method optimizes and scores them will probably be much more accurate than just DiffLinker alone. Generative AI is having a moment right now, but for better or worse I think “classic” molecular simulation is here to stay too. 
-</p>
-
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20240425_pymsym.html'>Molecular Symmetry Analysis Made Easy</a></h2><i>April 25, 2024</i>
-<p>
-Pure mathematics has all sorts of unexpected connections to other fields, and chemistry is no exception. One example of this is group theory: while I never delved deeply enough into math to actually study group theory as its own field, I've had to learn how to assign <a href=https://en.wikipedia.org/wiki/Point_groups_in_three_dimensions>point groups</a> to three-dimensional objects for several inorganic chemistry classes. This process, demonstrated below for water, basically entails finding all of the possible symmetry operations for a given molecule:
-</p>
-
-<figure>
-  <img class=centered-img src="../img/20240425_water_c2v.png" style="width:400px;" />
-  <figcaption>Finding the point group of water.</figcaption>
-</figure>
-
-<p>
-This might seem arcane but becomes quite important in several contexts. In computational chemistry, proper consideration of point groups and their corresponding symmetry numbers is needed to handle entropic effects correctly. Dan Singleton makes this point forcefully in his <a href=https://pubs.acs.org/doi/10.1021/ja5111392>2015 study of the Baylis–Hillman reaction</a> (SI pp. S24–S25):
-</p>
-
-<blockquote>
-For an entropy calculation to be properly compared with experimental observations, it should allow for a
-series of entropy effects that are not included in the entropies calculated from frequencies normally supplied
-by electronic structure calculations. This includes allowance for symmetry numbers and the effects of
-mixing of structures on entropy. The corrections are usually simple yet they are rarely done in computational
-mechanistic studies. A rationalization of this is that the effects are small and often make no difference for
-the results of greatest interest in papers. However, the effects can at times be quite large (see for example
-Seal, P.; Papajak, E.; Truhlar, D. G. <i>J. Phys. Chem. Lett.</i> <b>2012</b>, <i>3</i>, 264-271). Judging by papers where the
-consideration of symmetry numbers and entropy of mixing would make a difference but is ignored (for one 
-example, see <i>J. Chin. Chem. Soc.</i> <b>2001</b>, <i>48</i>, 193-200), the ideas are not as widely recognized as needed.
-</blockquote>
-
-<p>
-Why don't most people take symmetry into account? One reason is that while it's pretty easy to find the point group of a molecule by inspection, it's much harder to figure out how to do it programmatically. I ran into this issue writing code for Rowan, and was really pleased to find <a href=https://github.com/mcodev31/libmsym><i>libmsym</i></a>, a package that automatically finds the point group for a given molecule. (Here's <a href=https://jcheminf.biomedcentral.com/articles/10.1186/s13321-017-0193-3>the paper</a> describing <i>libmsym</i>.) We've had great results using this library for Rowan's thermochemistry module.
-</p>
-
-<p>
-Unfortunately, <i>libmsym</i> is now nine years old and we've also had problems with the code: in particular, I recently upgraded from an old Intel MacBook to a new M3 MacBook Pro, and there aren't any prebuild Apple Silicon-compatible wheels for <i>libmsym</i> on Pypi! Since this is an issue which <a href=https://github.com/mcodev31/libmsym/issues/26>other people</a> have also faced with <i>libmsym</i>, and neither the original author nor the listed maintainer have responded to my emails, I decided to just fork the repository and fix this issue myself.
-</p>
-
-<p>
-It took a bit more work than I was expecting (I ended up completely restructuring the package, rewriting all the CMake files, and moving the Python build to <a href=https://scikit-build-core.readthedocs.io/en/latest/index.html>scikit-build-core</a>), but I'm happy to share the final product, <a href=https://github.com/corinwagen/pymsym><i>pymsym</i></a>. <i>pymsym</i> should be compatible with any modern Linux or Mac architecture (thanks to <a href=https://cibuildwheel.pypa.io/en/stable/options/>cibuildwheel</a>) and can be installed from Pypi. Simply run <span class=code>pip install pymsym</span>.
-</p>
-
-<p>
-All the original <i>libmsym</i> code is there, and I've also added an additional high-level Python API for quickly predicting point groups and symmetry numbers:
-</p>
-
-<pre class=code-block>
-import pymsym
-
-# water
-atomic_numbers = [8, 1, 1]
-positions = [
-  [0.007544053252786398, 0.39774343371391296, 0.0],
-  [-0.7671031355857849, -0.18439316749572754, 0.0],
-  [0.7595590949058533, -0.21335026621818542, 0.0]
- ]
-
-print(pymsym.get_point_group(atomic_numbers, positions)) # C2v
-print(pymsym.get_symmetry_number(atomic_numbers, positions) # 2
-</pre>
-
-<p>
-I hope this is helpful to the community—let me know if you find any bugs!
 </p>
 
 </div><div class='previous-link'><a href='blog_p1.html'>previous page</a></div><div class='next-link'><a href='blog_p3.html'>next page</a></div><br>
