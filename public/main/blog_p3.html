@@ -34,7 +34,129 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p2.html'>previous page</a></div><div class='next-link'><a href='blog_p4.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20240425_pymsym.html'>Molecular Symmetry Analysis Made Easy</a></h2><i>April 25, 2024</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p2.html'>previous page</a></div><div class='next-link'><a href='blog_p4.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20240510_difflinker.html'>Generative Linker Design</a></h2><i>May 10, 2024</i>
+<p>
+<b>
+  Update: As of October 2024, you can now run DiffLinker calculations through <a href=rowansci.com>Rowan</a>, my computational chemistry startup. Read more about this in <a href=https://rowansci.substack.com/p/difflinker-mmff94-and-common-dft>our newsletter</a>!
+</b>
+</p>
+
+<p>
+Much molecular design today can be boiled down to “put the right functional groups in exactly the right places.” In catalysis, proper positioning of functional groups to complement developing charge or engage in other stabilizing non-covalent interactions with the transition state can lead to vast rate accelerations. A classic demonstration of this is Uyeda and Jacobsen’s <a href=https://pubs.acs.org/doi/abs/10.1021/ja110842s>enantioselective Claisen rearrangement</a>, where a simple catalyst presents a guanidinium ion to stabilize an anionic region and an electron-rich arene to stabilize a cationic region. Together, these interactions lead to high enantioselectivity and a 250-fold rate increase over the background reaction.
+</p>
+
+<figure>
+  <img class=centered-img src="../img/20240510_uyeda.png" style="width:500px;" />
+  <figcaption>I freely admit this choice of example is biased, but this is a great paper. </figcaption>
+</figure>
+
+<p>
+While putting the right functional groups in the right positions might sound easy, the underlying interactions are often exquisitely sensitive to distance, which makes finding the right molecular scaffold very challenging. Jeremy Knowles put this nicely in his <a href=https://www.nature.com/articles/350121a0>1991 perspective on enzyme catalysis</a>:
+</p>
+
+<blockquote>
+Although it is too early to generalize, it is evident that in this case <i>[triose phosphate isomerase]</i> at least, the positioning of functionality at the active site of the enzyme needs to be quite precise if full catalytic potency is to be realized… The good news for catalyst engineers is that proper placement of appropriate groups in the right environment seems to be enough. The not-so-good news is that this placement must be very precise.
+</blockquote>
+
+<p>
+Proper positioning of various groups isn’t just a problem in catalysis—it’s also very important in drug design. Lots of topics in medicinal chemistry essentially boil down to a variant of the positioning problem: 
+</p>
+
+<ol>
+<li>
+Recent years have seen an explosion in the number of arene bioisosteres, i.e. “ways to connect two groups the same distance apart as an arene would without using any aromatic rings.” This is nice because you can use these bioisosteres to e.g. tune biophysical properties, like lipophilicity, solubility, and membrane permeability, while ideally not affecting the actual conformation of the molecule too much. Here’s a graphic from Chris Swain showing some options for replacing a 1,4-disubstituted arene:
+
+<figure>
+  <img class=centered-img src="https://www.cambridgemedchemconsulting.com/resources/bioisoteres/aromatic_bioisosteres_files/aromaticbicycloreps.png" style="width:400px;" />
+  <figcaption>Taken from <a href=https://www.cambridgemedchemconsulting.com/resources/bioisoteres/aromatic_bioisosteres.html>this page</a>.</figcaption>
+</figure>
+
+(There's lots of work on this; see also the Baran Lab's <a href=https://baranlab.org/wp-content/uploads/2020/11/Bioisosteres-v2-Recent-Trends-and-Tactics.pdf>great overview of bioisosteres</a>.)
+
+</li>
+<li>
+
+
+“Scaffold hopping” generally means switching the core of a molecule while preserving key interactions and substituents (<a href=https://www.cresset-group.com/about/news/what-does-scaffold-hopping-mean-to-you/>although the term is a little vague</a>). Scaffold hops often look for new structures that don’t suffer from the ADME/toxicity liabilities of the original structure, which necessitates finding a new core that positions substituents in the same way. Here's a nice example of a scaffold hop in a tyrosine kinase inhibitor, from a <a href=https://apps.dtic.mil/sti/tr/pdf/ADA572958.pdf>review</a> by Hongmao Sun and co-workers:
+
+<figure>
+  <img class=centered-img src="../img/20240510_tyk.png" style="width:550px;" />
+  <figcaption>(This is Figure 8 in the reference.)</figcaption>
+</figure>
+
+</li>
+<li>
+
+Linker design has become incredibly important for PROTACs and other heterobifunctional molecules, as choosing a good linker is often key to drug efficacy (<a href=https://chemistry-europe.onlinelibrary.wiley.com/doi/abs/10.1002/cmdc.202200615>e.g.</a>). Unfortunately there are a vast variety of potential linkers, and it’s far from obvious to figure out which one will best balance, affinity, bioavailability, stability, and other properties:
+
+<figure>
+  <img class=centered-img src="../img/20240510_vhl.png" style="width:550px;" />
+  <figcaption>Taken from <a href=https://www.sciencedirect.com/science/article/pii/S0968089623001827>this review</a>.</figcaption>
+</figure>
+
+</li>
+<li>
+
+One of the toughest parts of fragment-based drug design is finding the right way to connect fragments which bind to different parts of the desired pocket. Here’s what <a href=https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6930586/>Philine Kirsch and co-workers</a> have to say about this:
+
+<blockquote>
+Finding the right linker motif, which orients the individual fragment units in the favourable geometry in relation to each other without introducing too much flexibility whilst maintaining the binding poses of both fragments, can be very challenging. If successful, the combination of two fragments with rather low affinity could result in significantly higher affinity and has the potential to result in “superadditive” contributions of both binding motifs. The challenge in fragment linking is the exploration of the binding mode of both fragments and the identification of an optimal linker. Only in this case, the overall reduced so-called rigid body entropy translates into synergistically-improved affinity.
+</blockquote>
+
+</li>
+</ol>
+
+<p>
+What’s hard about all these positioning problems is that finding a molecule that orients substituents in a given way is incredibly non-obvious: molecules are inherently discrete and atomic, making it hard to change a distance or angle by a precise percent. You can have two carbon atoms between your substituents, or you can have three carbon atoms, but you can’t have 2.5 carbon atoms. This makes prospective design very challenging: I can model my protein’s active site and figure out that I want a an <i>ortho</i>-pyridyl substituent and a tetrazole 8 Å apart at a 30º angle, but working backwards to an actual scaffold almost always requires a lot of trial and error. 
+</p>
+
+<p>
+A <a href=https://www.nature.com/articles/s42256-024-00815-9>recent paper</a> from Ilia Igashov and co-workers sets out to solve exactly this “inverse design” problem: given two substituents, can we use ML to find a linker that connects them in the desired orientation? Their solution is DiffLinker, a diffusion-based method that takes separate atomic fragments and generates a linker that connects them.
+</p>
+
+<figure>
+  <img class=centered-img src="../img/20240510_difflinker.png" style="width:500px;" />
+</figure>
+
+<p>
+There’s been other work in this area, but the DiffLinker authors argue that their model stands out in a few ways. DiffLinker generally produces more synthetically accessible and drug-like molecules than competitor methods, although the relative ranking of models does change significantly from benchmark to benchmark. Also, they’re not limited to joining pairs of molecule structures: DiffLinker can perform “one-shot generation of the linker between any arbitrary number of fragments,” which lets them vastly outperform other models when linking three or more fragments. 
+</p>
+
+<p>
+For cases where fragments must be joined in a protein pocket, the authors train a pocket-conditioned model, and show that this model results in many fewer clashes than an unconstrained model. They can use this model to recapitulate known drug structures, which they demonstrate with a known HSP90 inhibitor derived from molecular fragments. (It’s worth noting that the authors got the desired inhibitor structure only 3 times out of 1000 DiffLinker predictions.) They also show that their protein-conditioned model produces molecules that have good binding affinity as assessed by docking (GNINA/Vina), with the huge caveat that docking scores are notoriously inaccurate.
+</p>
+
+<figure>
+  <img class=centered-img src="../img/20240510_hsp90.png" style="width:500px;" />
+  <figcaption><b>a</b> is the experimental fragments, <b>b</b> is the input to DiffLinker, <b>c</b> is the experimental inhibitor, and <b>d</b> is the DiffLinker-generated inhibitor. Not bad!</figcaption>
+</figure>
+
+<p>
+There’s still plenty of work that needs to be done here: for instance, the authors readily acknowledge that PROTACs are still too challenging:
+</p>
+
+<blockquote>
+While DiffLinker effectively suggests diverse and valid chemical structures in tasks like fragment linking and scaffold hopping, we have observed that generating relevant linkers for PROTAC-like molecules poses a greater challenge. The main difference between these problems lies on the linker length and the distance between the input fragments. While the average linker size in our training sets is around 8 atoms (5 for ZINC, 10 for GEOM, 10 for Pockets), a typical linker in a PROTAC varies between 12 and 20 atoms. It means that the distribution of linkers in PROTACs has different characteristics compared to the distributions of linkers provided in our training sets. Therefore, to improve the performance of DiffLinker in PROTAC design, one may consider retraining the model using more suitable PROTAC data.
+</blockquote>
+
+<p>
+DiffLinker is open-source and comes with pre-trained models, so I played around with it a bit myself to see how well it worked. I sketched out a classic <i>meta</i>-terphenyl scaffold, deleted the central phenyl ring, and then asked DiffLinker to connect the now-separated phenyl rings. I was hoping that DiffLinker would come up with one of <a href=https://enamine.net/building-blocks/medchem/saturated-bioisosteres-of-meta-substituted-benzene>Enamine’s cool suggestions</a> for <i>meta</i>-arene bioisosteres, but in all five cases I just got back some variant on a benzene ring… which isn’t surprising in hindsight. 
+</p>
+
+<figure>
+  <img class=centered-img src="../img/20240510_rowan.png" style="width:400px;" />
+  <figcaption>DiffLinker also doesn't output hydrogens, which is a little annoying.</figcaption>
+</figure>
+
+<p>
+Although I don’t think this version of DiffLinker is going to replace humans at any of the tasks I talked about above, this still seems like a pretty cool direction for generative chemical ML. I’m excited to see future versions of methods like DiffLinker that are able to generate predictions conditioned on other molecular properties to allow for guided exploration of molecular space. (For instance, it would have been nice to request fragments that were three-dimensional above, so as to avoid getting boring benzenes back.)
+</p>
+
+<p>
+I also suspect that DiffLinker, like other generative chemical models, will increase the demand for accurate physics-based methods for refining and validating the output predictions. DiffLinker’s grasp of potential energy surfaces is presumably worse than DFT or other dedicated ML potentials, and a hybrid workflow where DiffLinker generates structures and a higher-quality method optimizes and scores them will probably be much more accurate than just DiffLinker alone. Generative AI is having a moment right now, but for better or worse I think “classic” molecular simulation is here to stay too. 
+</p>
+
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20240425_pymsym.html'>Molecular Symmetry Analysis Made Easy</a></h2><i>April 25, 2024</i>
 <p>
 Pure mathematics has all sorts of unexpected connections to other fields, and chemistry is no exception. One example of this is group theory: while I never delved deeply enough into math to actually study group theory as its own field, I've had to learn how to assign <a href=https://en.wikipedia.org/wiki/Point_groups_in_three_dimensions>point groups</a> to three-dimensional objects for several inorganic chemistry classes. This process, demonstrated below for water, basically entails finding all of the possible symmetry operations for a given molecule:
 </p>
@@ -367,140 +489,6 @@ Update 1/5/2024: <a href=20240105_phys_org.html>some followup thoughts</a> based
 </i></p>
 
 <i>Thanks to Eric Jacobsen for many conversations about the history of physical organic chemistry, Eugene Kwan for conversations about the principle of nonperfect synchronization, and to Ari Wagen for feedback on this post and six months of excellent front-end development for Rowan. Any errors are mine alone.</i>
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20231321_books.html'>Books from 2023</a></h2><i>December 31, 2023</i>
-<p>
-(Previously: <a href=https://corinwagen.github.io/public/blog/20221231_books.html>2022</a>)
-</p>
-
-<b>#1. Tony Fadell, <i>Build</i></b>
-<br>
-<b>#2. Giff Constable, <i>Talking To Humans</i></b>
-<br>
-<b>#3. Ben Horowitz, <i>The Hard Thing About Doing Hard Things</i></b>
-<br>
-<b>#4. Dale Carnegie, <i>How To Win Friends And Influence People</i></b>
-
-<p>
-Sounds Machiavellian, but actually quite wholesome: a “dad book,” as my friend called it.
-</p>
-
-<b>#5. Ben Patrick, <i>Knee Ability Zero</i></b>.
-<br>
-<b>#6. Neal Stephenson, <i>The Diamond Age</i></b>
-
-<p>
-<i>Snow Crash</i> was much worse upon rereading as an adult, but <i>The Diamond Age</i> was a bit better: in particular, I didn’t really appreciate the “speculative governance futurism”/”comparative cultural criticism” facets of the novel when I read this in high school.
-</p>
-
-<b> #7. Richard Hamming, <i> The Art of Doing Science and Engineering</i></b>
-
-<p>
-I reviewed this <a href=https://corinwagen.github.io/public/blog/20230516_hamming.html>here</a>.
-</p>
-
-<b>#8-11. Brandon Sanderson, <i>The Stormlight Archives</i></b>
-
-<p>
-Many great works of literature are notable for their brevity: when you read Hemingway, or <i>Dubliners</i>, or Flannery O’Connor, you know that every sentence has been crafted with care. Giant fantasy novels like <i>Wheel of Time</i> (which I read last year) or <i>The Stormlight Archives</i> work differently. There are entire chapters which are probably extraneous, whole characters and plot arcs which exist merely to bring out certain traits or pieces of information.
-</p>
-
-<p>
-But there are unique joys to megafiction: sitting down and reading hundreds of pages of a good story is relaxing in a way that other books simply aren’t. In my own life, I’ve found that I’m much better about making time to read when I’m in the middle of an engaging novel than when I’m reading theology or histories of feudalism. Narrative-driven “easy reading” has a bad reputation amongst the literati; in a world where all fiction is competing against screens for engagement, it shouldn’t.
-</p>
-
-<b>#12. Antonio Garcia Martínez, <i>Chaos Monkeys</i></b>
-
-<p>
-I reviewed this <a href=https://corinwagen.github.io/public/blog/20230530_chaos_monkeys.html>here</a>.
-</p>
-
-<b> #13. Tom Holland, <i>Rubicon</i></b>
-<br>
-<b> #14. Tom Holland, <i>Dynasty</i></b>
-<br>
-<b> #15. Czeslaw Milocz, <i>The Captive Mind</i></b>
-
-<p>
-Fantastic; I probably would have liked this even more if I were still in school.
-</p>
-
-<b> #16. C.S. Lewis, <i>That Hideous Strength</i></b>
-
-<p>
-I didn’t like this when I was a kid, but I like it now: in many respects <i>THS</i> can be viewed as a book-length exploration of the ideas in “The Inner Circle,” with a garnish of medieval cosmology here and there (<a href=http://www.planetnarnia.com/>see also</a>).
-</p>
-
-<b> #17. Kazuo Ishiguro, <i>Klara and the Sun</i></b>
-<br>
-<b> #18. Mike Cosper, <i>Recapturing the Wonder</i></b>
-<br>
-<b> #19. Mairtin O Caidhan, <i>Graveyard Clay</i></b>
-
-<p>
-Tyler Cowen recommended this book, but I didn’t love it.
-</p>
-
-<b> #20. Ursula K. LeGuin, <i>The Dispossessed</i></b>
-<br>
-<b> #21. Marty Cagan, <i>Inspired</i></b>
-<br>
-<b> #22. Ernst Junger, <i>On the Marble Cliffs</i></b>
-
-<p>
-This was excellent (h/t <a href=https://regressstudies.substack.com/p/young-lords-and-their-traces>Santi Ruiz</a>).
-</p>
-
-<b> #23. Michaeleen Doucleff, <i>Hunt, Gather Parent</i></b>
-
-<p>
-I reviewed this book <a href=https://corinwagen.github.io/public/blog/20231106_hgp.html>here</a>.
-</p>
-
-<b> #24. David Kirkpatrick, <i>The Facebook Effect</i></b>
-<br>
-<b> #25. Bill Carr &amp; Colin Bryar, <i>Working Backwards</i></b>
-
-<p>
-I reviewed this book <a href=https://corinwagen.github.io/public/blog/20231125_working_backwards.html>here</a>.
-</p>
-
-<b> #26. Geoffrey Chaucer, <i>The Canterbury Tales</i></b>
-
-<p>
-The best book I read this year by a mile; far better than I remembered. While many of <i>The Canterbury Tales</i> work pretty well as literature, they’re even better when viewed also as history. It’s rare to be able to read something from 800 years ago that’s legitimately funny and interesting.
-</p>
-
-<p>
-Reading Chaucer fills me with questions about the medieval mind. The stories are steeped in Christianity, as one might expect. Any argument goes back to the Bible, even those among animals, and Chaucer assumes a level of familiarity with e.g. the Psalms far exceeding that of most modern Christians. Yet at the same time the Greco-Roman world looms large: Roman gods appear as plot characters in three tales (the Knight’s Tale, the Merchant’s Tale, and the Manciple’s Tale), and Seneca is viewed as a moral authority on par with Scripture. I’m curious how all these beliefs and ideas fit together and welcome any recommendations on this subject. (<i>The Discarded Image</i> is already on my list.)
-</p>
-
-<b> #27. Gabrielle Zevin, <i>Tomorrow and Tomorrow and Tomorrow</i></b>
-
-<p>
-My wife recommended this book to me. I thought this would be a relaxing break from the November startup grind, but in fact it features a bunch of obsessed programmers working around the clock for months—a poor choice but a good novel.
-</p>
-
-<b> #28. Jessica Livingston, <i>Founders at Work</i></b>
-<br>
-<b> #29. Neal Stephenson, <i>Seveneves</i></b>
-<br>
-<br>
-<p>
-Overall, about a third of the books I read were startup-related: most of them were pretty bad, but even bad business/startup books are probably useful from the viewpoint of cultural immersion. Academic science is quite different from the startup ecosystem, and to the extent that cultural arbitrage is possible (in either direction), I need to become proficient in startup culture.
-</p>
-
-<p>
-I’m not sure why the median business book is so bad—perhaps business people are too willing to spend money on books and not picky enough, or perhaps MBA types generally lack knowledge about the humanities, which makes both supply and demand worse.
-</p>
-
-<p>
-(The median Christian book is also pretty bad. One unifying hypothesis: both pastors and businesspeople often have wise insights into specific situations, personal or business, but these insights aren’t readily generalizable into book form. Being able to give good advice doesn’t mean you should write an “advice book.”)
-</p>
-
-<p>
-As always, book recommendations are welcome, particularly on the topics of medieval history/culture, software engineering, or startups. Apologies for the infrequent posting as of late, and happy new year!
-</p>
-
 </div><div class='previous-link'><a href='blog_p2.html'>previous page</a></div><div class='next-link'><a href='blog_p4.html'>next page</a></div><br>
   </body>
   <br>

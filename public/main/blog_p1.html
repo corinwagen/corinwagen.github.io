@@ -34,7 +34,59 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='next-link'><a href='blog_p2.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20250405_to_his_defense_tech_portco.html'>To His Defense-Tech Portco</a></h2><i>April 5, 2025</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='next-link'><a href='blog_p2.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20250512_middle_way.html'>The Fundamental Wisdom of the Middle Way</a></h2><i>May 12, 2025</i>
+<br>
+<figure>
+  <img class=centered-img src="../img/20250512_nagarjuna.jpg" style="width:400px;" />
+</figure>
+<br>
+
+<p>In scientific computation, where I principally reside these days, there’s a cultural and philosophical divide between physics-based and machine-learning-based approaches.</p>
+
+<p>Physics-based approaches to scientific problems typically start with defining a simplified model or theory for the system. For instance, a scientist attempting to simulate protein dynamics might start by defining how the energy of a system depends on its coordinates by choosing (or creating) a forcefield. Once a model’s been selected, numerical simulations are run using the model and the output of these simulations is analyzed to produce a prediction.</p>
+
+<p>Physical simulations like these are extensively used today in climate modeling, orbital mechanics, computational fluid dynamics, and computational chemistry. These approaches are typically robust and relatively easy to interpret, since the underlying theory is perfectly known. Still, it’s often possible to get very complex behavior from a small set of underlying rules. Application of Newtonian gravitation, for instance, gives rise to the chaotic “three-body problem.” This combination of simple physical rules and complex emergent behavior is what makes physical simulations so powerful: starting from a well-understood model, it’s possible to gain non-trivial insights about complex systems.</p>
+
+<p>ML-based approaches to scientific computation turn all of this upside down. Many ML models directly map input to output without any intermediate subtasks, making it difficult to interpret what’s going on. While physics-based methods can often extrapolate from simple test cases to complex emergent behaviors, ML-based methods frequently struggle to predict behaviors outside of what they’ve seen before. Still, ML-based methods are often far more efficient than physical methods and, since they’re not constrained by a specific theoretical framework, can handle complex phenomena where the underlying functional form is not known.</p>
+
+<p>When these two subcultures collide, things often get nasty. Proponents of physics-based modeling frequently allege that ML is fundamentally unscientific, since science is all about extrapolation, and that the unreliability and interpretability of machine learning makes it ill-suited for anything except hacking benchmarks.</p>
+
+<p>On the other side of the aisle, machine-learning advocates claim that physics-based modeling is basically a way for scientists to feel smart and look at pretty pictures and will never be able to capture sufficient complexity to be useful. If you think I’m exaggerating, I’m not—<a href=https://endpts.com/endpoints-slack-interview-dukes-chatterjee-on-ai-bio-nih-cuts/>here’s Pranam Chatterjee</a> discussing why structure-based models like AlphaFold are “irrelevant” to disease (emphasis added):</p>
+
+<blockquote>…if we believe Anfinsen’s hypothesis: the sequence should encode everything else, including structure. Why do you need to look at the structure of the protein to understand it? <b>I have concluded people just feel more satisfied looking at a protein, rather than trusting an implicit language model to capture its features.</b> Hence the Nobel Prize.</blockquote>
+
+<p>For Pranam, the physical assumptions made by models like AlphaFold—that proteins have a three-dimensional structure that’s relevant to their biology—mean that these models are incapable of describing the complexity of reality. Contra Pranam, the point that I want to make in this piece is that there’s no reason why physics- and ML-based approaches should be so opposed to one another. In fact, I’m becoming convinced that the future looks like some hybrid of both approaches.</p>
+
+<p>Why? One of the big limitations of physics-based methods, at least in drug discovery, is that the underlying models often aren’t expressive enough and can’t easily be made more expressive. Molecular forcefields have only a handful of terms, which means that they can’t easily represent coupled dihedral rotation, π–π stacking, and so on—let alone bond-breaking or bond-forming processes—but even optimizing empirical parameters for all these terms quickly becomes a laborious and hard-to-scale process. In contrast, ML-based methods can scale to millions of empirical parameters or beyond without becoming intractably complex or overfit.</p>
+
+<p>On the other hand, the big advantage of physics-based approaches is their generalizability—even simple rulesets, <a href=https://writings.stephenwolfram.com/2022/05/the-making-of-a-new-kind-of-science/>like cellular automata</a>, can lead to immensely complex emergent behavior. This sort of extrapolation is rarely seen in scientific ML projects. <a href=https://patwalters.github.io/Why-Dont-Machine-Learning-Models-Extrapolate/>A recent blog post from Pat Walters</a> makes the observation that most cheminformatic models don’t seem capable of extrapolating outside the dynamic range of their training data. This is surprising, since even the simplest of “physical” models (like a linear equation) are capable of this extrapolation.</p>
+
+<p>If a hybrid approach is to work, it must be able to capture the strengths of both methods. One of the simplest ways to do this is an energy-based approach, where scientists don’t predict an output parameter directly but instead learn an energy function which can be used to indirectly predict an output. (<a href=https://arxiv.org/abs/2306.02572>Yann LeCun has advocated for this.</a>) This adds some test-time complexity, since additional computation is needed after inference to generate the final output, but also constrains the model to obey certain physical laws. (If you want to predict forces, for instance, it’s often best to do so through differentiating the predictions of an energy model, since <a href=https://arxiv.org/abs/2412.11569>doing this guarantees that the outputs will be a valid gradient field.</a>)</p>
+
+<p>Physics-informed ML approaches can also resolve the interpolation/extrapolation problem. Since physical equations are well-suited to extrapolation, applying a physical model to the output of an ML layer can convert interpolated intermediate states to extrapolated final results. This sort of extrapolation is well-documented in neural network potentials—for instance, <a href=https://pubs.rsc.org/en/content/articlelanding/2017/sc/c6sc05720a>ANI-1 was trained only on molecules with 8 or fewer heavy atoms</a> but proved capable of extrapolating to significantly larger molecules with good accuracy.</p>
+
+<p>One fair criticism of these hybrid physics–ML approaches is that they often require much more test-time compute than pure-ML methods: optimizing a geometry with a neural network potential can require hundreds of intermediate gradient calculations, while in theory an ML method could predict the correct geometry with a single step. But in practice I think this is an advantage. Scaling test-time compute has been an incredible boon for the LLM space, and chain-of-thought reasoning models like OpenAI’s o3 and DeepSeek-r1 are now the gold standard. To the extent that physics-informed ML methods give us the ability to spend more compute to get better answers, I suspect this will mostly be good for the field.</p>
+
+
+<p>At Rowan, we’ve recently published a few papers in this area—Starling, an energy-based model for predicting microstate distributions and macroscopic pKa, and Egret-1, a family of neural network potentials for bioorganic simulation—and I expect we’ll keep working on hybrid physics–ML approaches in the future. Others seem to be moving in this direction too. The recent Boltz-1x model (<a href=https://rowansci.substack.com/p/proteinligand-co-folding>now on Rowan!</a>) from Gabri Corso and co-workers incorporates inference-time steering for superior physical accuracy, and <a href=https://achira.ai/>Achira’s</a> written about the merits of “a third way” in simulation built around “harmonization of the theoretical and the pragmatic.”</p>
+
+<p>There’s immense room for creativity at the intersection of physics and machine learning. Virtually any part of a complex physics-based workflow can potentially be replaced with a bespoke ML model, leading to almost limitless combinatorial possibilities for experimentation. Which combinations of models, algorithms, and architectures will prove to be dead-ends, and which will unlock order-of-magnitude improvements in performance and accuracy? It’s a fun time to be working in this field.</p>
+
+<h3>Appendix:</h3>
+
+<p><i>I asked my co-founder Eli what he thought of this piece. He pointed out that the amount of physics one should incorporate into an ML model depends on the amount of data and the dimensionality of the problem. I asked him to explain more, and here’s what he wrote:</i></p>
+
+<blockquote>In ML terminology, incorporating information about the modality on which you are predicting into the design of the model is called adding inductive bias. One example of this for atomistic simulation is enforcing Euclidean equivariance into a model. This explicitly ensures that any spatial transformation to a model’s input is reflected in its output. This does ensure that physical laws are followed but also increases the computational complexity of the model, limiting system size at inference time and inference speed.
+  <br><br>
+  Some neural network potentials like <a href=https://arxiv.org/abs/2206.11990>Equiformer</a> enforce equivariance in every operation within the model to ensure physical laws are always followed, while <a href=https://arxiv.org/abs/2305.19302>others enforce it only for inputs and outputs</a>, relaxing constraints for intermediate model operations. Models like <a href=https://arxiv.org/abs/2504.06231>Orb-v3</a> don’t enforce equivariance at all, but incorporate dataset augmentation and unsupervised pre-training techniques to improve sample efficiency and learn physical laws.
+  <br><br>
+  As dataset size and diversity increase, we may see less of a need for physical inductive bias in models. One place we’ve seen this is with convolutional neural networks (CNNs) and vision transformers (ViTs) in computer vision: CNNs have built-in translational invariance whereas ViTs do not include any spatial inductive bias but are theoretically more flexible. We see ViTs outperforming CNNs <a href=https://arxiv.org/abs/2010.11929>only as dataset size and model size pass a certain threshold</a>. If we assume that a similar pattern will hold for atomistic simulation, we might expect that the dataset size at which this threshold occurs will be greater, as molecular simulation has more degrees of freedom than computer vision.</blockquote>
+
+<p><i>I think this is a good point—thanks Eli! More abstractly, we might expect that incorporating explicit physics will help more in the low-data regime, while pure ML approaches will be more effective as data and compute approach infinity.</i></p>
+
+
+<p><i>Thanks to Ari Wagen, Jonathon Vandezande, and Eli Mann for reading drafts of this post.</i></p>
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20250405_to_his_defense_tech_portco.html'>To His Defense-Tech Portco</a></h2><i>April 5, 2025</i>
 <br>
 <figure>
   <img class=centered-img src="../img/20250405_anduril.png" style="width:600px;" />
@@ -636,177 +688,6 @@ There’s a mix: bread and water, bread and water and vegetables, or anything bu
 Often this isn’t mentioned at all, but sometimes it’s said that you shouldn’t eat anything until the evening. 
 </p>
 
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20250101_books.html'>Books from 2024</a></h2><i>January 1, 2025</i>
-<p>
-(Previously: <a href=https://corinwagen.github.io/public/blog/20221231_books.html>2022</a>, <a href=https://corinwagen.github.io/public/blog/20231321_books.html>2023</a>.)
-</p>
-
-<b>#1. Baldassar Castiglione, <i>The Book of the Courier</i></b> 
-
-<p>
-This book gets cited from time to time as a sort of historical guide to "being cool," since the characters spend some time discussing the idea of <i>sprezzatura</i>, basically grace or effortlessness. More interesting to me was the differences between Renaissance conceptions of virtue, character, & masculinity / femininity and how our culture's used to thinking about these concepts—"the past is a foreign country."
-</p>
-
-<b>#2. Grant Cardone, <i>Sell Or Be Sold</i></b> 
-<br>
-<b>#3. Andrew Chen, <i>The Cold Start Problem</i></b> 
-<br>
-<b>#4–7. Stephanie Meyer, <i>The Twilight Saga</i></b> 
-
-<p>
-Having never read or watched any <i>Twilight</i> before this year, I found them much weirder than I was expecting.
-</p>
-
-<b>#8. Fuschia Dunlop, <i>Invitation to a Banquet</i></b> 
-
-<p>
-As featured on <i><a href=https://conversationswithtyler.com/episodes/fuchsia-dunlop-3/>CWT</a></i>!
-</p>
-
-<b>#9. Iris Murdoch, <i>The Black Prince</i></b> 
-<br>
-<b>#10. David Kushner, <i>Masters of Doom</i></b> 
-
-<p>
-A history of id Software, the company behind <i>Wolfenstein 3D</i>, <i>Doom</i>, <i>Quake</i>, and the <a href=https://en.wikipedia.org/wiki/Fast_inverse_square_root>fast inverse square root</a> algorithm. John Carmack is a <a href=https://waivek.github.io/website/tooltip.html>legendary figure in the software world</a>, and after reading a fictionalized history inspired by id last year (<i>Tomorrow and Tomorrow and Tomorrow</i>) it was good to read the real thing.
-</p>
-
-<b>#11. Michael Gerber, <i>The E-Myth Revisited</i></b> 
-<br>
-<b>#12. William Gibson, <i>Neuromancer</i></b> 
-
-<p>
-A lot of old science fiction is hard to appreciate properly—the best ideas have been sucked out and copied a hundredfold, leaving only the author's weirder musings behind to be appreciated.
-<i>Neuromancer</i>'s been copied as much as any novel, but I was impressed by the pace and general bleakness of this novel; it holds up well.
-</p>
-
-<b>#13–26. Lois McMaster Bujold, <i>The Vorkosigan Saga</i></b> 
-
-<p>
-I adored this series, which I read pretty steadily over the course of the year. Bujold writes satisfying, well-constructed plots that keep the focus on characters, not setting. The books fit together nicely, too: each story stands alone, but together paint a decades-long picture of her characters aging, gaining wisdom through their mistakes, and learning to handle the responsibilities placed on them. I think <i>Captain Vorpatril's Alliance</i> is my favorite one.
-</p>
-
-<b>#27. R. F. Kuang, <i>Babel</i></b> 
-<br>
-<b>#28. Clay Christiansen, <i>The Innovator’s Dilemma</i></b> 
-
-<p>
-As recommended by <a href=https://www.acquired.fm/episodes/jensen-huang>Jensen Huang</a>; unlike most business books, this one is worth reading all the way through.
-</p>
-
-<b>#29. Rob Fitzpatrick, <i>The Mom Test</i></b> 
-
-<p>A canonical book for startup founders, which I probably should have read 1–2 years ago.</p>
-
-<b>#30. Elena Ferrante, <i>My Brilliant Friend</i></b> 
-
-<p>
-At its core, this is a very similar story to <i>Wicked</i>: a coming-of-age story focusing on the envious and unstable friendship between two women.
-I liked this book, but haven't yet picked up the rest of the Neopolitan Novels; somehow keeping track of the names must intimidate me on a subconscious level.
-</p>
-
-<b>#31. Andy Grove, <i>Only The Paranoid Survive</i></b> 
-<br>
-<b>#32. Vernor Vinge, <i>A Fire Upon The Deep</i></b> 
-
-<p> I liked this book a lot. I would have adored it if I'd read it as a kid, I think; there's something viscerally compelling about Vinge's "Zones of Thought."</p>
-
-<b>#33. C. S. Lewis, <i>The Discarded Image</i></b> 
-
-<p>
-This book examines what medieval Europeans thought of the world: how did they see their universe and their place in it? This is a surprisingly subtle question: obviously they were Christian, but their cosmology was considerably different than what even the most "traditional" modern people believe. Last year, I wrote this about <i>The Canterbury Tales</i>:
-</p>
-
-<blockquote>
-Reading Chaucer fills me with questions about the medieval mind. The stories are steeped in Christianity, as one might expect. Any argument goes back to the Bible, even those among animals, and Chaucer assumes a level of familiarity with e.g. the Psalms far exceeding that of most modern Christians. Yet at the same time the Greco-Roman world looms large: Roman gods appear as plot characters in three tales (the Knight’s Tale, the Merchant’s Tale, and the Manciple’s Tale), and Seneca is viewed as a moral authority on par with Scripture. I’m curious how all these beliefs and ideas fit together and welcome any recommendations on this subject.
-</blockquote>
-
-<p>
-<i>The Discarded Image</i> exactly answers these questions. If you're at all interested in medieval thought, I highly recommend it.
-</p>
-
-<b>#34. Jim Collins, <i>Good To Great</i></b> 
-<br>
-<b>#35. R. T. France, <i>The Gospel of Mark</i></b> 
-<br>
-<b>#36. Nathan Azrin, <i>Toilet Training In Less Than One Day</i></b> 
-
-<p>We didn't quite live up to the book's promise, but it took less than a week, so I'm happy.</p>
-
-<b>#37. Tim Keller, <i>Every Good Endeavor</i></b> 
-<br>
-<b>#38. Brad Feld, <i>Venture Deals</i></b> 
-
-<p>Another canonical book for startup founders, which I also probably should have read before now.</p>
-
-<b>#39. Abigail Shrier, <i>Bad Therapy</i></b> 
-
-<p>Shrier invites controversy here as with her other writing. Sweeping conclusions about American youth aside, I found this surprisingly compelling when viewed as a self-help book about how to be less fearful.</p>
-
-<b>#40. Sheldon Vaunaken, <i>A Severe Mercy</i></b> 
-
-<p>Caused me to weep uncontrollably while stuck in a middle seat on a five-hour flight: you've been warned.</p>
-
-<b>#41. Thich Nhat Hanh, <i>You Are Here</i></b> 
-<br>
-<b>#42. Gunther Hagen, <i>This Is Germany: An Art Book</i></b> 
-<br>
-<b>#43. Thomas Malory, <i>Le Mort D’ Arthur</i></b> 
-<br>
-<b>#44. Georgette Heyer, <i>A Civil Contract</i></b> 
-<br>
-<b>#45. Alex Hormozi, <i>$100M Offers</i></b> 
-<br>
-<b>#46. R. F. Kuang, <i>Yellowface</i></b> 
-<br>
-<b>#47. Barry Werth, <i>The Billion-Dollar Molecule</i></b> 
-
-<p>This book is crazy, and I can't believe I hadn't read it before, particularly since I'm not too distant from a lot of the action, professionally or physically. It's framed as a science story, but I think it works even better at conveying the sheer desperation of early-stage startup life.</p>
-
-<b>#48. Diarmid McCullough, <i>The Reformation</i></b> 
-
-<p>
-The Reformation is much weirder than most people, Protestant or Catholic, realize: I was surprised by the diversity of pre-Reformation religious practice in Europe, which was mostly stamped out in the doctrinal standardization of the 1500s. For both Protestants and Catholics, it became very important to separate "us" from "them," which led to the rise of catechisms, inquisitions, and so on.
-</p>
-
-<p>
-This book also soured me on the "Albion's Seed" idea, as popularized by <a href=https://slatestarcodex.com/2016/04/27/book-review-albions-seed/>the SSC book review</a>. Viewed in isolation, the Puritans seem like a bunch of religious fanatics, but really McCullough argues that the same impulse predominated all over Europe in a "Reformation of Manners," from Charles Borromeo's Milan to Plymouth Colony. Perhaps it's less about the Puritans and more about the 1620s. 
-</p>
-
-<b>#49. Amy Chua, <i>Battle Hymn Of The Tiger Mother</i></b>
-
-<p>
-This book made it back into <a href=https://x.com/melissa/status/1871793185955172429>the discourse</a>, so I decided I'd actually read it—it's much better than I was expecting, and I don't think most of Chua's critics really understand the book. Conclusions for my own parenting have yet to be determined.
-</p>
-
-<br>
-<br>
-
-<p> I also read good chunks of a number of textbooks this year, including: </p>
-
-<ul>
-  <li>Barto and Sutton's <i>Reinforcement Learning</i></li>
-  <li>Kleppmann's <i>Designing Data-Intensive Applications</i></li>
-  <li>Di and Kern's <i>Drug-like Properties: Concepts, Structure Design and Methods</i></li>
-</ul>
-
-<p>
-Overall, this was a good year for books. As the stress of Rowan has ramped up more, I've found it more difficult to write creatively in my free time, and easier to just read other people's words—this manifests in a much-diminished rate of blogging, and a lot more energy diverted to reading fiction.
-</p>
-
-<p>
-Next year, I hope to read:
-</p>
-
-<ul>
-  <li>More history. I've picked up a number of books on Napoleon and the Napoleonic wars, since reading <i>A Civil Contract</i> reminded me that my understanding of the whole time period is pretty crude. I'm now a few hundred pages into Andrew Roberts's biography of Napoleon, and I'm realizing that I don't really understand pre-unification Italian history very well either. History just keeps going...</li>
-  <li>Relatedly, I want to re-read LeRoy Ladurie's microhistory of Montaillou, with an eye towards understanding family structures, privacy, and the relationship of the family to the broader community. David Brooks argues that <a href=https://www.theatlantic.com/magazine/archive/2020/03/the-nuclear-family-was-a-mistake/605536/>"the nuclear family was a mistake"</a>; I've had a lot of conversations about this topic over the past few years, and I'm not convinced that I or anyone else has a great sense of what these sorts of family dynamics were like five centuries ago. Montaillou seems like the right place to start acquiring some actual data, but any other recommendations are welcome!</li>
-  <li>And it might finally be the year I tackle <i>Institutes</i> or <i>City of God</i>...</li>
-</ul>
-
-<p>
-Happy new year, and feel free to leave book recommendations in <a href=https://cwagen.substack.com/p/books-from-2024>the Substack comments</a>!
-</p>
 </div><div class='next-link'><a href='blog_p2.html'>next page</a></div><br>
   </body>
   <br>
