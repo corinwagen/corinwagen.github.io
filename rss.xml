@@ -1591,7 +1591,7 @@ For the unfamiliar, SolidWorks is a program which allows engineers to design obj
 
 
 <figure>
-  <img class=centered-img src="https://blogs.solidworks.com/solidworksblog/wp-content/uploads/sites/2/2019/10/screenshot1.png" style="width:550px;" />
+  <img class="centered-img" src="https://corinwagen.github.io/public/img/20240325_solidworks.jpg" style="width:550px;" alt="picture of SolidWorks" />
   <figcaption>A screenshot of SolidWorks.</figcaption>
 </figure>
 
@@ -1632,7 +1632,7 @@ In fact, I’d argue that the most useful predictive computational tool for orga
 </p>
 
 <figure>
-  <img class=centered-img src="https://bitesizebio.com/wp-content/uploads/2016/11/Figure-6-NMR-Prediction.jpg" style="width:400px;" />
+  <img class=centered-img src="https://bitesizebio.com/wp-content/uploads/2016/11/Figure-6-NMR-Prediction.jpg" style="width:450px;" />
   <figcaption>A screenshot of ChemDraw's NMR prediction widget.</figcaption>
 </figure>
 
