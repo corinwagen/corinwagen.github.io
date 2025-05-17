@@ -34,7 +34,150 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p4.html'>previous page</a></div><div class='next-link'><a href='blog_p6.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20231020_wish_list.html'>Organic Chemistry’s Wish List, Four Years Later</a></h2><i>October 20, 2023</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p4.html'>previous page</a></div><div class='next-link'><a href='blog_p6.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20231027_quantum_computing.html'>Quantum Computing for Quantum Chemistry: Short-Term Pessimism</a></h2><i>October 27, 2023</i>
+<p>
+Quantum computing gets a lot of attention these days. In this post, I want to examine the application of quantum computing to quantum chemistry, with a focus on determining whether there are any business-viable applications today. My conclusion is that while quantum computing is a very exciting scientific direction for chemistry, it’s still very much a realm where basic research and development is needed, and it’s not yet ready for substantial commercial attention.
+</p>
+
+<p><i>
+Briefly, for those unaware, quantum computing revolves around “qubits” (Biblical pun intended?), quantum analogs of regular bits. They can be in the spin-up or spin-down states, much like bits can hold a 0 or a 1, but they also exhibit quantum behavior like superposition and entanglement. 
+</p>
+
+<p>
+Algorithms which run on quantum computers can exhibit “quantum advantage,” where for a given problem the quantum algorithm scales better than the classical algorithm, or “quantum supremacy,” where the quantum algorithm is able to tackle problems inaccessible to classical computers. Perhaps the best-known example of this is <a href=https://en.wikipedia.org/wiki/Shor%27s_algorithm>Shor’s algorithm</a>, which enables integer factorization in polynomial time (in comparison to the fastest classical algorithm, which is sub-exponential). 
+</p>
+
+<p>
+It’s pretty tough to actually make quantum computers in the real world, though. There are many different strategies for what to make qubits out of: isolated atoms, nitrogen vacancy centers in diamonds, superconductors, and trapped ions have all been proposed. The limited number of qubits accessible by state-of-the-art quantum computers, along with the high error rate and short decoherence times, means that practical quantum computation is very challenging today. These challenges are collectively described as “noisy intermediate-scale quantum”, or <a href=https://arxiv.org/abs/1801.00862>NISQ</a>, the world we currently live in. Much effort has gone into trying to find NISQ-compatible algorithms.
+</i></p>
+
+<p>
+Quantum chemistry, which revolves around simulating a quantum system (nuclei and electrons), seems like an ideal candidate for quantum computing. And indeed, many people have proposed using quantum computers for quantum chemistry, even going so far as to call chemistry the “killer app” for quantum computation. 
+</p>
+
+<p>
+Here are a few representative claims: 
+</p>
+
+<ul>
+<li>
+“Few fields will get value from quantum computing as quickly as chemistry. Even today’s supercomputers struggle to model a single molecule in its full complexity. We study algorithms designed to do what those machines can’t, and power a new era of discovery in chemistry, materials, and medicine.” (<a href=https://research.ibm.com/topics/quantum-chemistry>IBM</a>)
+</li>
+<li>
+“The problem is that most quantum chemical problems scale exponentially with system size. And classical computers struggle to cope with this exponential scaling. Realistically, they will never enable quantum chemistry to tackle real-world systems.” (<a href=https://www.emdgroup.com/en/research/science-space/envisioning-tomorrow/smarter-connected-world/quantum-computing.html>EMD Group</a>)
+</li>
+<li>
+“Classically built computers simply cannot handle the level of complexity of substances as commonplace as caffeine… But if future chemists embrace quantum computers, they are likely to be a lot luckier.” (<a href=https://www.scientificamerican.com/article/how-quantum-computing-could-remake-chemistry/>Scientific American</a>)
+</li>
+</ul>
+
+<p>
+None of these claims are technically incorrect—there <i>is</i> a level of “full complexity” to caffeine which we cannot model today—but most of them are very misleading. Computational chemistry is doing just fine as a field without quantum computers; I don’t think there are any deep scientific questions about the nature of caffeine that depend on computing its exact electronic structure to the microHartree (<a href=https://pubs.acs.org/doi/abs/10.1021/acs.jpclett.0c02621>competitions between physical chemists notwithstanding</a>).
+</p>
+
+<p>
+(Some other claims about quantum computing and chemistry border on the ridiculous: I’m not sure what to take away from <a href=https://nam.org/how-quantum-computing-can-combat-forever-chemicals-29001/?stream=policy-legal&s=03>this D-Wave press release</a> which claims that their quantum computer can model 67 million solutions to the problem of “forever chemicals” in 13 seconds. <a href=https://twitter.com/DulwichQuantum>Dulwich Quantum Computing</a>, on Twitter/X, does an excellent job of cataloging such malfeasances.)
+</p>
+
+<p>
+Nevertheless, there are many legitimate and exciting applications of quantum computing to chemistry. Perhaps the best-known is the variational quantum eigensolver (VQE), developed by Alán Aspuru-Guzik and co-workers <a href=https://www.nature.com/articles/ncomms5213>in 2014</a>. The VQE is a hybrid quantum/classical algorithm suitable for the NISQ era: it takes a Hartree–Fock calculation as the starting point, and then minimizes the energy by optimizing the system classically while evaluating the energy with a quantum computer. (If you want to learn more, there are a number of easy-to-read introductions to the VQE: here’s <a href=https://joshuagoings.com/2020/08/20/VQE/>one</a> from Joshua Goings, and here’s <a href=https://pennylane.ai/qml/demos/tutorial_vqe/>another</a> from Pennylane.)
+</p>
+
+<p>
+Another approach, more suitable for fault-tolerant quantum computers with large numbers of qubits, is quantum phase estimation. Quantum phase estimation, explained nicely by Pennylane <a href=https://pennylane.ai/blog/2021/11/quantum-computing-for-quantum-chemistry-a-brief-perspective/>here</a>, works like this: given a unitary operator and a state, the state is projected into an eigenstate and the corresponding eigenvalue is returned. (It’s not just projected onto an eigenstate randomly; the probability of returning a given eigenstate is proportional to the overlap with the input state.) This might sound abstract, but the ground-state energy of a molecule is just the smallest eigenvalue of its Hamiltonian, so this provides a route to get exact ground-state energies, assuming we can generate good enough initial states (again, typically a Hartree–Fock calculations).
+</p>
+
+<p>
+Both of these methods are pretty exciting, since full configuration interaction (the “correct” classical way to get the exact ground-state energy) typically has an <i>O</i>(<i>N</i>!) cost, making it prohibitively expensive for anything larger than, like, N<sub>2</sub>. Further work has built on these ideas: I don’t have the time or skillset to provide a full review of the field, although I’ll note <a href=https://journals.aps.org/prxquantum/abstract/10.1103/PRXQuantum.4.030307>this work</a> from Head-Gordon &amp; friends and <a href=https://www.nature.com/articles/s41586-021-04351-z>this work</a> from Joonho Lee. (<a href=https://arxiv.org/pdf/2310.03011.pdf#page34>These</a> <a href=https://link.aps.org/accepted/10.1103/RevModPhys.92.015003>reviews</a> provide an excellent overview of different algorithms; I’ll discuss it later on.)
+</p>
+
+<p>
+Based on the above description, one might reasonably assume that quantum computers offer some sort of dramatic quantum advantage relative to their classic congeners. <a href=https://arxiv.org/abs/2208.02199>Recent work</a> from Garnet Chan (and many coworkers) challenges this assumption, though: 
+</p>
+
+<blockquote>
+…we do not find evidence for the exponential scaling of classical heuristics in a set of relevant problems. …our results suggest that without new and fundamental insights, there may be a lack of generic EQA [exponential quantum advantage] in this task. Identifying a relevant quantum chemical system with strong evidence of EQA remains an open question.
+</blockquote>
+
+<p>
+The authors make many interesting points. In particular, they point out that physical systems seem to exhibit locality, i.e. if we’re trying to describe some system embedded in a larger environment to a given accuracy, then there’s some distance beyond which we can ignore the larger environment. This means that there are almost certainly polynomial-time classical algorithms out there for all of computational chemistry, since at some point increasing system size won’t slow our computations down any more. 
+</p>
+
+<p>
+This might sound abstract, but the authors point out that coupled-cluster theory, which can (in principle) be extended to arbitrary levels of precision, can be made to take advantage of locality and scale linearly with increasing system size or increasing levels of accuracy. Although such algorithms aren’t known for strongly correlated systems, like metallic systems, Chan and co-workers argue based on analogy to strongly correlated model systems that analogous behavior can be expected.
+</p>
+
+<figure>
+  <img class=centered-img src=../img/20231027_ccsdt.png style="width:550px;" />
+  <figcaption>
+    Figure 3, showing linear scaling of coupled-cluster theory with respect to increasing accuracy (A) and increasing system size (B)
+  </figcaption>
+</figure>
+
+<p>
+The above paper is making a very specific point—that exponential quantum advantage is unlikely—but doesn’t address whether weaker versions of quantum advantage are likely. Could it still be the case that quantum algorithms exhibit polynomial quantum advantage, e.g. scaling as <i>O</i>(<i>N</i>) while classical algorithms scale as <i>O</i>(<i>N</i><sup>2</sup>)? 
+</p>
+
+<p>
+<a href=https://www.pnas.org/doi/full/10.1073/pnas.2203533119>Another recent paper</a>, from scientists at Google and QSimulate, addresses this question by looking at the electronic structure of various iron complexes derived from cytochrome P450. They find that there’s some evidence that quantum computers (using quantum phase estimation) will be able to outcompete the best classical methods today (CCSD(T) and DMRG), but it’ll take a really big quantum computer:
+</p>
+
+<blockquote>
+Most notably, under realistic hardware configurations we predict that the largest models of CYP can be simulated with under 100 h of quantum computer time using approximately 5 million qubits implementing 7.8 × 10<sup>9</sup> Toffoli gates using four T factories. A direct runtime comparison of qubitized phase estimation shows a more favorable scaling than DMRG, in terms of bond dimension, and indicates future devices can potentially outperform classical machines when computing ground-state energies. Extrapolating the observed resource estimates to the full Cpd I system and compiling to the surface code indicate that a direct simulation of the entire system could require 1.5 trillion Toffoli gates—an unfeasible number of Toffoli gates to perform.
+</blockquote>
+
+<p>
+(A Toffoli gate is a three-qubit operator, described nicely <a href=https://www.sharetechnote.com/html/QC/QuantumComputing_Gate_Toffoli.html>here</a>.)
+</p>
+
+<p>
+Given that <a href=https://www.newscientist.com/article/2346074-ibm-unveils-worlds-largest-quantum-computer-at-433-qubits/>the largest quantum computer yet built is 433 qubits</a>, it’s clear that there’s a lot of work left to do until we can use quantum computers to inaugurate “a new era of discovery in chemistry.”
+</p>
+
+<figure>
+  <img class=centered-img src=https://www.oezratty.net/wordpress/wp-content/IBM-Osprey-1024x989.jpg style="width:350px;" />
+  <figcaption>
+    433 qubits down, only 8 billion more to go
+  </figcaption>
+</figure>
+
+<p>
+<a href=https://arxiv.org/pdf/2310.03011.pdf#page34>A recent review</a> agrees with this assessment: the authors write that “there is currently no evidence that heuristic NISQ approaches [like VQE] will be able to scale to large system sizes and provide advantage over classical methods,” and conclude with this paragraph:
+</p>
+
+<blockquote>
+Solving the electronic structure problem has repeatedly been identified as one of the most promising applications for quantum computers. Nevertheless, the discussion above highlights a number of challenges for current quantum approaches to become practical. Most notably, after accounting for the approximations typically made (i.e. incorporating the cost of initial state preparation, using nonminimal basis sets, including repetitions for correctness checking and sampling a range of parameters), a large number of logical qubits and total T/Toffoli gates are required. A major difficulty is that, unlike problems such as factoring, the end-to-end electronic structure problem typically requires solving a large number of closely related problem instances.
+</blockquote>
+
+<p>
+An important thing to note, which the above paragraph alludes to, is that the specific quantum algorithms discussed here don't actually make quantum chemistry faster than today’s methods—they typically rely on a Hartree–Fock ansatz, which is about the same amount of work as a DFT calculation. Since it's likely that proper treatment of electron correlation will require a sizable basis set, much like we see with coupled-cluster theory, we can presume that quantum methods would be slower than most DFT methods (even assuming that the actual quantum part of the calculation could be run instantly).
+</p>
+
+<p>
+This ignores the fact that the quantum methods would of course give much better results—but an uncomfortable truth is that, unlike one might think from the exuberant press releases quoted above, classical algorithms generally do an exceptional job already. Most molecules are very simple from an electronic structure perspective: static electron correlation is pretty rare, and linear scaling CCSD(T) approaches are widely available and very effective (<a href=https://pubs.acs.org/doi/abs/10.1021/acs.jctc.5b00359>e.g.</a>). There’s simply no need for FCI-quality results for most chemical problems, <a href=https://arxiv.org/pdf/2009.08927.pdf>random exceptions notwithstanding</a>.
+</p>
+
+<p>
+(Aspuru-Guzik and co-workers agree; <a href=https://link.aps.org/accepted/10.1103/RevModPhys.92.015003>in a 2020 review</a>, they state that they “do not expect [HF and DFT] calculations to be replaced by those on quantum computers, given the large system sizes that are simulated,” suggesting instead that quantum computers might find utility for statically correlated systems with 100+ spin orbitals)
+</p>
+
+<p>
+A related point I made in a <a href=https://rowansci.substack.com/p/quantum-chemistry-in-drug-discovery>recent essay/white paper for Rowan</a> is that quantum chemistry, at least as it’s applied to drug discovery, is limited not by accuracy but by speed. Existing quantum chemistry methods are already far more accurate than state-of-the-art drug discovery methods; replacing them with quantum computing-based approaches is like worrying about whether to bring a Lamborghini or a Formula 1 car to a go-kart race. It’s almost certain that there’s some way that “perfect” electronic structure calculations could be useful in drug design, but it’s hardly trivial to figure out how to turn a bunch of VQE calculations into a clinical candidate.
+</p>
+
+<p>
+Other fields, like materials science, seem to be more limited by inaccuracies in theory—modeling metals and surfaces is really hard—but the Hartree–Fock ansatz is also hard here, and there are fewer commercial precedents for computational chemistry in general. To my knowledge, the Hartree–Fock starting point alone is a terrific challenge for a system like e.g. a cube of 10,000 metal atoms, which is why so many materials scientists avoid exact exchange and stick to local functionals. (I don't know much about computations on periodic systems, though, so correct me if this is wrong!) Using quantum computing to design superconducting materials probably won’t be <a href=https://twitter.com/RokoMijic/status/1684831855411961857>as easy as it seems on Twitter/X</a>.
+</p>
+
+<p>
+So, while quantum computing is a terrifically exciting direction for computational chemistry in a scientific sense, I’m not sure it’s yet investable in a business sense. I don’t mean to belittle all the great scientific work being done in this field, in the papers I’ve referenced above and in many others. The point I’m trying to make here—that this field isn’t mature enough for actual commercial utility—could just as easily be made about ML in the 2000s, or any other number of promising but pre-commercial technologies. 
+</p>
+
+<p>
+I’ll close by noting that it seems like markets are coming around to this perspective, too. Zapata Computing, one of the original “quantum computing for chemistry” companies, recently <a href=https://www.hpcwire.com/2023/09/07/quantum-hopeful-zapata-to-go-public-and-pivot-to-industrial-generative-ai/>pivoted</a> to… generative AI, going public via a SPAC with Andretti (motorsport), and IonQ recently <a href=https://www.businesswire.com/news/home/20231023981563/en/IonQ-Announces-Senior-Leadership-Transition>parted ways</a> with its CSO, who is going back to his faculty job at Duke. We’ll see what happens, but progress in hardware has been slow, and it’s likely that it’ll be years yet until we can start to perform practical quantum chemical calculations on quantum computers.
+</p>
+
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20231020_wish_list.html'>Organic Chemistry’s Wish List, Four Years Later</a></h2><i>October 20, 2023</i>
 <p>
 In 2019, ChemistryWorld published a <a href=https://web.archive.org/web/20190507001416/https://www.chemistryworld.com/news/the-five-reactions-on-every-organic-chemists-wish-list/3010150.article>“wish list”</a> of reactions for organic chemistry, describing five hypothetical reactions which were particularly desirable for medicinal chemistry. A few recent papers brought this back to my mind, so I revisited the list with the aim of seeing what progress had been made. (Note that I am judging these based solely by memory, and accordingly I will certainly omit work that I ought to know about—sorry!)
 </p>
@@ -605,81 +748,6 @@ And the precisely defined concepts favored by theorists are often hard for exper
 <p>
 I don’t mean to be too critical here. The ability to break intermolecular interactions down into different components is certainly useful, and it seems likely that some version of EDA will eventually achieve consensus and emerge as a useful tool. But I think the utility of EDA even in the best case is pretty limited. Quantum chemistry is complicated, and if we think we can break it down into easy-to-digest components and eliminate the full nonlocal majesty of the Schrodinger equation, we’re lying to ourselves (or our experimental collaborators). Compute with caution!
 </p>
-
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230820_ts_polarizable.html'>Transition States Are Polarizable</a></h2><i>August 20, 2023</i>
-<p><i>
-Recently in off-blog content: I coauthored <a href=https://www.freaktakes.com/p/the-past-and-present-of-computer>an article with Eric Gilliam</a> on how LLMs can assist in hypothesis generation and help us all become more like Sharpless. Check it out!
-</i></p>
-
-<p>
-The Pauling model for enzymatic catalysis states that enzymes are “antibodies for the transition state”—in other words, they preferentially bind to the transition state of a given reaction, rather than the reactants or products. This binding interaction stabilizes the TS, thus lowering its energy and accelerating the reaction.  
-</p>
-
-<p>
-This is a pretty intuitive model, and one which is often employed when thinking about organocatalysis, particularly noncovalent organocatalysis. (It’s a bit harder to use this model when the mechanism changes in a fundamental way, as with many organometallic reactions.) Many transition states have distinctive features, and it’s fun to think about what interactions could be engineered to recognize and stabilize only these features and nothing else in the reaction mixture. 
-</p>
-
-<p>
-(For instance, chymotrypsin contains a dual hydrogen-bond motif called the “<a href=https://en.wikipedia.org/wiki/Oxyanion_hole>oxyanion hole</a>” which stabilizes developing negative charge in the Burgi–Dunitz TS for alcoholysis of amides. The negative charge is unique to the tetrahedral intermediate and the high-energy TSs to either side, so reactant/product inhibition isn’t a big issue. This motif can be mimicked by dual hydrogen-bond donor organocatalysts like the one my PhD lab specialized in.) 
-</p>
-
-<p>
-The downside of this approach to catalyst design is that each new sort of reaction mechanism requires a different sort of catalyst. One TS features increasing negative charge at one place, while another features increasing positive charge at another, and a third is practically charge-neutral the whole way through. What if there were some feature that was common to all transition states? 
-</p>
-
-<p>
-A recent <a href=https://chemrxiv.org/engage/chemrxiv/article-details/64def1de694bf1540c8b1e3c?s=03>preprint</a> from Diptarka Hait and Martin Head-Gordon suggests an interesting answer to this question: polarizability. (Diptarka, despite just finishing his PhD, is a <a href=https://scholar.google.com/citations?user=R2WrGKMAAAAJ&hl=en>prolific</a> scientist with a ton of different interests, and definitely someone to keep an eye on.) The authors tackle the question of when precisely a stretching bond can be considered “broken.” An intuitive answer might be “the transition state,” but as the paper points out, plenty of bond-breaking potential energy surfaces lack clear transition states (e.g. H<sub>2</sub>, pictured below in red). 
-</p>
-
-<figure>
-  <img class=centered-img src=../img/20230820_polariz.png style="width:450px;" />
-  <figcaption>
-  Hydrogen PES (red), with various polarizability components shown in blue.
-  </figcaption>
-</figure>
-
-<p>
-Instead, the authors propose that polarizability is a good way to study this question. As seen in the following graph, polarizability (particularly α<sub>||</sub>, the component parallel to the bond axis) first increases as a bond is stretched, and then decreases, with a sharp and easily identifiable maximum about where a bond might be considered to be broken. This metric tracks with the conventional PES metric in cases where the PES is well-defined (see Fig. 5), which is comforting. Why does this occur?
-</p>
-
-<blockquote>
-The evolution of α [polarizability] can be rationalized in the following manner. Upon initially stretching H2 from equilibrium, the bonding electrons fill up the additional accessible volume, resulting in a more diffuse (and thus more polarizable) electron density. Post bond cleavage however, the electrons start localizing on individual atoms, leading to a decrease in polarizability.
-</blockquote>
-
-<p>
-In other words, electrons that are “caught in the act” of reorganizing between different atoms are more polarizable, whereas electrons which have settled into their new atomic residences are less polarizable again.
-</p>
-
-<p>
-This is cool, but how can we apply this to catalysis? As it happens, there are already a few publications (<a href=https://pubs.acs.org/doi/abs/10.1021/jo960521y>1</a>, <a href=https://pubs.acs.org/doi/abs/10.1021/jo960521y>2</a>) from Dennis Dougherty and coworkers dealing with exactly this question. They show that cyclophanes are potent catalysts for S<sub>N</sub>2-type reactions that both create and destroy cations, and argue that polarizability, rather than any charge-recognition effect, undergirds the observed catalysis:
-</p>
-
-<blockquote>
-Since transition states have long, weak bonds, they are expected to be more polarizable than ground-state substrates or products. The role of the host is to surround the transition state with an electron-rich-system that is polarizable and in a relatively fixed orientation, so that induced dipoles in both the host and the transition state are suitably aligned… Note that in this model, it is not sufficient that polarizability contributes to binding. Polarizability must be more important for binding transition states than for binding ground states. Only in this way can it enhance catalysis.
-</blockquote>
-
-<p>
-To defend this argument, the authors prepare a series of variously substituted cyclophanes, and show that while Hammett-type electronic tuning of the aryl rings has relatively small effects, adding more heavy atoms always increases the rate, with the biggest effect observed with bromine (the heaviest element attempted). Heavier atoms are more polarizable, so this supports the argument that polarizability, rather than any specific electrostatic effect, is responsible for catalysis. 
-</p>
-
-<figure>
-  <img class=centered-img src=../img/20230820_cyclophane.png style="width:450px;" />
-  <figcaption>
-  The cyclophanes used as catalysts: Y=Br is the best.
-  </figcaption>
-</figure>
-
-<p>
-The Dougherty work is performed on a very specific model system, and the absolute rate accelerations seen aren’t massive (about twofold increase relative to the protio analog), so it’s not clear that this will actually be a promising avenue for developing mechanism-agnostic catalysts. 
-</p>
-
-<p>
-But I think this line of research is really interesting, and merits further investigation. Pericyclic reactions, which involve large electron clouds and multiple forming–breaking bonds and often feature minimal development of partial charges, seem promising targets for this sort of catalysis—what about the carbonyl–ene reaction or something similar? The promise of new catalytic strategies that complement existing mechanism-specific interactions is just too powerful to leave unstudied. 
-</p>
-
-<i>
-Thanks to Joe Gair for originally showing me the Dougherty papers referenced.
-</i>
 
 </div><div class='previous-link'><a href='blog_p4.html'>previous page</a></div><div class='next-link'><a href='blog_p6.html'>next page</a></div><br>
   </body>
