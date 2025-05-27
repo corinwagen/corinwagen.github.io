@@ -34,7 +34,70 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p11.html'>previous page</a></div><div class='next-link'><a href='blog_p13.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230215_science_engineering.html'>Science and Engineering</a></h2><i>February 15, 2023</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p11.html'>previous page</a></div><div class='next-link'><a href='blog_p13.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230221_models_and_oracles.html'>Models and Oracles</a></h2><i>February 21, 2023</i>
+<p>
+When thinking about science, I find it helpful to divide computations into two categories: models and oracles.
+</p>
+
+<p>
+In this dichotomy, models are calculations which act like classic ball-and-stick molecular models. They illustrate that something is geometrically possible—that the atoms can literally be arranged in the proper orientation—but not much more. No alternative hypotheses have been ruled out, and no unexpected insights have emerged. A model has no intelligence of its own, and only reflects the thought that the user puts into it.
+</p>
+
+<p>
+This isn’t bad! Perhaps the most striking example of the utility of models is <a href=https://pubs.acs.org/doi/abs/10.1021/ja00713a007>Tolman’s original cone angle report</a>, where he literally made a wooden model of different phosphine ligands and measured the cone angle with a ruler. The results are excellent!
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20230221_tolman.png" style="width:350px;" />
+  <figcaption> 
+  Figure 1, from Tolman’s paper.
+  </figcaption>
+</figure>
+
+<p>
+In contrast, an oracle bestows new insights or ideas upon a petitioner—think <a href=https://en.wikipedia.org/wiki/Pythia>the Oracle at Delphi</a>. This is what a lot of people imagine when they think of computation: we want the computer to predict totally unprecedented catalysts, or figure out the mechanism without any human input. We bring our problems to the superintelligence, and it solves them for us. 
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20230221_miola.jpeg" style="width:450px;" />
+  <figcaption> 
+  <i>The Oracle</i>, by Camille Miola (1880). Picture from Wikimedia Commons.
+  </figcaption>
+</figure>
+
+
+<p>
+In reality, every simulation is somewhere between these two limiting extremes. No matter how hard you try, a properly executed DFT calculation will not predict formation of a methyl cation to be a low-barrier process—the computational method used understands enough chemistry to rule this out, even if the user does not. On the flip side, even the most sophisticated calculations all involve some form of human insight or intuition, either explicitly or implicitly. We’re still very far away from the point where we can ask the computer to generate the structures of new catalysts (or medicines) and expect reasonable, trustworthy results. But that’s ok; there’s a lot to be gained from lesser calculations! There’s no shame in generating computational models instead of oracles.
+<p>
+
+<p>
+What’s crucial, though, is to make sure that everyone—practitioners, experimentalists, and readers—understands where a given calculation falls on the model–oracle continuum. An expert might understand that a semiempirical AIMD study of reaction dynamics is likely to be only qualitatively correct (if that), but does the casual reader? I’ve talked to an unfortunate number of experimental chemists who think a single DFT picture means that we can “predict better catalysts,” as if that were a button in GaussView. The appeal of oracles is seductive, and we have to be clear when we’re presenting models instead. (This ties into <a href=https://corinwagen.github.io/public/blog/20220810_viewpoints_on_simulation.html>my piece about computational nihilism.</a>)
+<p>
+
+<p>
+Finally, this piece would be incomplete if I didn’t highlight Jan Jensen and co-workers’ <a href=https://onlinelibrary.wiley.com/doi/10.1002/anie.202218565>recent work</a> on automated design of catalysts for the Morita–Baylis–Hillman reaction. The authors use a generative model to discover tertiary amines with lower DFT-computed barriers than DABCO (the usual catalyst), and then experimentally validate one of their candidates, finding that it is indeed almost an order-of-magnitude faster than DABCO. It’s difficult to underscore how groundbreaking this result is; as the authors dryly note, “We believe this is the first experimentally verified <i>de novo</i> discovery of an efficient catalyst using a generative model.” On the spectrum discussed above, this is getting pretty close to “oracle.”
+<p>
+
+<figure>
+  <img class="centered-img" src="../img/20230221_jensen.png" style="width:450px;" />
+  <figcaption> 
+  Figure 3 from the paper, illustrating discovery of new catalysts.
+  </figcaption>
+</figure>
+
+<p>
+Nevertheless, the choice of model system illustrates how far the field still has to go. The MBH reaction is among the best-studied reactions in organic chemistry, as illustrated by <a href=https://pubs.acs.org/doi/10.1021/ja5111392>Singleton’s 2015 mechanistic <i>tour de force</i></a> (and references therein, and subsequent work), so Jensen and co-workers could have good confidence that the transition state they were studying was correct and relevant. Furthermore, as I understand it, the MBH reaction can be catalyzed by just about any tertiary amine—there aren’t the sort of harsh activity cliffs or arcane structural requirements that characterize many other catalytic reactions. Without either of these factors—well-studied mechanism or friendly catalyst SAR—I doubt this work would be possible. 
+<p>
+
+<p>
+This point might seem discouraging, but I mean it in quite the opposite way. <i>De novo</i> catalyst design isn’t impossible for mysterious and opaque reasons, but for quite intelligible reasons—mechanisms are complicated, catalysts are hard to design, and we just don’t understand enough about what we’re doing, experimentally or computationally. What Jensen has shown us is that, if we can address these issues, we can expect to start converging on oracular results. I find this very exciting!
+<p>
+
+<em>
+Jan Jensen was kind enough to <a href=https://twitter.com/janhjensen/status/1628063110572507136>reply to this post on Twitter</a> with a few thoughts and clarifications, which are worth reading.
+</em>
+
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230215_science_engineering.html'>Science and Engineering</a></h2><i>February 15, 2023</i>
 <blockquote><i>
 In science, if you know what you are doing, you should not be doing it. In engineering, if you do not know what you are doing, you should not be doing it.
 </i></blockquote>
@@ -478,134 +541,6 @@ Reaction optimization is a common task in organic chemistry, but one that’s co
 Organic chemistry, long the realm of “small data,” is slowly but inexorably catching up with the adjacent sciences. As progress in lab automation and instrumentation makes setting up, purifying, and analyzing large numbers of reactions easier, experimental chemists will have to figure out how to choose which reactions to run and how to handle all the data from these reactions, using tools like the ones discussed above. Like it or not, data science and cheminformatics may soon become core competencies of the modern experimental chemist!
 </p>
 
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230103_hdkie_puzzle.html'>Misleading H/D KIE Experiments</a></h2><i>January 3, 2023</i>
-<p>
-<i>
-Note: old versions of this post lacked a discussion of S<sub>N</sub>2. I've added an appendix which remedies this.
-</i>
-</p>
-
-<p>
-In <a href=https://corinwagen.github.io/public/blog/20220815_rate_determining_span.html>“The Rate-Limiting Span,”</a> I discussed how thinking in terms of the span from ground state to transition state, rather than in terms of elementary steps, can help prevent conceptual errors. Today, I want to illustrate why this is important in the context of a little H/D KIE puzzle. 
-</p>
-
-<p>
-Consider the following reaction, which could conceivably proceed via an S<sub>N</sub>2 mechanism (red), an S<sub>N</sub>1 mechanism (blue), or really anywhere on the continuum:
-</p>
-
-<figure>
-  <img class="centered-img" src="../img/20230103_structures.png" style="width:550px;" />
-  <figcaption> 
-    This is a bit of a silly reaction, admittedly. The intermolecular version or the <i>endo</i> version would have been better.
-  </figcaption>
-</figure>
-
-<p>
-What experiment can be used to investigate the mechanism of this reaction? One possibility is an alpha H/D KIE experiment at the iminium position. Reactions with a sp<sup>3</sup> ground state and an sp<sup>2</sup> transition state display secondary normal alpha H/D KIEs, while reactions with an sp<sup>2</sup> ground state and an sp<sup>3</sup> transition state display secondary inverse KIEs.
-Thus, one might think “if iminium formation is rate-limiting, the KIE will be normal, but if alkene addition is rate-limiting, the KIE will be inverse.”
-</p>
-
-<p>
-Unfortunately this is not true. Instead, all mechanistic possibilities give secondary normal KIEs! I investigated this model system computationally at the wB97X-D/6-31G(d)/SMD(CH<sub>2</sub>Cl<sub>2</sub>) level of theory. Here’s a More O’Ferrall–Jencks plot of the H/D KIE at the iminium position, computed with <a href=https://github.com/ekwan/PyQuiver>PyQuiver</a>
-(breaking bond on Y axis, forming bond on X axis): 
-</p>
-
-<!--
-<figure>
-  <img class="centered-img" src="../img/20230103_energy.png" style="width:500px;" />
-  <figcaption> 
-    Some of the grid points didn't finish, which explains the scattered gaps. I've also excluded anything with energy more than 30 kcal/mol above the ground state.
-  </figcaption>
-</figure>
--->
-
-<figure>
-  <img class="centered-img" src="../img/20230103_kie.png" style="width:550px;" />
-  <figcaption> 
-    The raw data from PyQuiver is a little fuzzy, so I applied a convolution to smooth the data. Details later on. 
-  </figcaption>
-</figure>
-
-<p>
-Rather than telling us which step is rate-limiting, all the KIE shows us is how much the transition state resembles an iminium ion (bottom right). Structures with long C–Cl bond distances and short C–C bond distances have substantial isotope effects (around 20%), while structures with forming or breaking bonds have smaller isotope effects. 
-</p>
-
-<p>
-Why is this? Both ionization and addition proceed through iminium-like structures that are substantially sp<sup>2</sup>-hybridized at carbon, irrespective of whether sp<sup>2</sup> character is technically increasing or decreasing in the elementary step. Relative to the starting material, both transition states look like iminium ions and thus lead to large isotope effects. 
-</p>
-
-<figure>
-  <img class="centered-img" src="../img/20230103_structures2.png" style="width:300px;" />
-  <figcaption>
-  These both look pretty much like iminium ions.
-  </figcaption>
-</figure>
-
-<p>
-We can also conceptualize this in terms of elementary steps. Taken by itself, alkene addition does lead to an inverse kinetic isotope effect, as seen by the decreasing values as one moves left from the iminium—but an inverse isotope effect relative to the normal equilibrium isotope effect of the iminium. In this system, the equilibrium isotope effect of the iminium is larger than the kinetic isotope effect for alkene addition, and so the combination of these two effects leads to a (smaller) overall normal effect. 
-</p>
-
-<p>
-(This is the opposite of primary H/D KIEs, where central transition states lead to the largest isotope effects and equilibrium effects are typically small. Here, the isotope effect is mainly a function of hybridization, and so the later the TS, the greater the difference in hybridization and the larger the isotope effect.)
-</p>
-
-<p>
-In summary, although this experiment seems informative, it’s actually not very useful. It tells you something about the structure of the transition state, but not which step is rate-limiting! In this case, a better experiment would be to measure <sup>13</sup>C KIEs, or an H/D KIE on the nucleophile. 
-</p>
-
-<h3>Appendix I: What About S<sub>N</sub>2?</h3>
-
-<p>
-On Twitter, <a href="https://twitter.com/LevinChem/status/1610287881993728000">Mark Levin</a> asks about the KIE for the concerted path. I originally meant to include a discussion of this, but then totally forgot to! So let’s fix that.
-</p>
-
-<p>
-As shown in the graph above, extremely concerted pathways (i.e. going right down the middle of the MOJ plot) will have pretty small isotope effects. These sorts of mechanisms are common where the carbocation would be extremely unstable (methyl iodide) but much less common for stabilized carbocations like we’re discussing here. When oxocarbeniums or iminiums are involved, even “concerted” mechanisms shift towards the bottom right corner: this is the <a href=https://pubs.acs.org/doi/pdf/10.1021/ja506092h>“loose”/“exploded” S<sub>N</sub>2</a> often seen in glycosylation. These pathways will have a modest to large H/D KIE, depending on the exact system and how “exploded” they are (see page 53 of <a href=https://pubs.acs.org/doi/10.1021/jacs.6b10621>this SI</a> for examples)
-</p>
-
-<p>
-Putting this together, then, what experimental results would be conclusive? A very small KIE would be diagnostic for a “classic” synchronous S<sub>N</sub>2 process, which I consider to be very unlikely here. But medium or large H/D KIEs are consistent with any possibility: S<sub>N</sub>1 with rate-limiting ionization, S<sub>N</sub>1 with rate-limiting nucleophilic attack, or a loose S<sub>N</sub>2. There’s an annulus of different mechanistic possibilities that all give about the same isotope effect, as shown below:
-</p>
-
-<figure>
-  <img class="centered-img" src="../img/20230103_sn2_plot.png" style="width:470px;" />
-  <figcaption> 
-  Any TS in the red zone is consistent with a moderately large KIE (say, 15%).
-  </figcaption>
-</figure>
-
-<p>
-To make matters worse, H/D KIEs are pretty tough to simulate quantitatively, because of tunneling, so the annulus isn’t even that precise. That’s why I think this isn’t a very good experiment.
-</p>
-
-<h3>Appendix II: Smoothing the KIE Grid</h3>
-
-<p>
-The raw KIE values from PyQuiver were pretty noisy, probably because there are small or multiple imaginary frequencies for some of these non-stationary points, so I used convolution to smooth things out a bit. 
-</p>
-
-<pre class=code-block>
-import numpy as np
-from scipy.ndimage import convolve
-
-#### this code block takes a 2d np.ndarray of KIE values 
-#### and returns a smoothed np.ndarray with the same dimensions
-
-corner_w = 0.05
-edge_w = 0.2
-kernel = np.array([
-    [corner_w, edge_w, corner_w],
-    [edge_w, 1 ,edge_w],
-    [corner_w, edge_w, corner_w]
-])
-kernel = kernel / np.sum(kernel)
-
-smooth_grid = convolve(kie_grid, kernel, mode="nearest")
-</pre>
-
-<p>
-I haven’t seen this technique used before, but it doesn’t seem unreasonable to me.
-</p>
 </div><div class='previous-link'><a href='blog_p11.html'>previous page</a></div><div class='next-link'><a href='blog_p13.html'>next page</a></div><br>
   </body>
   <br>

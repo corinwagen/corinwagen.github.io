@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      How Does o3 Guess Latitude From Photos?
+    </title>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="language" content="en">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--twitter-->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@github" />
+    <meta name="twitter:title" content="How Does o3 Guess Latitude From Photos?" />
+    <meta name="twitter:description" content="I take a deep dive into the world of shadow-related trigonometry." />
+    <meta name="twitter:image" content="https://corinwagen.github.io/public/img/20250527_ohio.jpg" />
+
+    <link rel="stylesheet" href="../../static/style.css">
+
+    <link rel="alternate" type="application/rss+xml" title="RSS feed for the blog" href="/rss.xml">
+
+    <!--google-->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MTNZ0ZSG3W"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MTNZ0ZSG3W');
+    </script>
+
+  </head>
+  <body>
+    <ul class="menu-list">
+      <li class="menu-item"><a href="../main/index.html" class="menu-link menu-title">Corin Wagen</a></li>
+      <li class="menu-item"><a href="../main/index.html#about" class="menu-link">About</a></li>
+      <!--<li class="menu-item"><a href="../main/index.html#projects" class="menu-link">Projects</a></li>-->
+      <!--<li class="menu-item"><a href="../main/index.html#past_work" class="menu-link">Past Work</a></li>-->
+      <li class="menu-item">
+        <a href="../main/blog_p1.html" class="menu-link">Blog</a>
+        <a href='../main/archive.html' class="menu-link">(Archive)</a>
+      </li>   
+    </ul>
+    <h1> How Does o3 Guess Latitude From Photos? </h1>
+    <i>May 27, 2025</i>
+    
+<p>
+  Recently, <a href=https://x.com/KelseyTuoc/status/1917340813715202540>Kelsey Piper</a> shared that o3 (at time of writing, one of the latest reasoning models from OpenAI) could guess where outdoor images were taken with almost perfect accuracy. <a href=https://www.astralcodexten.com/p/testing-ais-geoguessr-genius>Scott Alexander</a> and others have since verified this claim. 
+</p>
+
+<p>
+I’ve been playing around with this too: with the prompt linked in Scott’s post, o3 can guess where my photos were taken almost every time, even when I intentionally avoid anything that looks like it might be too helpful. After inspecting the reasoning, I was surprised to learn that o3 can almost always estimate the latitude to within a few degrees, which vastly restricts the range of potential answers.
+</p>
+
+
+<p>
+I didn’t think this was possible before doing the research for this post. Here’s three recent examples—see if you can estimate the latitude yourself. (You may want to open the images in a new tab to zoom in.)
+</p>
+
+
+<figure>
+  <img class=centered-img src="../img/20250527_ohio.png" style="width:500px;" />
+</figure>
+
+<figure>
+  <img class=centered-img src="../img/20250527_mexico.png" style="width:550px;" />
+</figure>
+
+<figure>
+  <img class=centered-img src="../img/20250527_argentina.png" style="width:550px;" />
+</figure>
+
+<p>
+o3 guessed that these were 40–45º N,  25–28 ºN, and 34–36º S; in every case the answer was within that range. (I make sure to only give o3 screenshots, so it can’t access EXIF data or otherwise cheat at this assessment.) 
+</p>
+
+<p>
+How is this possible? Here’s my best understanding of what o3 is doing, informed by a bunch of back-and-forth conversations with a friendly neighborhood AI model. (I’ll be assuming that the photo also has compass information, in keeping with standard GeoGuessr rules.)
+</p>
+
+<h2>Local Noon, On The Equinox</h2>
+<p>
+Let’s make this as simple as possible to start. On the spring equinox, at noon, at the equator, the sun is directly overhead. As a result, tall objects without any overhang won’t cast any shadows. 
+</p>
+
+<p>
+If you’re not on the equator, then objects will still cast a shadow, and the length of the shadow S relative to the object’s height H tells you what latitude you’re at. Formally, we can define the solar elevation θ := arctan(H/S), and approximate the latitude φ as 90º − θ. 
+</p>
+
+<p>
+I don’t do much mental trigonometry these days, but it’s pretty easy to make a table with some key values: 
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>S/H</th>
+      <th>θ (Solar Elevation)</th>
+      <th>φ (Latitude)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>2:1</td>
+      <td>26º</td>
+      <td>64º</td>
+    </tr>
+    <tr>
+      <td>1.3:1</td>
+      <td>37º</td>
+      <td>53º</td>
+    </tr>
+    <tr>
+      <td>1:1</td>
+      <td>45º</td>
+      <td>45º</td>
+    </tr>
+    <tr>
+      <td>0.7:1</td>
+      <td>55º</td>
+      <td>35º</td>
+    </tr>
+    <tr>
+      <td>0.5:1</td>
+      <td>63º</td>
+      <td>27º</td>
+    </tr>
+    <tr>
+      <td>0 (no shadow)</td>
+      <td>90º</td>
+      <td>0º</td>
+    </tr>
+  </tbody>
+</table>
+
+
+<p>
+With a compass, figuring out which hemisphere you’re in is easy. In the northern hemisphere, the sun is south of you, so the shadows point north; in the southern hemisphere, the shadows point south.
+</p>
+
+<h2>Local Noon, Any Season</h2>
+<p>
+Unfortunately, it’s more complex than this—we’re not always on the equinox, meaning that we also have to account for solar declination (δ). The solar declination reflects how far away from the equator the sun is on any given date; δ is +23.4º on the summer solstice and -23.4º on the winter solstice. We have to adjust the above formula to take this into account: now φ ≈ 90º − θ + δ. 
+</p>
+
+<p>
+Qualitatively, this means that shadows are shorter in summer than winter. A H/S ratio of 1:1 implies a latitude of 22º in winter or a latitude of 68º in summer, which is the difference between Cuba and Iceland. In practice, though, o3 can often figure out the season from how the trees look and how people are dressed.
+</p>
+
+<h2>Any Time, Any Season</h2>
+<p>
+When we move away from noon, things get a bit more complicated. We have to employ h, the hour angle, which is equal to 0º at local noon (when the sun is directly overhead) and increments by 15º every hour. Here’s the full equation:
+</p>
+
+<p>
+sin(θ) = sin(φ)*sin(δ) + cos(φ)*cos(δ)*cos(h)
+</p>
+
+<p>
+(o3 says “It’s just the spherical-law-of-cosines applied to the right-angled triangle on the celestial sphere.” Trivial! If you’re curious how we go from this to the simplified noon equation above, see Appendix A.)
+</p>
+
+<p>
+This is a bit too involved for a GeoGuessr game—even o3 solves this in a Python environment. Qualitatively, though, this means that as we move away from noon and cos(h) becomes smaller, the solar elevation θ shrinks. Within an hour or two of noon, we’re only off by 1–2º, but after three hours we’re overestimating the latitude by 7–10º.
+</p>
+
+<p>
+This seems bad, but with a compass it’s relatively easy to check how far from noon it is. Shadows point exactly north–south at local noon, and point increasingly east or west as the hour angle increases, so looking at the shadow orientation can tell you how much to update the latitude. In practice o3 recommends just ignoring shadow-related math after 3:00 PM or before 9:00 AM, since the error becomes too high. 
+</p>
+
+<h2>Putting It All Together</h2>
+<p>
+Here’s another recent GeoGuessr picture. Can we solve this now? 
+</p>
+
+<figure>
+  <img class=centered-img src="../img/20250527_cambodia.png" style="width:550px;" />
+</figure>
+
+
+<p>
+Here’s my attempt to apply what we’ve learned: we’re looking east and we can see that shadows are pointing north, so the sun is south. This means that we’re in the northern hemisphere. The shadow–height ratio is a bit tough to estimate from this picture; based on the Prius, maybe 0.5:1. So that gives us an equinox latitude of 27º N, minus say 5º for time of day (since the shadows seem angled), which leaves us with a latitude of… 22º N ± 23º depending on the season. Not terribly helpful.
+</p>
+
+<p>
+I gave o3 the same image, and it told me the latitude was 12–15º N. The correct answer is 11.5 ºN (Phnom Penh). 
+</p>
+
+<p>
+What did we do wrong? I asked o3 what went wrong with my reasoning, and this is what it told me (lightly edited for clarity): 
+</p>
+<ul>
+  <li>
+    <b>Wrong S:H ratio.</b> “A Toyota Hilux / Prius roof is ≈ 1.5–1.6 m. Measuring the dark patch on the tarmac (allowing for perspective) the shadow is 0.6–0.7 m, giving height : shadow ≈ 2.3–2.5.”
+  </li>
+  <li>
+    <b>Wrong hour correction.</b> “How far the Sun drops below its noon altitude depends on the hour angle… Two hours before/after noon (h ≈ 30 °) knocks 10–15° off the altitude in the low latitudes, not 5°.”
+  </li>
+  <li>
+    <b>Very wrong season correction.</b> “Season changes δ by ±23.4 °, but the corresponding change in the Sun’s altitude is modulated by both time-of-day (cos h) and your own latitude (cos φ). Thus the swing is never a flat ±23 ° except at noon on/near the tropics… 
+Solve sin(67º) = sin(ϕ)*sin(δ) + cos(ϕ)*cos(δ)*cos(30º) for the full seasonal range. That inversion pins ϕ between 11° N (June solstice) and 16° N (December solstice), with the equinox coming out at ≈ 13° N.”
+  </li>
+</ul>
+
+<p>
+The last point deserves further discussion. The impact of solar declination on solar elevation is modulated both by the latitude and the hour angle—the 23.4º swing is scaled by cos(h) and by the actual latitude. With some Python code (Appendix B), we can quickly confirm that the effect is smaller at near-equatorial latitudes: 
+</p>
+
+<figure>
+  <img class=centered-img src="../img/20250527_theta_by_phi.png" style="width:550px;" />
+</figure>
+
+<p>
+Overall, though, there’s nothing here we haven’t already discussed; o3 just understands this material better than me and can do the math properly.
+</p>
+
+<h2>Conclusions</h2>
+<p>
+This is a fun activity for building AI-related intuition. o3 is very good at this and is able to do something that appears superhuman. Upon close inspection, the reasoning is legible, but I’m not really able to follow the same methods myself with any degree of precision; I’m just not quite able to do any step with sufficient accuracy. I’m hoping that I’ll be able to build up my skills over time—this would be a pretty fun party trick. 
+</p>
+
+<h2>Appendix A: Getting The Simplified Equation For Noon</h2>
+<p>
+The full equation is: 
+</p>
+<p>
+sin(θ) = sin(φ)*sin(δ) + cos(φ)*cos(δ)*cos(h)
+</p>
+<p>
+If we assume that we’re at local noon, cos(h) = 1. This lets us apply the following identity:
+</p>
+<p>
+cos(α−β) = cos(α)*cos(β) + sin(α)*sin(β)
+</p>
+<p>
+To get: 
+</p>
+<p>
+sin(θ) = cos(φ - δ)
+</p>
+<p>
+sin(θ) = sin(90º - φ + δ)
+</p>
+<p>
+θ = 90º - φ + δ
+</p>
+<p>
+Which is the simplified equation I presented above.
+</p>
+
+<h2>Appendix B: </h2>
+
+<p>
+  Here's the Python code to generate the above plot.
+</p>
+
+<pre class=code-block>
+import numpy as np
+import matplotlib.pyplot as plt
+
+%matplotlib inline
+%config InlineBackend.figure_format = 'retina'
+
+def solar_elevation_vs_month(hour_local: float, latitude_deg: float) -> np.ndarray:
+    """
+    Return an array of solar-elevation angles (degrees) for each day at a given true-solar hour and latitude.
+    """
+    lat = np.deg2rad(latitude_deg)
+    doy = np.arange(365)
+
+    # Approximate solar-declination model (±23.44° sine fit)
+    delta = np.arcsin(np.sin(np.deg2rad(23.44)) * np.sin(2 * np.pi / 365 * (doy - 80)))
+
+    # Hour angle: 0° at solar noon; +15° per hour in the afternoon
+    H = np.deg2rad((hour_local - 12.0) * 15.0)
+
+    # Solar-elevation formula
+    h = np.arcsin(np.sin(lat) * np.sin(delta) + np.cos(lat) * np.cos(delta) * np.cos(H))
+    return np.rad2deg(h)
+
+
+if __name__ == "__main__":
+    plt.figure(figsize=(6, 4))
+
+    months = np.array([15, 46, 75, 105, 135, 162,  198, 228, 258, 288, 318, 344])
+
+    for h, l in [(15, 0), (15, 15), (15, 30), (15, 45), (15,60)]:
+        elevations = solar_elevation_vs_month(h, l)
+        plt.plot(np.arange(365), elevations, label=f"{h:.1f} h, {l:.1f}° N")
+    
+    plt.xticks(months, ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
+    plt.ylabel(f"Solar elevation (°)")
+    plt.xlim(0,365)
+    plt.ylim(0,60)
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
+</pre>
+
+
+
+    <br>
+    <br>
+    <i>If you want email updates when I write new posts, you can subscribe <a href=https://cwagen.substack.com/>on Substack.</a></i>
+  </body>
+  <br>
+  <br>
+  <footer>
+    <a href="mailto:corin.wagen+blog@gmail.com">email</a>
+    <a href="https://github.com/corinwagen">github</a>
+    <a href="https://twitter.com/CorinWagen">twitter</a>
+    <div style="float:right;">
+      <a href="/rss.xml">rss</a>
+      <a href="https://cwagen.substack.com">substack</a>
+    </div>
+  </footer>
+</html>
