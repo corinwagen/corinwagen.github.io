@@ -34,7 +34,83 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p2.html'>previous page</a></div><div class='next-link'><a href='blog_p4.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20240710_dissimilar_clustering.html'>Choosing Maximally Dissimilar Molecules</a></h2><i>July 10, 2024</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p2.html'>previous page</a></div><div class='next-link'><a href='blog_p4.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20240917_robotics.html'>Robots Won't Solve Organic Synthesis</a></h2><i>September 17, 2024</i>
+<p>
+Abhishaike Mahajan recently wrote <a href=https://www.owlposting.com/p/generative-ml-in-chemistry-is-bottlenecked>an excellent piece</a> on how generative ML in chemistry is bottlenecked by synthesis (<i>disclaimer: I gave some comments on the piece, so I may be biased</i>). One of the common reactions to this piece has been that self-driving labs and robotics will soon solve this problem—this is a pretty common sentiment, and one that I’ve heard a lot. 
+</p>
+
+<p>
+Unfortunately, I think that the strongest version of this take is wrong: organic synthesis won’t be “solved” by just replacing laboratory scientists with robots, because (1) figuring out what reactions to run is hard and (2) running reactions is even harder and (3) we need scientific advances to fix this, not just engineering. 
+</p>
+
+<h2>
+Predicting What Reactions To Run Is Hard
+</h2>
+
+<p>
+Organic molecules are typically made through a sequence of reactions, and figuring out how to make a molecule involves both the strategic question of which reactions to run in what order and the tactical question of how to run each reaction. 
+</p>
+
+<p>
+There’s been a ton of work on both of these problems, and it’s certainly true that computer-assisted retrosynthesis tools have come a long way in the last decade! But retrosynthesis is one of those problems that’s (relatively) easy to be good at and almost impossible to be great at. In part, this is because data in this field tends to be very bad: publications and patents are full of irreproducible or misreported reactions, and negative results are virtually never reported. (<a href=https://www.science.org/content/blog-post/sorta-artificial-intelligence>This post</a> by Derek Lowe is a good overview of some of the problems that the field faces.)
+</p>
+
+<p>
+But also, the problems are just hard! I got the chance to try out one of the leading retrosynthesis software packages back in my career as an organic chemist, and when we fed it some of the tough synthetic problems we were facing, it gave us all the logical suggestions that we had already tried (unsuccessfully) and then began suggesting insane reactions to us. I can’t really blame the model for not being able to invent new chemistry—but this illustrates the limits of what pure retrosynthesis can accomplish, absent new scientific discoveries.
+</p>
+
+<p>
+The tactical problem of optimizing reaction conditions is also difficult. In cases where there are a lot of continuous variables (like temperatures or concentrations), conventional optimization methods like design-of-experiments can work well—but where reagents or catalysts are involved, optimization becomes significantly more challenging. Lots of cheminformatics/small-data ML work has been done in this area, but it’s still not straightforward to reliably take a reaction drawn on paper and get it to work in the lab. 
+</p>
+
+<h2>
+Running Reactions Is Even Harder
+</h2>
+
+<p>
+All of the above problems are, in principle, solvable. Where I think robotics is likely to struggle even more is in the actual execution of these routes. Synthetic organic chemistry is an arcane and specialized craft that typically requires at least five years of training to be decent at—most published reaction procedures assume that the reader is themselves a trained organic chemist, and omit most of the “obvious” details that are needed to unambiguously specify a sequence of steps. (The incredibly detailed procedures in <a href=https://www.orgsyn.org/><i>Organic Syntheses</i></a> illustrate just how much is missing from the average publication.)
+</p>
+
+<p>
+My favorite illustration of how irreproducible organic chemistry can be is BlogSyn, a brief project that aimed to anonymously assess how easily published reactions could be reproduced. <a href=https://blog-syn.blogspot.com/2013/02/blog-syn-002-pd-catalyzed-c-3-selective.html>The second BlogSyn post</a> found that a reported olefination of pyridine could not be reproduced—the original author of the paper, Jin-Quan Yu (Scripps) responded, and the shape of reaction tube was ultimately found to be critical to reaction success.
+</p>
+
+<p>
+<a href=https://blog-syn.blogspot.com/2013/02/blog-syn-003-benzylic-oxidation-of_18.html>The third BlogSyn post</a> found that an IBX-mediated benzylic oxidation reported by Phil Baran (also of Scripps) could not be reproduced at all as written. Phil and his co-authors responded pretty aggressively, and after several weeks of back-and-forth <a href=https://blog-syn.blogspot.com/2013/03/blog-syn-003a-secret-ingredient.html>it was ultimately found</a> that the reaction could be reproduced after modifying virtually every parameter. A comment from Phil’s co-author Tamsyn illustrates some of the complexities at play:
+</p>
+
+<blockquote>
+There is in [BlogSyn’s] discussion a throw away comment about the 2-methylnaphthalene not being volatile. Have you never showered and then left your hair to dry at room temperature? – water evaporates at RT, just as 2-methylnaphthalene does at 95 ºC. I suggest to you that at the working temperatures of this reaction, the biggest problem may be substrate evaporation (or “hanging out” on the colder parts of the flask as Phil said)... We need fluorobenzene to reflux in these reactions and in so-doing wash substrate back into the reaction from the walls of the vessel, but it clearly slows/inhibits the reaction also – so, we need to tune this balance carefully and with patience. Scale will have a big influence on how well this process works.
+</blockquote>
+
+<p>
+Tamsyn is, of course, right—volatile substrates can evaporate, and part of setting up a reaction is thinking about the vapor pressure of your substrates and how you can address this. But this sort of thinking requires a trained chemist, and isn’t easily automated. There are a million judgment calls to make in organic synthesis—what concentration to use, how quickly to add the reagent, how to work up the reaction, what extraction solvent to use, and so on—and it’s hard enough to teach first-year graduate students how to do all this, let alone robots. Perhaps at the limit as robots achieve AGI this will be possible, but for now these remain difficult problems. 
+</p>
+
+<h2>
+We Need Scientific Advances To Fix This
+</h2>
+
+<p>
+What can be done, then? 
+</p>
+
+<p>
+From a synthetic point of view, we need more robust reactions. Lots of academics work on reaction development, but the list of truly reliable reactions remains miniscule: amide couplings, Suzuki couplings, addition to Ellman auxiliaries, SuFFEx chemistry, and so on. From a practical point of view, every reaction like this is worth a thousand random papers with a terrible substrate scope (<a href=https://onlinelibrary.wiley.com/doi/full/10.1002/1521-3773%2820010601%2940%3A11%3C2004%3A%3AAID-ANIE2004%3E3.0.CO%3B2-5>Sharpless said it better in 2001 than I ever could</a>; see also <a href=https://pubs.acs.org/doi/10.1021/acs.jmedchem.5b01409>this 2015 study</a> about how basically no new reactions are used in industry). Approaches like skeletal editing are incredibly exciting, but there’s a limit to how impactful any non-general methodology can be.
+</p>
+
+<p>
+Perhaps even more important is finding better methods for reaction purification. Purification is one of those topics which doesn’t get a lot of academic attention, but being able to efficiently automate purification unlocks a whole new set of possibilities. Solid-phase synthesis (which makes purification as simple as rinsing off some beads) has always seen some amount of use in organic chemistry, but a lot of commonly-used reactions aren’t compatible with solid support: either new supports or new reactions could address this problem. There are also cool approaches like Marty Burke’s <a href=https://www.nature.com/articles/s44160-024-00558-w?fromPaywallRec=false>“catch-and-release”</a> boronate platform which haven’t yet seen broad adoption.
+</p>
+
+<p>
+Ultimately, I share the dream of the robotics enthusiasts: if we’re able to make organic synthesis routine, we can stop worrying about how to make molecules and start thinking about what to make! I’m very optimistic about the opportunity of new technologies to address synthetic bottlenecks and enable higher-throughput data generation in chemistry. But getting to this point will take not only laboratory automation but also a ton of scientific progress in organic chemistry, and the first step in solving these problems is actually taking them seriously and recognizing that they’re unsolved.
+</p>
+
+<i>
+  Thanks to Abhishaike Mahajan and Ari Wagen for helpful comments about this post.
+</i>
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20240710_dissimilar_clustering.html'>Choosing Maximally Dissimilar Molecules</a></h2><i>July 10, 2024</i>
 <p>
 I've been playing around with generating non-equilibrium conformations by molecular dynamics recently, and I've been thinking about how to best parse the outputs of a dynamics simulation. A technique I've seen quite often in the literature is "choose a dissimilar subset of conformers by RMSD"—for instance, here's what <a href=https://www.nature.com/articles/s41597-022-01882-6>the SPICE paper</a> says: 
 </p>
@@ -511,74 +587,6 @@ print(pymsym.get_symmetry_number(atomic_numbers, positions) # 2
 
 <p>
 I hope this is helpful to the community—let me know if you find any bugs!
-</p>
-
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20240325_solidworks.html'>The SolidWorks Model of Simulation</a></h2><i>March 25, 2024</i>
-<p>
-<i>Apologies for the long hiatus: we've had some health issues in the family, and startup life has been particularly overwhelming. With any luck, I'll be able to return to a more regular posting frequency soon.</i>
-</p>
-
-<p>
-What’s the right relationship between theory, computation, and experiment? Much has been written on this. In this piece, I want to put forward an answer that I think is underrated in the life sciences—what I call the “SolidWorks model” of simulation. 
-</p>
-
-<p>
-For the unfamiliar, SolidWorks is a program which allows engineers to design objects in the computer: the user can create a 3D model of their device, figure out the measurements that allow the parts to fit together in the desired way, and then go into the lab and actually build everything. (I’m not a SolidWorks power user, but I spent a semester messing around with it in high school and I’ve been thinking back on this recently.)
-</p>
-
-
-<figure>
-  <img class="centered-img" src="../img/20240325_solidworks.jpg" style="width:550px;" alt="picture of SolidWorks" />
-  <figcaption>A screenshot of SolidWorks.</figcaption>
-</figure>
-
-<p>
-What are the distinctive features of SolidWorks? 
-</p>
-
-<ul>
-<li>
-<b>SolidWorks doesn’t predict overall success.</b> If you’re designing a new gearbox in SolidWorks, you can check that the parts will fit together, but you don’t know if it will run efficiently or not. Modeling is not supposed to replace actually building and testing the part.
-</li>
-<li>
-<b>SolidWorks can be used by normal engineers, not dedicated computer experts.</b> It’s quick and easy to model things, so modeling becomes a part of the regular engineering/design workflow. You can model a part, make it, adjust the model, make it again, and so on and so forth. 
-</li>
-<li>
-<b>SolidWorks assists human intuition instead of trying to replace it.</b> SolidWorks only draws what you tell it to, which means all the ideas still come from humans—to the extent that SolidWorks increases productivity, it does so by helping people understand what they’re working on more clearly. This comports with Richard Hamming’s idea that “the purpose of computing is insight, not numbers.”
-</li>
-</ul>
-
-<p>
-Astute readers will notice differences from how simulations in the life sciences are typically conducted. It’s rare in chemistry or biology to have computations and experiments performed in the same research group, let alone by the same person—but this is crucial to SolidWorks-style simulation, where experimental scientists must quickly gain insight from their computations. If someone from a different team has to get around to answering their request or a job takes overnight to run, the experimental scientist will move on and modeling will be excluded from the design/build/test cycle.
-</p>
-
-<p>
-SolidWorks-style computation is also prospective, not retrospective. In other words, the goal of the simulation is to generate subsequent experimental hits, not figures for publication, meaning that successful computational studies might never even be reported. This is different from the DFT section of the average organic chemistry paper, which is typically performed by a different team after all experimental results are complete. This isn’t bad, but <i>ex post</i> studies are different from actually using computations <i>ex ante</i> to design molecules.
-</p>
-
-<p>
-I don’t mean to suggest that the SolidWorks paradigm is objectively correct: there are many ways in which theory, computation, and experiment can usefully interact, and I think it’s great that there are scientists using careful <i>ex post</i> computations to interpret perplexing experimental results or running massive virtual screens to design new molecules entirely <i>in silico</i>. I myself have worked on plenty of projects like this and hope to conduct more in the future.
-</p>
-
-<p>
-But I do think that SolidWorks-style computation is pretty underrated today. There are few computational tools that non-experts can really use, and the average experimental scientists might not interact with computation even once in an average week (except perhaps when meeting with someone from a different lab or team). Even when experimentalists have the technical skills to run calculations, the friction involved in connecting to a computing cluster, generating input files, monitoring jobs, etc often makes it impractical to really run calculations and experiments in tandem.
-</p>
-
-<p>
-In fact, I’d argue that the most useful predictive computational tool for organic chemists has probably been the ChemDraw “Predict NMR” button. The predictions are laughably crude by today’s standards, but ChemDraw NMR has a few key advantages: (1) you don’t have to program anything or look at a terminal window to use it, (2) there aren’t any options for end users to mess around with, so you can’t do anything wrong, and (3) it runs instantly from a software package everyone already has, so it fits right into your workflow. These factors are collectively more important than accuracy—ChemDraw NMR is accurate enough to be useful, and far more convenient than fancier approaches. 
-</p>
-
-<figure>
-  <img class=centered-img src="https://bitesizebio.com/wp-content/uploads/2016/11/Figure-6-NMR-Prediction.jpg" style="width:450px;" />
-  <figcaption>A screenshot of ChemDraw's NMR prediction widget.</figcaption>
-</figure>
-
-<p>
-This seems like a scenario where publication pressure leads to misaligned incentives. Scientific publications emphasize novelty, accuracy, and performance, not pragmatic considerations like “how easy is it to run this software in the middle of the workday” or “how confusing are the parameters to understand.” And for pioneering computational workflows that ought not to be run without a deep understanding of the science, that’s probably appropriate. But pragmatic considerations matter for casual users. 
-</p>
-
-<p>
-If it’s not obvious by now, one of our big visions for Rowan is “SolidWorks for organic chemistry”—to the extent that there are people who are designing and creating new molecules, we think that it’s important that they are able to think intelligently about the molecules that they’re designing. This means making software that can deliver actionable insights while being fast and simple enough for experimentalists to use. While this is a massive project, it’s not impossibly large, and we’re optimistic that Rowan can quickly become helpful to experimental chemists. If you think this vision is exciting and have ideas for how we can bring it to life, let us know!
 </p>
 
 </div><div class='previous-link'><a href='blog_p2.html'>previous page</a></div><div class='next-link'><a href='blog_p4.html'>next page</a></div><br>
