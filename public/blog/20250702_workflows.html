@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      Workflows Are the New Models
+    </title>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="language" content="en">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--twitter-->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@github" />
+    <meta name="twitter:title" content="Workflows Are the New Models" />
+    <meta name="twitter:description" content="On the vibe shift that's happening across computational chemistry." />
+    
+
+    <link rel="stylesheet" href="../../static/style.css">
+
+    <link rel="alternate" type="application/rss+xml" title="RSS feed for the blog" href="/rss.xml">
+
+    <!--google-->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MTNZ0ZSG3W"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MTNZ0ZSG3W');
+    </script>
+
+  </head>
+  <body>
+    <ul class="menu-list">
+      <li class="menu-item"><a href="../main/index.html" class="menu-link menu-title">Corin Wagen</a></li>
+      <li class="menu-item"><a href="../main/index.html#about" class="menu-link">About</a></li>
+      <!--<li class="menu-item"><a href="../main/index.html#projects" class="menu-link">Projects</a></li>-->
+      <!--<li class="menu-item"><a href="../main/index.html#past_work" class="menu-link">Past Work</a></li>-->
+      <li class="menu-item">
+        <a href="../main/blog_p1.html" class="menu-link">Blog</a>
+        <a href='../main/archive.html' class="menu-link">(Archive)</a>
+      </li>   
+    </ul>
+    <h1> Workflows Are the New Models </h1>
+    <i>July 2, 2025</i>
+    <br />
+<br />
+<a href="https://x.com/CorinWagen/status/1939695363427893471"><em>Expanded from a post on X</em></a><em>, which I felt didn’t do a good job expressing all of what I meant.</em>
+
+<p>
+  The past few years of “AI for life science” has been all about the models: AlphaFold&nbsp;3, neural-network potentials, protein language models, binder generation, docking, co-folding, ADME/tox prediction, and so on.  
+  But <a href="https://www.chaidiscovery.com/news/introducing-chai-2">Chai-2</a> (and lots of related work) shows us that the vibes are shifting.  
+  Models themselves are becoming just a building block; the real breakthroughs are going to happen at the workflow level, as we learn how to combine these models into robust and performant pipelines.
+</p>
+
+<p>
+  Workflows are the new models.  
+  To have a state-of-the-art computational stack for drug discovery (or protein engineering, or materials design, or anything else), it’s no longer enough to have just a single state-of-the-art model.  
+  You need a suite of modular tools that you can combine in a way that makes sense for your task. (At Rowan, we’re seeing this happen all over the industry.)
+</p>
+
+<p>What does this mean in practice? Here are two imaginary case studies illustrating what modern computational chemistry looks like in 2025:</p>
+
+<h3>Materials Science</h3>
+
+<p>
+  A company is developing a new inorganic photocatalyst for bulk acid–alkene coupling (following
+  <a href="https://pubs.acs.org/doi/abs/10.1021/jacs.0c08688">Zhu and Nocera, 2020</a>).  
+  Their workflow might look something like this:
+</p>
+
+<ul>
+  <li>Agentic literature search for potential photo-active inorganic materials that seem synthesizable.</li>
+  <li>A diffusion or flow-matching model for 3-D structure generation where crystallography data doesn’t exist.</li>
+  <li>Rapid structural relaxation with a neural-network potential (NNP) to generate minimized structures.</li>
+  <li>Adsorption-energy estimation with another NNP to see if alkene binding is feasible.</li>
+  <li>HOMO–LUMO gap computation with periodic DFT to estimate photo-activity.</li>
+  <li>Molecular dynamics to check the stability of the bound pose.</li>
+  <li>Volcano-plot creation and final candidate scoring based on all properties.</li>
+</ul>
+
+<p>
+  The entire cycle can be repeated <em>ad nauseum</em> to generate new candidates, with the focus gradually shifting from exploration to exploitation.
+</p>
+
+<h3>Drug Discovery</h3>
+
+<p>
+  A company has identified new CNS biological targets that they hope to inhibit with a small molecule.  
+  Their workflow might look something like this:
+</p>
+
+<ul>
+  <li>Based on a starting hit (from a DEL, or from a known binder), generate modifications automatically or by sampling from an enumerated library.</li>
+  <li>Filter candidates by synthesizability, solubility, pK<sub>a</sub>, and other project-specific structural filters.</li>
+  <li>Dock molecules against the target and potential anti-targets using a fast method like Vina.</li>
+  <li>For hits predicted to show good selectivity, rescore with a second method (strain-corrected docking, Boltz-2, etc.).</li>
+  <li>
+    <a href="https://pubs.acs.org/doi/abs/10.1021/acs.jcim.0c00057">Run a short MD simulation</a> to check the stability of the bound pose.
+  </li>
+  <li>
+    Screen for <a href="https://rowansci.com/publications/macroscopic-pka-prediction">blood–brain-barrier permeability</a> and
+    <a href="https://pubs.acs.org/doi/10.1021/acs.chemrestox.4c00015">liver toxicity</a> (e.g.).
+  </li>
+</ul>
+
+<p>
+  This cycle, too, can be repeated until <del>you run out of Modal credits</del> a set of promising candidates is identified for synthesis.
+</p>
+
+<br />
+
+<p>
+  Neither of these case studies is based on a particular company; instead, they’re meant to illustrate the sort of ML-native workflows we’re seeing from early adopters across the chemical sciences.  
+  For simplicity, experimental integration isn’t shown here, but any sane scientist will obviously incorporate wet-lab testing as soon as possible and feed those insights back into the top of the funnel.
+</p>
+
+<p>
+  In any case, the overall point is clear—no single model can by itself solve every problem, and figuring out the right way to combine a set of models is itself a non-trivial system-design problem.  
+  It’s entirely possible to create a state-of-the-art workflow simply by combining “commoditized” open-source models in a new way, and so far the resultant workflows don’t seem obvious or easy to copy.  
+  This defies popular intuition about what constitutes a “moat” for AI companies.
+</p>
+
+<p>
+  More metaphysically, the line between workflows and models is blurring.  
+  Many ML-adjacent people think of models as the active unit of science: “they have a model for X” or “we’re building a model for Y.”  
+  But, as shown above, most state-of-the-art research today requires lots of individual ML models, and many “models” are already miniature workflows.  
+  For instance, running a single inference call through
+  <a href="https://github.com/dptech-corp/Uni-pKa">the Uni-pKa “model”</a> requires enumerating all possible microstates, performing a conformer search, and running geometry optimizations on every individual conformer—just to generate the pairwise-distance matrix used as input for the actual ML model.
+</p>
+
+<p>Why does this matter? Here are a few thoughts that I've had, after thinking about this point:</p>
+
+<ul>
+  <li>Models must be plug-and-play, interoperable, and robust—anything that can’t be integrated into higher-level workflows won’t be used.</li>
+  <li>
+    The best models might not be those that top isolated benchmarks; in a workflow context, speed, reliability, and uncertainty
+    quantification also matter.  
+    Richard Hamming’s first rule of systems engineering comes to mind: “If you optimize the components, you will probably ruin the system
+    performance” (<a href="https://corinwagen.github.io/public/blog/20230516_hamming.html">see my previous book review</a>).
+  </li>
+  <li>
+    Any thinking that depends on a sharp metaphysical difference between workflows and models is probably wrong.  
+    I recently had a sales call where someone told me they weren’t interested in any workflows—they only wanted to use models.  
+    I wanted to send them to
+    <a href="https://slatestarcodex.com/2014/11/21/the-categories-were-made-for-man-not-man-for-the-categories/">old Slate Star Codex posts</a>,
+    but (wisely?) held my tongue.
+  </li>
+  <li>
+    Devops and good software engineering will rise in importance.  
+    At Rowan, we’ve learned firsthand how hard it is to manage hundreds of thousands of workflows across a vast sea of unruly scientific dependencies.
+  </li>
+  <li>
+    Relatedly, the amount of scientific, computational, and engineering expertise needed to run a modern computational-science program is
+    rising exponentially—and shows no signs of stopping.
+  </li>
+</ul>
+
+<i>Thanks to Ari Wagen for reading a draft of this post.</i>
+
+    <br>
+    <br>
+    <i>If you want email updates when I write new posts, you can subscribe <a href=https://cwagen.substack.com/>on Substack.</a></i>
+  </body>
+  <br>
+  <br>
+  <footer>
+    <a href="mailto:corin.wagen+blog@gmail.com">email</a>
+    <a href="https://github.com/corinwagen">github</a>
+    <a href="https://twitter.com/CorinWagen">twitter</a>
+    <div style="float:right;">
+      <a href="/rss.xml">rss</a>
+      <a href="https://cwagen.substack.com">substack</a>
+    </div>
+  </footer>
+</html>
