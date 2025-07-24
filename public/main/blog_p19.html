@@ -34,7 +34,91 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p18.html'>previous page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220708_apotheosis_of_2d_ir.html'>The Apotheosis of 2D Infrared Spectroscopy</a></h2><i>July 8, 2022</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p18.html'>previous page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220719_timescales.html'>Timescales</a></h2><i>July 19, 2022</i><p>
+  For many organic chemists, it’s hard to grasp the vast difference between various “fast” units of time. 
+  For instance, if a reactive intermediate has a lifetime of microseconds, does that mean it can escape the solvent shell and react with a substrate? 
+  What about a lifetime of nanoseconds, picoseconds, or femtoseconds?
+</p>
+
+<p>
+  To help answer these questions for myself, I made the following graphic about a year ago, which compares the timescale of various molecular processes on a logarithmic axis.
+  Although someone skilled in Adobe Illustrator could doubtless make a prettier version, 
+  I've still found this to be a useful reference, and frequently use it as a slide in talks or group meetings:
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20220719_timescales.png" style="width:650px;" alt="illustration of chemical timescales" />
+  <figcaption> Illustration of timescales of chemical processes—open in new tab for higher resolution</figcaption>
+</figure>
+
+<p>
+  Based on this graphic, it becomes easier to think about the interplay between competing fast processes. 
+  Species that persist for less than ~5 ps, for instance, are effectively “frozen” in the solvent configuration they’re formed in, 
+  whereas molecules that persist for longer can sample different solvent configurations. 
+  If a species can persist for 10-100 ps, it can begin to sample the nearby conformational landscape through low-barrier processes (e.g. single-bond rotation), 
+  although larger conformational changes might still be inaccessible.
+</p>
+
+<p>
+  As lifetimes stretch into the nanosecond regime, diffusion and solvent-cage escape become more realistic possibilities: 
+  based on <a href=https://onlinelibrary.wiley.com/doi/abs/10.1002/anie.200503273>Mayr’s value</a> for the “diffusion limit” (2–4e9 M<sup>-1</sup>s<sup>-1</sup>), 
+  we can estimate that bimolecular association with a 1.0 M reactant will take 200-400 ps, while association with a 100 mM reactant will take 2-4 ns. 
+  On the far right of the graph, being able to distinguish different species by NMR (e.g. amide methyl groups in DMF) means that these species have a very long lifetime indeed.
+</p>
+
+<p>
+  Framed in these terms, then, it becomes obvious why the 10-100 ps timescales currently accessible by <i>ab initio</i> molecular dynamics (AIMD) are unable to model many important 
+  molecular processes.  Indeed, <a href=https://pubs.acs.org/doi/10.1021/acs.jctc.0c00833>work from Grossman and coworkers</a> 
+  has shown that the results of AIMD simulations can be very dependent on the pre-AIMD equilibration method used, 
+  since the actual solvent environment is unable to fully relax over the timescale of the simulation. 
+  For AIMD to become a truly useful alternative to forcefield molecular dynamics, much faster <i>ab initio</i> methods will be needed!
+<p>
+
+<h3>
+  Sources:
+</h3>
+<ul>
+  <li>
+    intramolecular vibrational redistribution: <a href=http://www.cchem.berkeley.edu/millergrp/pdf/237.pdf>ref</a>
+  </li>
+  <li>
+    hydrogen bonding: <a href=https://web.stanford.edu/group/fayer/articles/351.pdf>ref</a>
+  </li>
+  <li>
+    NMR: <a href= http://www.satyensaha.com/pdf%20files/literature/SS-NMR-timescale.pdf>ref</a>
+  </li>
+  <li>
+    bond rotation: <a href=https://pubs.rsc.org/en/content/articlelanding/2015/an/c5an00558b>ref</a>, 
+    <a href=https://web.stanford.edu/group/fayer/articles/350.pdf>ref</a>
+  </li>
+  <li>
+    carbocation lifetimes: <a href=https://catalogimages.wiley.com/images/db/pdf/0471233242.01.pdf>ref</a>, 
+    <a href=https://www.sciencedirect.com/science/article/abs/pii/S0301010408000050?via%3Dihub>ref</a>
+  </li>
+  <li>
+    excited state lifetimes: <a href=https://pubs.acs.org/doi/10.1021/acs.chemrev.6b00057>ref</a>, 
+    <a href=https://pubs.rsc.org/en/content/articlelanding/2019/cc/c9cc01047e>ref</a>, 
+    <a href=https://pubs.acs.org/doi/10.1021/cr300503r>ref</a>, 
+    <a href=https://pubs.rsc.org/en/content/articlelanding/2016/cp/c6cp01635a>ref</a>
+  </li>
+</ul>
+
+<i>Thanks to Richard Liu and Eugene Kwan for feedback on this figure.</i>
+
+<h3>Corrections (updated 7/25/2022):</h3>
+  <ul>
+    <li>
+      The lifetime given for benzophenone is for the singlet excited state, not the triplet excited state 
+      (which has a much longer lifetime, explaining why benzophenone can be used as a triplet sensitizer).
+      Thanks to <a href="https://twitter.com/DanielEFalvey/status/1549868458673901568">Daniel Falvey</a> for pointing this out.
+    </li>
+    <li>
+      The illustration of "NMR timescale" refers only to the timescale in which different peaks can be distinguished in a 1D NMR experiment.
+      More sophisticated NMR experiments can probe much faster processes, such as molecular tumbling, so the use of the phrase "NMR timescale" is misleading.
+      Thanks to <a href="https://twitter.com/DominikJKubicki/status/1549809467247689728">Dominik Kubicki</a> for pointing this out.
+    </li>
+  </ul>
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220708_apotheosis_of_2d_ir.html'>The Apotheosis of 2D Infrared Spectroscopy</a></h2><i>July 8, 2022</i>
 <p>
   While IR spectroscopy is still taught in introductory organic chemistry classes, it has been almost completely replaced by NMR spectroscopy and mass spectrometry for 
   routine structural assignments. Still, IR spectroscopy offers unique advantages to the mechanistic chemist: the short timescale of IR allows for the 
