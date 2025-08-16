@@ -34,7 +34,110 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p14.html'>previous page</a></div><div class='next-link'><a href='blog_p16.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20221216_carbon_nmr_response.html'>Response to Comments on "Against Carbon NMR"</a></h2><i>December 16, 2022</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p14.html'>previous page</a></div><div class='next-link'><a href='blog_p16.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20221219_low_code_csearch.html'>Low-Code Conformational Searching</a></h2><i>December 19, 2022</i>
+<p>
+Today I want to engage in some shameless self-promotion and highlight how <a href=https://github.com/ekwan/cctk><i>cctk</i></a>, an open-source Python package that I develop and maintain with Eugene Kwan, can make conformational searching easy.
+</p>
+
+<p>
+<b>Updated October 2024 with some more shameless self-promotion: you can now run even faster and more advanced conformer searches for free through <a href=rowansci.com>Rowan</a>, my computational chemistry startup. <a href=https://rowansci.com/tools/conformers>Here's some more information</a> about Rowan's conformational searching capabilities!</b>
+</p>
+
+<p>
+Conformational searching is a really crucial task in computational chemistry, because pretty much everything else you do depends on having the correct structure in the computer. In simple cases you can just draw out every conformer manually, but as the system under study gains degrees of freedom it becomes increasingly impractical to think through every possibility.
+</p>
+
+<p>
+Failure to identify the correct conformer can lead to completely incorrect results, as demonstrated by Neese and coworkeers in <a href="https://pubs.rsc.org/en/Content/ArticleLanding/2022/SC/D2SC02274E">this recent article</a>. They reexamine a reaction <a href="https://www.science.org/doi/10.1126/science.aaq0445">originally studied by Ben List</a> and demonstrate that the conformers examined in the initial publication are almost 5 kcal/mol above the true lowest-energy conformers.
+</p>
+
+<figure>
+  <img class=centered-img src=../img/20221219_neese_csearch.gif style="width:450px;" />
+  <figcaption>
+  Figure 1 from the paper; the previously reported conformers are shown in green.
+  </figcaption>
+</figure>
+
+<p>
+Conformational searching approaches attempt to prevent this sort of error by automating the process of finding conformers. There are lots of different algorithms one can use, like <a href="https://pubs.acs.org/doi/10.1021/ja952478m">low-mode searching</a>, metadynamics, and replica exchange (to name just a few), and decades of literature on this topic.
+</p>
+
+<p>
+Since conformational searching requires many individual calculations, it’s <a href=https://link.springer.com/protocol/10.1007/978-1-0716-0282-9_14>almost never practical</a> to do a conformational search at a high level of theory (e.g. using DFT or <i>ab initio</i> methods). Instead, <a href="https://pubs.acs.org/doi/10.1021/acs.joc.2c00066">forcefields</a> or <a href="https://pubs.acs.org/doi/10.1021/acs.jcim.5b00671">semiempirical</a> methods are generally used, with the caveat that the conformers generated might have somewhat inaccurate geometries.
+</p>
+
+<p>
+<i>cctk</i> uses <a href="https://crest-lab.github.io/crest-docs/">crest</a> (from Grimme and coworkers), which uses a <a href=https://crest-lab.github.io/crest-docs/page/overview/workflows.html#imtd-gc-algorithm>metadynamics-based algorithm</a> with the <i>GFN2-xtb</i> semiempirical method to generate and score conformers. Although <i>crest</i> isn’t perfect, it’s simple, easy to use, and often generates very reasonable results.
+</p>
+
+<p>
+I personally find the <i>crest</i> syntax a little tough to remember, so I’ve created a Python script so that I don’t have to look it up every time. 
+</p>
+
+<h3>Installing Packages</h3>
+
+<p>
+To run this tutorial, you’ll need to have <i>cctk</i> and <i>crest</i> installed. It’s often easiest to manage dependencies using a <i>conda</i> environment; if you don’t already have one, you can create one for this project with this code:
+</p>
+
+<pre class=code-block>
+conda create --name=chem python=3.8
+pip install cctk
+pip install pyyaml
+conda install -c conda-forge crest
+</pre>
+
+<p>
+And in the future, you can activate the environment like this:
+</p>
+
+<pre class=code-block>
+conda activate chem
+</pre>
+
+<h3>Running the Tutorial</h3>
+
+<p>
+The files for this tutorial can be found <a href="https://github.com/corinwagen/utilities/tree/master/csearch">here</a>. <span class=code>ex.yaml</span>, which is the only file you should need to modify, contains all the information needed for the python script <span class=code>do_crest.py</span>:
+</p>
+
+<pre class=code-block>
+# list of atoms to constrain
+# atom1, atom2, distance (or "auto" to keep distance from initial geometry)
+constraints:
+    constraint1: 17 31 auto
+    constraint2: 30 31 auto
+
+# location of input geometry, either as Gaussian .gjf or .out file
+input_geom: pictet_spengler.gjf
+
+# directory in which crest will run (will be created)
+directory: crest
+
+# name of logfile
+logfile: crest.log
+
+# whether or not this is a noncovalent complex (true or false).
+# this simply gets passed to crest; some settings are changed.
+noncovalent: false
+</pre>
+
+<p>
+To generate conformers, simply run:
+</p>
+
+<pre class=code-block>
+python do_crest.py ex.yaml
+</pre>
+
+<p>
+This takes about 30 seconds to run on my laptop, and will generate about a hundred output conformers, which can (if desired) be further refined using DFT.
+</p>
+
+<p>
+Hopefully this is useful! Please feel free to contact me with questions or bug reports.
+</p>
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20221216_carbon_nmr_response.html'>Response to Comments on "Against Carbon NMR"</a></h2><i>December 16, 2022</i>
 <p>
 Since my previous <a href="https://twitter.com/CraftyCarbene/status/1603572282953289729">“based and red pilled”</a> post seems to have struck a nerve, I figured I should address some common objections people are raising. 
 </p>
@@ -391,295 +494,6 @@ Ionization energy: 4.122 kcal/mol
 <p>
 My hope is that this program promotes wider adoption of the Fuoss model, and in general enables more critical thinking about ion-pair energetics in organic solvents.
 Please feel free to send any bug reports, complaints, etc. my way!
-</p>
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20221128_business_card_explained.html'>Business Card Lennard–Jones Simulation, Explained</a></h2><i>November 28, 2022</i>
-<p>
-Last week, I posted a simple Lennard–Jones simulation, written in C++, that models the behavior of liquid Ar in only 1561 characters.
-By popular request, I'm now posting a breakdown/explanation of this program, both to explain the underlying algorithm and illustrate how it can be compressed.
-</p>
-
-<p>
-Here's the most current version of the program, now condensed even further to 1295 characters:
-</p>
-
-<pre class=code-block>
-#include &lt;iostream&gt;
-#include &lt;random&gt;
-#define H return
-typedef double d;typedef int i;using namespace std;i N=860;d B=8.314e-7;d S=1544
-.8;d q(d x){if(x&gt;17)x-=34;if(x&lt;-17)x+=34;H x;}d rd(){H 34*drand48()-17;}struct v
-{d x,y,z;v(d a=0,d b=0,d c=0):x(a),y(b),z(c){}d n(){H x*x+y*y+z*z;}v p(){H v(q(x
-),q(y),q(z));}};v operator+(v a,v b){H v(a.x+b.x,a.y+b.y,a.z+b.z);}v operator*(d
- a,v b){H v(a*b.x,a*b.y,a*b.z);}struct p{v r,q,a,b;vector&lt;i&gt; W;p(v l):r(l){}void
- F(v f){b=0.025*f+b;}};vector&lt;p&gt; P;void w(){cout&lt;&lt;N&lt;&lt;"\n\n";for(p l:P)cout&lt;&lt;"Ar
-"&lt;&lt;l.r.x&lt;&lt;" "&lt;&lt;l.r.y&lt;&lt;" "&lt;&lt;l.r.z&lt;&lt;"\n";cout&lt;&lt;"\n";}void E(){for(i j=N;j--;){for(
-i k:P[j].W){v R=(P[j].r+-1*P[k].r).p();d r=R.n();if(r&lt;70){d O=r*r*r;R=2880*B*(2*
-S*S/O/O-S/O)/r*R;P[j].F(R);P[k].F(-1*R);}}}}void e(){for(i j=0;j&lt;N;j++){P[j].W.c
-lear();for(i k=j+1;k&lt;N;k++)if((P[j].r+-1*P[k].r).p().n()&lt;90)P[j].W.push_back(k);
-}}i main(){i A=1e3;i Y=5e3;for(i j=N;j--;){for(i a=999;a--;){v r=v(rd(),rd(),rd(
-));i c=0;for(p X:P){d D=(r+-1*X.r).p().n();if(D&lt;6.8)c=1;}if(!c){P.push_back(p(r)
-);break;}}}for(i t=0;t&lt;=3e4;t++){for(p&amp; I:P)I.r=(I.r+I.q+0.5*I.a).p();if(t%20==0
-)e();E();d K=0;for(p&amp; I:P){I.q=I.q+0.5*(I.b+I.a);I.a=I.b;I.b=v();K+=20*I.q.n();}
-d T=2*K/(3*B*N);if(t&lt;2*Y){d C=75;if(t&lt;Y)C=75*t/Y+(A-75)*(Y-t)/Y;for(p&amp; I:P)I.q=s
-qrt(C/T)*I.q;}if(t%100==0&amp;&amp;t&gt;2*Y)w();}}
-</pre>
-
-<p>
-Let's add some whitespace and break this down, line by line:
-</p>
-
-<pre class=code-block>
-#include &lt;iostream&gt;
-#include &lt;random&gt;
-
-// some abbreviations
-#define H return
-typedef double d;
-typedef int i;
-using namespace std;
-
-// constants
-i N=860;        // number of particles
-d B=8.314e-7;   // boltzmann's constant
-d S=1544.8;     // the minimum of the Lennard-Jones potential, 3.4 Å, to the 6th power
-</pre>
-
-<p>
-The program begins by importing the necessary packages, defining abbreviations, and declaring some constants. 
-Redefining <span class=code>double</span> and <span class=code>int</span> saves a ton of space, as we'll see.
-(This is standard practice in the code abbreviation world.)
-</p>
-
-<pre class=code-block>
-// given a 1d coordinate, scale it to within [-17,17].
-// (this only works for numbers within [-51,51] but that's fine for this application)
-d q(d x){
-    if(x&gt;17)
-        x-=34;
-    if(x&lt;-17)
-        x+=34;
-    H x;
-}
-
-// returns a uniform random number in [-17,17]
-d rd(){
-    H 34*drand48()-17;
-}
-</pre>
-
-<p>
-We now define a helper function to keep coordinates within the boundaries of our cubical box, and create another function to "randomly" initialize particles' positions.
-(<span class=code>drand48</span> is not a particularly good random-number generator, but it has a short name and works well enough.)
-</p>
-
-<pre class=code-block>
-// vector class
-struct v{
-    d x,y,z;
-    v(d a=0,d b=0,d c=0):x(a),y(b),z(c){}
-
-    // return the squared length of the vector
-    d n(){
-        H x*x+y*y+z*z;
-    }
-   
-    // return a vector with periodic boundary conditions applied
-    v p(){
-        H v(q(x),q(y),q(z));
-    }
-};
-
-// vector addition
-v operator+(v a,v b){
-    H v(a.x+b.x,a.y+b.y,a.z+b.z);
-}
-
-// multiplication by a scalar
-v operator*(d a,v b){
-    H v(a*b.x,a*b.y,a*b.z);
-}
-
-</pre>
-
-<p>
-Here, we define a vector class to store positions, velocities, and accelerations, and define addition and multiplication by a scalar.
-(It would be better to pass <span class=code>const</span> references to the operators, but it takes too many characters.)
-</p>
-
-<pre class=code-block>
-// particle class
-struct p{
-    // r is position, q is velocity, a is acceleration, b is acceleration in the next timestep
-    v r,q,a,b;
-    // neighbor list, the list of particles close enough to consider computing interactions with
-    vector&lt;i&gt; W;
-
-    p(v l):r(l){}
-   
-    // apply a force to this particle. 
-    // 0.025 = 1/40 = 1/(Ar mass)
-    void F(v f){
-        b=0.025*f+b;
-    }
-};
-
-// global vector of all particles
-vector&lt;p&gt; P;
-
-// write current coordinates to stdout
-void w(){
-    cout&lt;&lt;N&lt;&lt;"\n\n";
-    for(p l:P)
-        cout&lt;&lt;"Ar "&lt;&lt;l.r.x&lt;&lt;" "&lt;&lt;l.r.y&lt;&lt;" "&lt;&lt;l.r.z&lt;&lt;"\n";
-    cout&lt;&lt;"\n";
-}
-
-</pre>
-
-<p>
-Now, we define a class that represents a single argon atom. 
-Each atom has an associated position, velocity, and acceleration, as well as <span class=code>b</span>, which accumulates acceleration for the next timestep.
-Atoms also have a "neighbor list", or a list of all the particles close enough to be considered in force calculations. 
-(To prevent double counting, each neighbor list only contains the particles with index larger than the current particle's index.)
-</p>
-
-<p>
-We create a global variable to store all of the particles, and create a function to report the current state of this variable.
-</p>
-
-<pre class=code-block>
-// compute forces between all particles
-void E(){
-    for(i j=N;j--;){
-        for(i k:P[j].W){
-            // compute distance between particles
-            v R=(P[j].r+-1*P[k].r).p();
-            d r=R.n();
-
-            // if squared distance less than 70 (approximately 6 * 3.4Å**2), the interaction will be non-negligible
-            if(r&lt;70){
-                d O=r*r*r;
-                // this is the expression for the lennard–jones force.
-                // the second lennard–jones parameter, the depth of the potential well (120 kB), is factored in here.
-                R=2880*B*(2*S*S/O/O-S/O)/r*R;
-
-                // apply force to each particle
-                P[j].F(R);
-                P[k].F(-1*R);
-            }
-        }
-    }
-}
-</pre>
-
-<p>
-Now, we create a function to calculate the forces between all pairs of particles. 
-For each particle, we loop over the neighbor list and see if the distance is within six minima of the adjacent particle, 
-using squared distance to avoid the expensive square-root calculation.
-If so, we calculate the force and apply it to each particle.
-</p>
-
-<pre class=code-block>
-// build neighbor lists
-void e(){
-    for(i j=0;j&lt;N;j++){
-        // clear the old lists
-        P[j].W.clear();
-        for(i k=j+1;k&lt;N;k++)
-            // if squared distance between particles less than 90 (e.g. close to above cutoff), add to neighbor list
-            if((P[j].r+-1*P[k].r).p().n()&lt;90)
-                P[j].W.push_back(k);
-    }
-}
-</pre>
-
-<p>
-Finally, we create a function to build the neighbor lists, which is a straightforward double loop.
-We add every particle which might conceivably be close enough to factor into the force calculations within 10–20 frames.
-</p>
-
-<pre class=code-block>
-i main(){
-    i A=1e3;    // initial temperature (1000 K)
-    i Y=5e3;    // time to reach final temperature (5000 fs)
-
-    // initialize the system. each particle will be randomly placed until it isn't too close to other particles.
-    for(i j=N;j--;){
-        for(i a=999;a--;){
-            // generate random position
-            v r=v(rd(),rd(),rd());
-            i c=0;
-
-            // check for clashes with each extant particle
-            for(p X:P){
-                d D=(r+-1*X.r).p().n();
-                if(D&lt;6.8)
-                    c=1;
-            }
-
-            // if no clashes, add particle to list
-            if(!c){
-                P.push_back(p(r));
-                break;
-            }
-        }
-    }
-</pre>
-
-<p>
-To begin the program, we randomly initialize each particle and test if we're too close to any other particles. 
-If not, we save the position and move on to the next particle. This is crude but works well enough for such a simple system.
-</p>
-   
-<pre class=code-block>
-    // run MD! this is basically just the velocity verlet algorithm.
-    for(i t=0;t&lt;=3e4;t++){
-        // update position
-        for(p&amp; I:P)
-            I.r=(I.r+I.q+0.5*I.a).p();
-        
-        // every 20 timesteps (20 fs), update neighbor lists
-        if(t%20==0)
-            e();
-
-        // compute forces
-        E();
-
-        // finish velocity verlet, and sum up the kinetic energy.
-        d K=0;  // kinetic energy
-        for(p&amp; I:P){
-            I.q=I.q+0.5*(I.b+I.a);
-            I.a=I.b;
-            I.b=v();
-            K+=20*I.q.n();
-        }
-        
-        d T=2*K/(3*B*N); // temperature
-
-        // in the first 10 ps, apply berendsen thermostat to control temperature
-        if(t&lt;2*Y){
-            d C=75; // target temperature
-            if(t&lt;Y)
-                C=75*t/Y+(A-75)*(Y-t)/Y;
-            for(p&amp; I:P)
-                I.q=sqrt(C/T)*I.q;
-        }
-       
-        // every 100 fs after the first 10 ps, write the configuration to stdout
-        if(t%100==0&amp;&amp;t&gt;2*Y)
-            w();
-    }
-}
-</pre>
-
-<p>
-Finally, we simply have to run the simulation. We use the velocity Verlet algorithm with a 1 fs timestep, 
-updating neighbor lists and writing to <span class=code>stdout</span> periodically.
-The temperature is gradually lowered from 1000 K to 75 K over 5 ps, and temperature is controlled for the first 10 ps.
-</p>
-
-<p>
-Hopefully this helps to shed some light on how simple a molecular dynamics simulation can be, and highlights the wonders of obfuscated C++!
 </p>
 </div><div class='previous-link'><a href='blog_p14.html'>previous page</a></div><div class='next-link'><a href='blog_p16.html'>next page</a></div><br>
   </body>

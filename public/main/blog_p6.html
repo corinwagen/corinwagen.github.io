@@ -34,7 +34,81 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p5.html'>previous page</a></div><div class='next-link'><a href='blog_p7.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20231125_working_backwards.html'>Book Review: Working Backwards</a></h2><i>November 25, 2023</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p5.html'>previous page</a></div><div class='next-link'><a href='blog_p7.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20231201_sutton.html'>Bitter Lessons in Chemistry</a></h2><i>December 1, 2023</i>
+<br>
+<br>
+<p class=epigraph>
+“And I took the little scroll from the hand of the angel and ate it. It was sweet as honey in my mouth, but when I had eaten it my stomach was made bitter.”
+</p>
+<p class=epigraph-byline>
+–Revelation 10:10
+</p>
+
+<figure>
+  <img class=centered-img src=https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Ottheinrich_Folio293r_Rev10.jpg/1024px-Ottheinrich_Folio293r_Rev10.jpg style="width:450px;" />
+</figure>
+
+<p>
+As machine learning becomes more and more important to chemistry, it’s worth reflecting on Richard Sutton’s 2019 blog post about the “bitter lesson.” In <a href=http://www.incompleteideas.net/IncIdeas/BitterLesson.html>this now-famous post</a>, Sutton argues that “the biggest lesson that can be read from 70 years of AI research is that general methods that leverage computation are ultimately the most effective, and by a large margin.” This might sound obvious, but it’s not:
+</p>
+
+<blockquote>
+[The bitter lesson] is a big lesson. As a field, we still have not thoroughly learned it, as we are continuing to make the same kind of mistakes. To see this, and to effectively resist it, we have to understand the appeal of these mistakes. We have to learn the bitter lesson that building in how we think we think does not work in the long run. The bitter lesson is based on the historical observations that 1) AI researchers have often tried to build knowledge into their agents, 2) this always helps in the short term, and is personally satisfying to the researcher, but 3) in the long run it plateaus and even inhibits further progress, and 4) breakthrough progress eventually arrives by an opposing approach based on scaling computation by search and learning. <u>The eventual success is tinged with bitterness, and often incompletely digested, because it is success over a favored, human-centric approach.</u> <i>(emphasis added)</i>
+</blockquote>
+
+<p>
+How might the bitter lesson be relevant in chemistry? One example is computer-assisted retrosynthesis in organic synthesis, i.e. figuring out how to make a given target from commercial starting materials. This task was first attempted by Corey’s LHASA program (<a href=https://pure.mpg.de/rest/items/item_2549520/component/file_3325899/content>1</a>, <a href=https://www.nobelprize.org/uploads/2018/06/corey-lecture.pdf>2</a>), and more recently has been addressed by Bartosz Gryzbowski’s <a href=https://www.cell.com/chem/pdf/S2451-9294(18)30085-8.pdf>Synthia</a>. Despite considerable successes, both efforts have operated through manual encoding of human chemical intuition. If Sutton is to be believed, we should be pessimistic about the scalability and viability of such approaches relative to pure search-based alternatives in the coming years.
+</p>
+
+<p>
+Another example is machine-learned force fields (like ANI or NequIP). While one could argue that equivariant neural networks like <i>e3nn</i> aren’t so much incorporating domain-specific knowledge as exploiting relevant symmetries (much like convolutional neural networks exploit translational symmetry in images), there’s been a movement in recent years to combine chemistry-specific forces (e.g. long-range Coulombic forces) with neural networks: Parkhill’s <a href=https://pubs.rsc.org/en/content/articlelanding/2018/sc/c7sc04934j>TensorMol</a> did this back in 2018, and more recently <a href=https://www.nature.com/articles/s41467-021-27340-2>Dral</a>, <a href=https://arxiv.org/abs/2301.08734>Piquemal</a>, and <a href=https://pubs.acs.org/doi/full/10.1021/jacs.3c07628>Levitt &amp; Fain</a> (<a href=https://twitter.com/olexandr/status/1730604569028092081>among others</a>) have published on this as well. While I’m no expert in this area, the bitter lesson suggests that we should be skeptical about the long-term viability of efforts, and instead just throw more data at chemistry-agnostic models. 
+</p>
+
+<p>
+A key assumption of the bitter lesson is that “over a slightly longer time than a typical research project, massively more computation inevitably becomes available.” This idea has also been discussed by Andrej Karpathy, who <a href=https://karpathy.github.io/2022/03/14/lecun1989/>reproduced</a> Yann LeCun’s landmark 1989 backpropagation paper last year using state-of-the-art techniques and reflected on how the field has progressed since then. In particular, Karpathy discussed how the last three decades of progress in ML can help us envision what the next three decades might look like:
+</p>
+
+<blockquote>
+Suppose that the lessons of this exercise remain invariant in time. What does that imply about deep learning of 2022? What would a time traveler from 2055 think about the performance of current networks?
+<ul>
+<li>
+2055 neural nets are basically the same as 2022 neural nets on the macro level, except bigger.
+</li>
+<li>
+Our datasets and models today look like a joke. Both are somewhere around 10,000,000X larger.
+</li>
+<li>
+One can train 2022 state of the art models in ~1 minute by training naively on their personal computing device as a weekend fun project.
+</li>
+<li>
+Today’s models are not optimally formulated, and just changing some of the details of the model, loss function, augmentation or the optimizer we can about halve the error.
+</li>
+<li>
+Our datasets are too small, and modest gains would come from scaling up the dataset alone.
+</li>
+<li>
+Further gains are actually not possible without expanding the computing infrastructure and investing into some R&D on effectively training models on that scale.
+</li>
+</ul>
+</blockquote>
+
+<p>
+If we take this seriously, we might expect that chemical ML will not be able to advance much farther without bigger datasets and bigger models. Today, experimental datasets rarely exceed 10<sup>4</sup>–10<sup>5</sup> data points, and even computational datasets typically comprise 10<sup>7</sup> data points or fewer—compare this to the ~10<sup>13</sup> tokens <a href=https://www.reddit.com/r/LocalLLaMA/comments/14wbmio/gpt4_details_leaked/>reportedly used to train GPT-4</a>! It’s not obvious how to get experimental datasets that are this large. HTE and robotics will help, but five orders of magnitude is a big ask. Even all of Reaxys doesn’t get you to 10<sup>8</sup>, poor data quality notwithstanding. (It’s probably not a coincidence that DNA-encoded libraries, which can actually have hundreds of millions of data points, also pair nicely with ML: I’ve written about this <a href=https://corinwagen.github.io/public/blog/20230403_industry.html>before</a>.)
+</p>
+
+<p>
+In contrast, computation permits the predictable generation of high-quality datasets. If Sutton is right about the inevitable availability of “massively more computation,” then we can expect it to become easier and easier to run hitherto expensive calculations like DFT in parallel to generate huge datasets, and to enable more and more downstream applications like chemical machine learning. With the right infrastructure (like Rowan, hopefully), it should be possible to turn computer time into high-quality chemical data with almost no non-financial scaling limit: <a href=https://pubs.acs.org/doi/10.1021/ci300415d>we’re certainly not going to run out of molecules</a>.
+</p>
+
+<p>
+The advent of big data, though, heralds the decline of academic relevance. Julian Togelius and Georgios Yannakakis wrote about this earlier this year in a piece on <a href=https://arxiv.org/abs/2304.06035?s=03>“survival strategies for depressed AI academics,”</a> which discusses the fact that “the gap between the amount of compute available to ordinary researchers and the amount available to stay competitive is growing every year.” For instance, GPT-4 reportedly cost c. $60 million to train, far surpassing any academic group’s budget. Togelius and Yannakakis provide a lot of potential solutions, some sarcastic (“give up”) and others quite constructive—for instance, lots of interpretability work (<a href=https://transformer-circuits.pub/2023/monosemantic-features/index.html>like this</a>) is done on toy models that don’t require GPT-4 levels of training. Even the most hopeful scenarios they present, however, still leave academics with a rather circumscribed role in the ML ecosystem. 
+</p>
+ 
+<p>
+The present academic era of chemical machine learning can thus be taken as a sign of the field’s immaturity. When will chemical ML reach a Suttonian era where scaling is paramount and smaller efforts become increasingly futile? I’m not sure, but my guess is that it will happen when (and only when) there are clear commercial incentives for developing sophisticated models, enabling companies to sink massive amounts of capital into training and development. This clearly hasn’t happened yet, but it also might not be as far away as it seems (<a href=https://www.nature.com/articles/s41586-023-06735-9>cf.</a>). It’s an interesting time to be a computational chemist…
+</p>
+
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20231125_working_backwards.html'>Book Review: Working Backwards</a></h2><i>November 25, 2023</i>
 <p>
 I took a pistol course in undergrad, and while I was a poor marksman I enjoyed the experience. In particular, I was surprised by how meditative the act of shooting was. As our instructor explained, much of good shooting comes down to not doing anything when you pull the trigger. When you’re not firing, it’s easy to point a gun at a target and line up the sights, but as you pull the trigger you subconsciously anticipate the noise and movement of the pistol blast, which makes you flinch and pull the gun off-target. Being a good shooter thus requires consciously learning to counteract what your instincts tell you to do.
 </p>
@@ -488,58 +562,6 @@ Overall, it’s impressive how much progress has been made towards the goals enu
 <p>
 As methods get faster to develop and more and more methods are published, what will happen? Will chemists employ an exponentially growing arsenal of transformations in their syntheses, or will the same methods continually be forgotten and rediscovered every few decades? Will computers be able to sift through centuries of literature and build the perfect synthesis—or will the rise of automation mean that we have to redesign every reaction to be “dump and stir”? Or will biocatalysis just render this entire field obsolete? The exact nature of synthesis’s eschatology remains to be determined.
 </p>
-
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20231016_networking.html'>Networking, For Skeptics</a></h2><i>October 16, 2023</i>
-<figure>
-  <img class=centered-img src=https://arthistorybuff.files.wordpress.com/2017/10/dp819996.jpg style="width:400px;" />
-  <figcaption>
-    "Hi, would you like to connect on LinkedIn?"
-  </figcaption>
-</figure>
-
-<p>
-<i>
-(in the spirit of Dale Carnegie and post-rat <a href=https://sympatheticopposition.substack.com/p/how-and-why-to-be-ladylike-for-women>etiquette guides</a>)
-</i>
-</p>
-
-<p>
-Scientists, engineers, and other technical people often make fun of networking. Until a few years ago, I did this too: I thought networking was some dumb activity done by business students who didn’t have actual work to do, or something exploitative focused on pure self-advancement. But over the past year or so, I’ve learned why networking is important, and have found a way to network that doesn’t make me feel uncomfortable or selfish. I want to share my current thoughts here, in case they help anyone else.
-</p>
-
-<p>
-The first thing to recognize is that networking matters because we live in a world of relationships. Technical people often struggle with this point: to some, relying on relationships feels imprecise or even nepotistic. But we’re human beings, not stateless automata communicating via some protocol, and it’s inevitable (and appropriate) for us to form relationships and care about them.
-</p>
-
-<p>
-Having the right relationships can make a big difference. We trust people we know much more than we trust strangers. It’s weird for someone whom you’ve never met to email you asking for a favor, but very normal for a friend or acquaintance to reach out and ask for something. And most ambitious projects (academia, startups, etc) are limited not by money but by human capital: there are only so many talented people out there, and if you can’t get access to them, what you’re doing will suffer. (On a macro level, this explains why management consulting has become so important.)
-</p>
-
-<p>
-So it’s worth intentionally building relationships before you have an immediate need. There are a lot of people,<sup>[citation needed]</sup> so how might one go about this? One obvious strategy might be to build relationships with people you think could be useful to you. But this doesn’t work very well. It’s not always obvious what will or won’t be useful in the future, and far too easy to let status quo bias reign supreme. (Most graduate students struggle to imagine how knowing someone from another subfield could ever be useful, let alone someone who isn’t a scientist, which makes it tough when they want to do <a href=https://news.ycombinator.com/item?id=24459155>something outside academia.</a>)
-</p>
-
-<p>
-Another downside to this strategy is that you have to partition people into “useful” or “not useful” upon meeting them. This is self-defeating: most people can figure out when you’re treating them only as a means to an end, so walking around evaluating everyone’s utility tends to poison your interactions. Plus, it’s a very Machiavellian way to view the world, and ought to make you feel a little gross.
-</p>
-
-<p>
-Instead, a better strategy is to accept that you won’t be able to predict <i>a priori</i> who will be useful and instead just try and meet people. If the end goal of networking is to find people you’ll be able to collaborate with in the future, in one capacity or another, then it’s important to find people who share your values and who you get along with: in other words, friends. So, rather than worrying about if it’ll be better to know a renewable energy consultant or a paralegal for a medical device company, you can just see who you like spending time with and go from there.
-</p>
-
-<p>
-If we think of networking as synonymous to making friends, then it also becomes more obvious when and how one should network. Anything explicitly framed as an opportunity for networking is a bad choice: these events tend to attract people who are self-centered, and mostly end up revolving around LinkedIn (the Tinder of networking?). Instead, look for places where you’ll find people you could be friends with. For me, this ends up mostly being church and church-adjacent spaces like Bible studies; I’m not sure what the analogous space for non-religious people is.
-</p>
-
-<p>
-The strategies I’ve discussed above are framed in terms of “demand-side networking,” or how you can find ways to acquire human capital when you have a demand for it. But the same considerations apply to “supply-side networking,” or marketing oneself to potential people. The beauty of treating networking simply as making friends is that you’re not committing to any particular outcome: maybe you’ll benefit from it, maybe the other person will benefit from it, or maybe both of you will (or neither). The expected value of building new relationships should always be positive, which means that networking isn’t a zero-sum game: it’s good for all involved.
-</p>
-
-<p>
-The conclusion I want to leave you with is this: networking, rightly understood, just means living in a way that recognizes our dependence on other people. To live life as a “networker” means putting yourself in places where you might make new friends, looking for common ground in all your interactions, and trying to recognize others’ talents and abilities. Networking isn’t some Randian pursuit focused on extracting value from those around us. It should be done with humility, accepting that we need other people to thrive and being open to whatever relationships come our way.
-</p>
-
-<i>Thanks to Ari Wagen for editing drafts of this post.</i>
 
 </div><div class='previous-link'><a href='blog_p5.html'>previous page</a></div><div class='next-link'><a href='blog_p7.html'>next page</a></div><br>
   </body>

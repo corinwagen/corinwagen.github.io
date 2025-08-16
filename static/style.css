@@ -119,7 +119,7 @@ li {
 }
 
 figcaption {
-  font-size: 9pt;
+  font-size: 10pt;
   font-style: italic;
   text-align: center;
 }
@@ -189,4 +189,11 @@ iframe {
   margin: 1em auto;
   border: 0;
   display: block;
+}
+
+div.box-inset {
+  border: 4px solid #ccc;
+  margin: 1em;
+  padding: 0 1em;
+}
 }

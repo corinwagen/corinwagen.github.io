@@ -34,7 +34,125 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p9.html'>previous page</a></div><div class='next-link'><a href='blog_p11.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230530_chaos_monkeys.html'>Book Review: Chaos Monkeys</a></h2><i>May 30, 2023</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p9.html'>previous page</a></div><div class='next-link'><a href='blog_p11.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230602_data_cheaper.html'>Data Are Getting Cheaper</a></h2><i>June 2, 2023</i>
+<p>
+Much ink has been spilled on whether scientific progress is slowing down or not (<a href=https://www.theatlantic.com/science/archive/2018/11/diminishing-returns-science/575665/>e.g.</a>). I don’t want to wade into that debate today—instead, I want to argue that, regardless of the rate of new discoveries, acquiring scientific data is easier now than it ever has been.
+</p>
+
+<p>
+There are a lot of ways one could try to defend this point; I’ve chosen some representative anecdotes from my own field (organic chemistry), but I’m sure scientists in other fields could find examples closer to home. 
+</p>
+
+<h3>
+NMR Spectroscopy
+</h3>
+
+<p>
+    NMR spectroscopy is now the primary method for characterization and structural study of organic molecules, but it wasn’t always very good. The last half-century has seen a <a href=https://content.iospress.com/download/biomedical-spectroscopy-and-imaging/bsi055?id=biomedical-spectroscopy-and-imaging%2Fbsi055>steady increase</a> in the quality of NMR spectrometers (principally driven by the development of more powerful magnetic fields), meaning that even a relatively lackluster NMR facility today has equipment beyond the wildest dreams of a scientist in the 1980s:
+</p>
+
+<figure>
+  <img class=centered-img src=../img/20230602_nmr.png style="width:400px;" />
+  <figcaption>
+  Most powerful NMR magnet over time (Campbell, Figure 1). Broad adoption lags these records, but the trend is comparable.
+  </figcaption>
+</figure>
+
+<h3>
+Commercially Available Compounds
+</h3>
+
+<p>
+The number of compounds available for purchase has markedly increased in recent years. In the 1950s, the Aldrich Chemical Company’s listings could fit on a single page, and even by the 1970s Sigma-Aldrich only sold 40,000 or so chemicals (<a href=https://www.encyclopedia.com/books/politics-and-business-magazines/sigma-aldrich>source</a>). 
+</p>
+
+<p>
+But things have changed. Nowadays new reagents are available for purchase within weeks or months of being reported (<a href=https://enamine.net/news-press-releases/press-releases/1286-enamine-brings-levin-nitrogen-deleting-reagent-to-the-market>e.g.</a>), and companies like Enamine spend all their time devising new and quirky structures for medicinal chemists to buy.
+</p>
+
+One way to quantify how many compounds are for sale today is through <a href=https://en.wikipedia.org/wiki/ZINC_database>the ZINC database</a>, aimed at collecting compounds for virtual screening, which is updated every few years or so. The first iteration of ZINC, in 2005, had fewer than a million compounds: now there are almost 40 billion:
+
+<figure>
+  <img class=centered-img src=../img/20230602_zinc.png style="width:400px;" />
+  <figcaption>
+  Number of compounds in the ZINC database over time (graphic made by me).
+  </figcaption>
+</figure>
+
+<p>
+(Most compounds in the ZINC database aren’t available on synthesis scale, so it’s not like you can order a gram of all 40 billion compounds—there’s probably more like <a href=https://mcule.com/database/>3 million</a> “building blocks” today, which is still a lot more than 40,000.)
+</p>
+
+<h3>
+Chromatography 
+</h3>
+
+<p>
+Chromatography, the workhorse of synthetic and analytical chemistry, has also gotten a lot better. Separations that took almost an hour can now be performed in <a href=https://analyticalsciencejournals.onlinelibrary.wiley.com/doi/full/10.1002/jssc.201500270>well under a minute</a>, accelerating purification and analysis of any new material (this paper focuses on chiral stationary phase chromatography, but many of the advances translate to other forms of chromatography too).
+</p>
+
+<figure>
+  <img class=centered-img src=../img/20230602_chromatography.jpg style="width:450px;" />
+  <figcaption>
+    Fastest chiral separation for a given compound by year (Regalado, Figure 1). 
+  </figcaption>
+</figure>
+
+<h3>
+Computational Chemistry
+</h3>
+
+<p>
+Moore’s Law is powerful. In the 1970s, using semiempirical methods and minimal basis set Hartree–Fock to investigate an 8-atom system was cutting-edge, as demonstrated by <a href=https://pubs.acs.org/doi/abs/10.1021/ja00455a056>this paper from Ken Houk</a>:
+</p>
+
+<figure>
+  <img class=centered-img src=../img/20230602_houk.png style="width:400px;" />
+  <figcaption>
+    Figure 3 from the 1977 Houk paper.
+  </figcaption>
+</figure>
+
+<p>
+Now, that calculation would probably take only a few seconds on my laptop computer, and it’s becoming increasingly routine to perform full density-functional theory or post-Hartree–Fock studies on 200+ atom systems. <a href=https://www.science.org/doi/10.1126/science.ade5320>A recent paper</a>, also from Ken Houk, illustrates this nicely: 
+</p>
+
+<figure>
+  <img class=centered-img src=../img/20230602_houk2.png style="width:400px;" />
+  <figcaption>
+    Figure 3E from the 2022 Houk paper.
+  </figcaption>
+</figure>
+
+<p>
+The fact that it’s now routine to perform conformational searches and high-accuracy quantum chemical calculations on catalyst•substrate complexes with this degree of flexibility would astonish anyone from the past. (To be fair to computational chemists, it’s not all Moore’s Law—advances in QM tooling also play a big role.)
+</p>
+
+<h3>
+What Now?
+</h3>
+
+<p>
+There are lots of advances that I haven’t even covered, like the general improvement in synthetic methodology and the rise of robotics. Nevertheless, I think the trend is clear: it’s easier to acquire data than it’s ever been. 
+</p>
+
+<p>
+What, then, do we do with all this data? Most of the time, the answer seems to be “not much.” <a href=https://pubs.acs.org/doi/10.1021/acs.orglett.2c03246>A recent editorial</a> by Marisa Kozlowski observes that the average number of substrates in <i>Organic Letters</i> has increased from 17 in 2009 to 40 in 2021, even as the information contained in these papers has largely remained constant. Filling a substrate scope with almost identical compounds is a boring way to use more data; we can do better.
+</p>
+
+<p>
+The availability of cheap data means that scientists can—and must—start thinking about new ways to approach experimental design. Lots of academic scientists still labor under the delusion that “hypothesis-driven science” is somehow superior to HTE, when in fact the two are ideal complements to one another. “Thinking in 96-well plates” is already common in industry, and should become more common in academia; why run a single reaction when you can run a whole screen?
+</p>
+
+<p>
+New tools are needed to design panels, run reactions, and analyze the resultant data. One nice entry into this space is Tim Cernak’s <a href=https://chemrxiv.org/engage/chemrxiv/article-details/60c75166702a9bcd6918bf39><i>phactor</i></a>, a software package for high-throughput experimentation, and I’m sure lots more tools will spring up in the years to come. (I’m also optimistic that multi-substrate screening, which we and others have used in “screening for generality,” will become more widely adopted as HTE becomes more commonplace.)
+</p>
+
+<p>
+The real worry, though, is that we will refuse to change our paradigms and just use all these improvements to publish old-style papers faster.  All the technological breakthroughs in the world won’t do anything to accelerate scientific progress if we refuse to open our eyes to the possibilities they create. If present trends continue, it may be possible in 5–10 years to screen for a hit one week, optimize reaction conditions the next week, and run the substrate scope on the third week. Do we really want a world in which every methodology graduate student is expected to produce 10–12 low-quality papers per year? 
+</p>
+
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230530_chaos_monkeys.html'>Book Review: Chaos Monkeys</a></h2><i>May 30, 2023</i>
 <p>
 Recently, I wrote about <a href=https://corinwagen.github.io/public/blog/20230502_startups.html>how scientists could stand to learn a lot from the tech industry.</a> In that spirit, today I want to share a book review of <i>Chaos Monkeys: Obscene Fortune and Random Failure in Silicon Valley</i>, Antonio García Martínez’s best-selling memoir about his time in tech and “a guide to the spirit of Silicon Valley” (<a href=https://www.nytimes.com/2016/06/29/business/dealbook/review-chaos-monkeys-is-a-guide-to-the-spirit-of-silicon-valley.html>NYT</a>).
 </p>
@@ -613,74 +731,6 @@ These downsides notwithstanding, I think there is a lot of good science that cou
 It doesn’t seem like it’s that easy to start a purely mechanistic research group these days, so maybe this is an unfundable idea. But it seems sad that a technique as powerful for physical (in)organic chemists as IRMS could just fade into obscurity, and I hope somebody finds the time and resources to apply it to modern mechanistic problems.
 </p>
 
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20230508_aldehyde_eie.html'>Isotope Effects in Aldehyde Protonation</a></h2><i>May 8, 2023</i>
-<p>
-I’m writing my dissertation right now, and as a result I’m going back through a lot of old slides and references to fill in details that I left out for publication.
-</p>
-
-<p>
-One interesting question that I’m revisiting is the following: when protonating benzaldehyde, what is the H/D equilibrium isotope effect at the aldehyde proton? This question was relevant for the H/D KIE experiments we conducted in <a href=https://pubs.acs.org/doi/full/10.1021/jacs.2c06688>our study of the asymmetric Prins cyclization</a>. (The paper hasn’t gotten much attention, but it’s probably the most “classic” organic chemistry paper I’ve worked on, with a minimum of weird computational details or bizarre analytical techniques.)
-</p>
-
-<figure>
-  <img class="centered-img" src="../img/20230508_aldehyde_nores.png" style="width:375px;" />
-</figure>
-
-<p>
-Since the H/D bond isn’t involved in the reaction, we won’t see a primary effect; so we know we have to be thinking in terms of secondary effects. The most common reason to observe a secondary isotope effect is changes in hybridization: sp<sup>3</sup> to sp<sup>2</sup> gives a normal effect, whereas sp<sup>2</sup> to sp<sup>3</sup> gives an inverse effect. From this perspective, it looks like the effect should be unity, since the carbon in question is sp<sup>2</sup> in both structures.
-</p>
-
-<p>
-Reality, however, disagrees. <a href=https://www.sciencedirect.com/science/article/abs/pii/0040403976800573>Hall and Milosevich</a> report a EIE of 0.94 for benzaldehyde in aq. sulfuric acid, and <a href=https://pubs.acs.org/doi/pdf/10.1021/ja982504r>Gajewski and co-authors</a> compute an EIE of 0.83 for acetaldehyde at the MP2/6-31G(d,p) level of theory. I performed my own calculations at the M06-2X/jun-cc-pVTZ level of theory and obtained an EIE of 0.851 with <a href=https://github.com/ekwan/PyQuiver>PyQuiver</a>, qualitatively consistent with the above results.
-</p>
-
-<p>
-Where does this EIE come from? It’s helpful to think of benzaldehyde as possessing multiple resonance forms:
-</p>
-
-<figure>
-  <img class="centered-img" src="../img/20230508_aldehyde_res.png" style="width:400px;" />
-</figure>
-
-<p>
-We typically think of the neutral resonance form on the top left, but you can also imagine putting a positive charge on carbon and a negative charge on oxygen to create a zwitterion with a C–O single bond (bottom left). In neutral benzaldehyde, this resonance form is substantially disfavored, but in protonated benzaldehyde it doesn’t look any worse than the “normal” top resonance form!
-</p>
-
-<p>
-If this is true, we’d expect the C–O bond order to decrease from 2 in neutral benzaldehyde to ~1.5 in protonated benzaldehyde. Indeed, in my calculations the bond length increases from 1.20 Å to 1.28 Å upon protonation—so it seems the double bond character is decreasing! It’s not quite the same as going from sp<sup>2</sup> to sp<sup>3</sup>, but the inverse KIE begins to make sense.
-</p>
-
-<p>
-(This is purely guesswork, but my guess would be that the differences between the two structures are attenuated in a polar solvent like water. The zwitterionic resonance form of the neutral structure will be stabilized and thus the neutral aldehyde will be more polar, making the change to the oxocarbenium less drastic. This might explain why the measured EIE in water is smaller—although this might also be due to counterion effects, or something completely unrelated.)
-</p>
-
-<p>
-Let’s go a level deeper. According to <a href=https://pubs.acs.org/doi/abs/10.1021/ja01542a075>Streitwieser</a>, secondary KIEs associated with hyperconjugation originate from the creation or destruction of the c. 800 cm<sup>-1</sup> out-of-plane bending vibrations of Csp<sup>2</sup>–H hydrogens, which are markedly lower in frequency than the c. 1350 cm<sup>-1</sup> bending vibrations associated with Csp<sup>3</sup>–H hydrogens.
-</p>
-
-<p>
-Raising the frequency of a mode increases the energy required to inhabit the ground vibrational state (the “zero-point energy”)—but deuterium is heavier and vibrates more slowly, meaning that it possesses less ZPE and is less affected by these changes. So when an 800 cm<sup>-1</sup> sp<sup>2</sup> mode transforms to a 1350 cm<sup>-1</sup> sp<sup>3</sup> mode, the ZPE increases, but less for D than for H, so D is favored. Conversely, when a 1350 cm<sup>-1</sup> sp<sup>3</sup> mode transforms to a 800 cm<sup>-1</sup> sp<sup>2</sup> mode, the ZPE decreases, but less for D than for H, so H is favored. (For a more complete explanation, see <a href=https://macmillan.princeton.edu/wp-content/uploads/RRK-KIE.pdf>this presentation by Rob Knowles</a>.)
-</p>
-
-<p>
-This effect is complicated for benzaldehyde by the fact that the out-of-plane bend of the aldehyde couples to the out-of-plane bend of the phenyl ring, so there are several modes involving out-of-plane vibration of the aldehyde proton. When I compared the out-of-plane bend of the aldehyde H in both structures, I saw only minimal differences: 771, 963, 1040, and 1051 cm<sup>-1</sup> for the neutral species, as compared to 790, 1003, and 1061 cm<sup>-1</sup> for the protonated species. These small differences can’t be responsible for the observed effect.
-</p>
-
-<p>
-In contrast, the in-plane C–H bend shows a big change—1430 cm<sup>-1</sup> for benzaldehyde, but 1644 cm<sup>-1</sup> for the oxocarbenium (it seems to couple to the C–O stretch; the reduced mass increases from 1.26 amu to 3.52 amu). Applying Streitweiser’s formula for estimating the isotope effect for a specific mode gives a pretty good match:
-</p>
-
-<p>
-kH/kD ≈ exp(0.187/T * ∆ν) = exp(0.187/298 * (-214)) = 0.87
-</p>
-
-<p>
-I don’t understand this area well enough to comment on why there’s a change in the in-plane vibrational frequency and not the out-of-plane vibrational frequency, nor do I understand how to deconvolute the effects of mode-to-mode coupling. Nevertheless, this provides a tentative physical rationale for the observation.
-</p>
-
-<p>
-On a more abstract level, this case study illustrates why isotope effects are such a good tool. Any transformation that perturbs the vibrational frequencies of a given molecule can, in principle, be monitored by isotope effects without affecting the electronic energy surface at all. So, although the precise nature and magnitude of the effect might be hard to predict <i>a priori</i>, it’s not surprising that a transformation as dramatic as protonating a functional group produces a sizable isotope effect.
-</p>
 </div><div class='previous-link'><a href='blog_p9.html'>previous page</a></div><div class='next-link'><a href='blog_p11.html'>next page</a></div><br>
   </body>
   <br>
