@@ -1,0 +1,395 @@
+---
+title: "Book Review: The Art of Doing Science and Engineering"
+date: 2023-05-16
+blog: True
+summary: "A master class from Richard Hamming, one of the fathers of modern computing."
+image: https://m.media-amazon.com/images/I/41hZEEzw30L._AC_UF1000,1000_QL80_.jpg 
+---
+
+<br>
+<br>
+<p class=epigraph>
+“They performed his signs among them, and miracles in the land of Ham.”
+</p>
+<p class=epigraph-byline>
+—Psalm 105:27
+</p>
+
+<p>
+Who was Richard Hamming, and why should you read his book?
+</p>
+
+<p>
+If you’ve taken computer science courses or messed around enough with <i>scipy</i>, you might recognize his name in a few different places—<a href=https://en.wikipedia.org/wiki/Hamming_code>Hamming error-correction codes</a>, the <a href=https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.windows.hamming.html>Hamming window function</a>, the <a href=https://en.wikipedia.org/wiki/Hamming_distance>Hamming distance</a>, the <a href=https://en.wikipedia.org/wiki/Hamming_bound>Hamming bound</a>, etc. I had heard of some of these concepts, but didn’t know anything concrete about him before I started reading this book.
+</p>
+
+<p>
+His brief biography is as follows: Richard Hamming (1915–1998) studied mathematics at the University of Chicago, earned a PhD in three years from Illinois, and then started as a professor at the University of Louisville… in 1944. He was almost immediately recruited for the Manhattan Project, where he worked on large-scale simulations of imploding spherical shells of explosives, and generally acted as a “computational janitor” for various projects.
+</p>
+
+<p>
+In 1946, he moved to Bell Telephone Laboratories, <a href=https://www.theverge.com/2012/3/21/2887206/jon-gertner-idea-factory-bell-labs-great-american-age-innovation-book-review>“arguably the most innovative research institution in the country,”</a> and worked there until 1976. During his time at Bell Labs, he was involved in “nearly all of the laboratories' most prominent achievements” (<a href=https://en.wikipedia.org/wiki/Richard_Hamming>Wikipedia</a>), and was rewarded with such accolades as the third-ever Turing Award (essentially the Nobel Prize for computer science) and the IEEE Richard W. Hamming medal. (You know you’re successful when someone else names an award after you!)
+</p>
+
+<p>
+After he retired from Bell Labs, Hamming went on to go teach classes at the Naval Postgraduate School. This book—published in 1996, just before his death—is based on the capstone engineering class he taught there, which attempted to prepare students for their technical future by conveying the “style of thinking” necessary to be a great scientist and engineer. Stripe Press calls it “a provocative challenge to anyone who wants to build something great” and “a manual of style for how to get there,” while the foreword calls it a “tour of scientific greatness” which prepares “the next generation for even greater greatness” while challenging them to serve the public good.
+</p>
+
+<p>
+I was excited to read this book because:
+</p>
+
+<ol>
+<li>
+Hamming was present at arguably the two most successful scientific institutions of the 20th century—the Manhattan Project and Bell Labs—and so was witness to more innovative scientific discoveries than almost anyone today. So if anyone has a shot at teaching how to be an effective scientist, it’s Hamming.
+</li>
+
+<li>
+The interface between academic science and real-world advances seems to be one of the most broken elements of the modern research ecosystem, and I was interested to see what Hamming, as a self-proclaimed scientist and engineer, had to say on the subject.
+</li>
+
+<li>
+It’s a first-hand account of the creation of the most important field of the past century—computer science—and thus a way to witness, albeit second-hand, the important process of <a href=https://freaktakes.substack.com/p/when-do-ideas-get-easier-to-find>scientific branch-creation</a>.
+</li>
+
+<li>
+The book is a chance to see computing, and computer science, as it was before the implications and importance of the field became obvious, and thus a way to understand what a promising area of research looks like without the benefit of hindsight.
+</li>
+
+<li>
+This is a chance to read frank and honest reflections from someone who both was a great scientist and was adjacent to a huge number of other great scientists, and thus learn about the culture of successful science (especially successful science in the mid-20th century, which might be different than the science of today).
+</li>
+</ol>
+
+<h2>
+1. What’s In The Book?
+</h2>
+
+<p>
+<i>The Art of Doing Science and Engineering</i> is not a conventional textbook, but neither is it a self-help book, a memoir, or a guide to personal strategy. The two books that remind me of it most are <i>Godel, Escher, Bach</i>, by Douglas Hofstadter, and <i>Zero To One</i>, by Peter Thiel. All three books are composed of various pseudo-independent chapters which, in isolation, could likely function as essays, but which echo certain themes over and over again in a way that makes the whole greater than the sum of its parts in a hard-to-summarize way.
+</p>
+
+<p>
+Hamming’s goal in structuring the book this way is clear, and explicitly stated: he doesn’t want to teach object-level facts, because the facts needed to succeed in any discipline will inevitably change over the course of time. Instead he seeks to teach the patterns of thought which will enable anyone to succeed in an evolving technical landscape. To do so, he uses a mix of first-person stories, historical reflections, mathematical proofs, and graphs, all with the goal of teaching something that’s essentially incommunicable: style. I quote:
+</p>
+
+<blockquote>
+I will show you my style as best I can, but, again, you must take those elements of it which seem to fit you, and you must finally create your own style. Either you will be a leader or a follower, and my goal for you is to be a leader. You cannot adopt every trait I discuss in what I have observed in myself and others; you must select and adapt, and make them your own if the course is to be effective.
+</blockquote>
+
+<p>
+Despite Hamming’s insistence that there is “really no technical content” in the book and that any mathematics is only “window dressing,” I found that my lack of background knowledge made several chapters—particularly those on digital filters—quite difficult to understand.
+</p>
+
+<h2>
+2. Representative Anecdotes
+</h2>
+
+<p>
+In keeping with Hamming’s desire to convey the “style of thinking” rather than actual object-level scientific ideas, I’ll share a few anecdotes, insights, and quotes in an attempt to reproduce the style of his writing.
+</p>
+
+<h3>
+2.1 The Second Mouse Gets The Cheese
+</h3>
+
+<p>
+Hamming recounts the invention of interpreters and compilers and then reflects on how hard it was for early computer pioneers to think of computers as “symbol manipulators and not just number crunchers,” observing that often the first people in a field do not understand it as well as those who come after them. Why is this?
+</p>
+
+<blockquote>
+The reason this happens is that the creators have to fight through so many dark difficulties, and wade through so much misunderstanding and confusion, they cannot see the light as others can, now the door is open and the path made easy…. in time the same will probably be true of you.
+</blockquote>
+
+<p>
+This is a nice observation, and perhaps explains the value of startups: incumbents in a market can be inefficient not only for bureaucratic reasons, but also because they’re intellectually less suited to see new opportunities—the young can see the status quo more clearly than those who’ve had to create it. This also explains why “really new ideas seldom arise from the experts in the field”—experts always bring their expertise when looking at something new, which makes them more likely to be correct, but also disincentivizes new ways of thinking and thus creates a sort of status quo bias.
+</p>
+
+<h3>
+2.2 Order-of-Magnitude Changes
+</h3>
+
+<p>
+Many people, faced with early computers, dismissed them as simply a faster way to do rote calculations—which seems silly in hindsight, but was a real barrier for early computer pioneers to overcome. Hamming argues “a single order of magnitude change (a factor of ten) produces fundamentally new effects” in any piece of technology, and immediately thereafter reflects on how it’s difficult for people to accept something new:
+</p>
+
+<blockquote>
+People always want to think that something new is just like the past—they like to be comfortable in their minds as well as their bodies—and hence they prevent themselves from making any significant contribution to the new field being created under their noses. Not everything which is said to be new really is new, and it is hard to decide in some cases when something is new, yet the all too common reaction of “it’s nothing new” is stupid.
+</blockquote>
+
+<p>
+I had previously attributed the idea that ten-fold improvement creates a fundamentally new product to Peter Thiel (<i>Zero To One</i>, pp. 48–49), but it seems Hamming (as usual) got there first.
+</p>
+
+<h3>
+2.3 Intuition In High Dimensions
+</h3>
+
+<p>
+Since most complex problems occur in high-dimensional spaces, Hamming illustrates a few ways that our 2D or 3D intuition can fail us.
+</p>
+
+<p>
+One particularly nice thought experiment is this: take a square with side length 4 and divide it into four squares, each containing a unit circle. Now draw a circle in the middle of the square, such that the circle just touches each of the four unit circles. Realizing that the distance from the center of this circle to the center of each unit circle must be √2, and that the radius of the unit circle is, of course, 1, we can see that the radius of the inner circle must be √2 - 1 ≈ 0.414.
+</p>
+
+<p>
+Now, we can perform the same mental exercise for a cube with side length four, and find that the analogous inner sphere has side length √3 - 1 ≈ 0.732. More generally, as we extend this exercise to higher dimensions, we find that the radius of the inner <i>n</i>-dimensional hypersphere is √<i>n</i> - 1, which is bizarre! For instance, in ten dimensions, the inner sphere has radius √10 - 1 ≈ 2.162, meaning that it reaches outside of the surrounding cube:
+</p>
+
+<blockquote>
+Yes, the sphere is convex, yes it touches each of the 1,024 packed spheres on the inside, yet it reaches outside the cube! So much for your raw intuition about n-dimensional space, but remember the n-dimensional space is where the design of complex objects generally takes place.
+</blockquote>
+
+<p>
+This sort of intuition is difficult to obtain, but Hamming gives a few examples. One that stuck with me was the claim that, in high-dimensional shapes, almost all of the volume is on the surface—so “almost surely the optimal design will be on the surface and will not be inside, as you might think from taking the calculus and doing optimizations in that course.”
+</p>
+
+<h3>
+2.4 The Fast Fourier Transform
+</h3>
+
+<p>
+Here’s a memorable story from Hamming’s life:
+</p>
+
+<blockquote>
+You have all heard about the fast Fourier transform [FFT] and the Tukey-Cooley paper. It is sometimes called the <i>Tukey-Cooley</i> transform or algorithm. Tukey had suggested to me, sort of, the basic ideas of the FFT. I had at the time an IBM Card Programmed Calculator (CPC) and the “butterfly” operation meant it was completely impractical to do with the equipment I had. Some years later I had an internally programmed IBM 650 and he remarked on it again. All I remembered was that it was one of Tukey’s few bad ideas; I completely forgot why it was bad—namely because of the equipment I had at the time. So I did not do the FFT, though a book I had already published (1961) shows I knew all the facts necessary, and could have done it easily!
+<br><br>
+Moral: when you know something cannot be done, also remember the essential reason why, so later, when the circumstances have changed, you will not say “It can’t be done.” Think of my error! How much more stupid can anyone be?
+</blockquote>
+
+<p>
+Later in the book, Hamming puts forward the following “old statement” about experts:
+</p>
+
+<blockquote>
+If an expert says something can be done he is probably correct, but if he says it is impossible then consider getting another opinion.
+</blockquote>
+
+<h3>
+2.5 The Mixed Blessings of Jargon
+</h3>
+
+<p>
+Hamming emphasizes the importance, as an interdisciplinary scientist, of mastering the language of the field in which you’re working, but warns against embracing jargon too much. Why? Jargon serves “to facilitate communication over a restricted area of things or events… [but] also blocks thinking outside the original area it was designed to cover.” So jargon makes intra-domain communication easier, but makes inter-domain communication harder.
+</p>
+
+<p>
+More philosophically, jargon is a consequence of how “we have been mainly selected by evolution to resent outsiders,” and thus the “instinctive use of jargon” is a base instinct that must be consciously resisted.
+</p>
+
+<h3>
+2.6 Optimal Components, Suboptimal Systems
+</h3>
+
+<p>
+Hamming discusses the field of systems engineering, which he defines as “the attempt to keep at all times the larger goals in mind and to translate local actions into global results” (emphasis original), and coins the first rule of systems engineering:
+</p>
+
+<blockquote>
+If you optimize the components, you will probably ruin the system performance.
+</blockquote>
+
+<p>
+This point is illustrated with a few examples. One of these examples is the progressive optimization of calculus and linear algebra classes in college, where “we have stripped out anything not immediately relevant to each course,” leading to “large parts of any mathematical education being omitted in the urge to optimize the individual courses.” Only when the proper goal of a mathematical education is taken into account—producing well-trained students with a firm grasp of math and the ability to apply it to important problems—can the constituent courses sanely be optimized.
+</p>
+
+<p>
+I found this idea pretty insightful, and have thought about it a lot since reading this book. For instance, one can see many researchers as over-optimizing for “publishing papers” or “winning grants” rather than working towards maximizing total scientific progress. (Alex Danco has a great piece discussing the same ideas in the context of the Canadian tech ecosystem, which I wrote about <a href=https://corinwagen.github.io/public/blog/20221206_definite_games_indefinite_optimism.html>here</a>.)
+</p>
+
+<h3>
+2.7 Learning Should Be Difficult
+</h3>
+
+<p>
+I like this story so much I’ll just reproduce it in its entirety:
+</p>
+
+<blockquote>
+When I first came to the Naval Postgraduate School in 1976 there was a nice dean of the extension division concerned with education. In some hot discussions on education we differed. One day I came into his office and said I was teaching a weightlifting class (which he knew I was not). I went on to say that graduation was lifting 250 pounds, and I had found many students got discouraged and dropped out, some repeated the course, and a very few graduated. I went on to say thinking this over last night I decided the problem could be easily cured by simply cutting the weights in half—the student in order to graduate, would lift 125 pounds, set them down, and then lift the other 125 pounds, thus lifting the 250 pounds.
+<br><br>
+I waited a moment while he smiled (as you probably have) and I then observed that when I found a simpler proof for a theorem in mathematics and used it in class, was I or was I not cutting the weights in half? What is your answer? Is there not an element of truth in the observation that the easier we make the learning for the student, the more we are cutting the weights in half?
+</blockquote>
+
+<p>
+This story reflects a key belief of Hamming’s: that creativity and talent in technical disciplines are not innate traits given only to rare geniuses, but trainable skills which anyone can hope to acquire and improve at, given the appropriate training regimen. In Hamming’s worldview, staring at a confusing math problem is not a sign that you’re a failure, but the process by which you become successful.
+</p>
+
+<h3>
+2.8 The Importance of Presentation
+</h3>
+
+<p>
+Hamming emphasizes that being able to “sell” one’s ideas is a key part of being a scientist:
+</p>
+
+<blockquote>
+All [methods of conveying ideas] are essential—you must learn to sell your ideas, not by propaganda, but by force of clear presentation. I am sorry to have to point this out; many scientists and others think good ideas will win out automatically and need not be carefully presented. They are wrong; many a good idea has had to be rediscovered because it was not well presented the first time, years before! New ideas are automatically resisted by the establishment, and to some extent justly. The organization cannot be in a continual state of ferment and change, but it should respond to significant changes.
+</blockquote>
+
+<p>
+In this view, a certain degree of institutional conservatism is necessary to avoid being swept up by any new fad (in machine learning terms, we might say that organizations need to limit their learning rate), and so you alone must convince your peers that your insights are the real deal and deserve to be taken seriously.
+</p>
+
+<p>
+Hamming then extends this idea to needing to sell your abilities more broadly:
+</p>
+
+<blockquote>
+You do not hire a plumber to learn plumbing while trying to fix your trouble; you expect he is already an expert. Similarly, only when you have developed your abilities will you generally get the freedom to practice your expertise, whatever you choose to make it, including the expertise of “universality,” as I did.
+</blockquote>
+
+<p>
+My experience within science is that most people are a bit allergic to the idea of “selling” themselves or their research—with the exception of a few people who become almost addicted to it. Hamming (who never shies away from quoting a Greek philosopher) would probably think that there’s an Aristotelian mean between these two extremes: the ideal scientist/engineer recognizes that self-promotion is a necessary means to an end, but never engages in self-promotion absent a higher goal.
+</p>
+
+<h2>
+3. Overall Themes
+</h2>
+
+<p>
+I would summarize Hamming’s key themes—those leitmotifs which pop up time and time again in the book—as the following:
+</p>
+
+<h3>
+3.1 Fundamentals Are Key
+</h3>
+
+<p>
+Wherever possible, try to understand the intellectual underpinnings of a field as well as possible, rather than the surface-level results. If you do so, you will not only understand the field better than most of its practitioners, but also be better at transferring knowledge between fields. Perceiving “the essential unity of all knowledge rather than the fragments which appear as the individual topics are taught” allows one to quickly access relevant information to the problem at hand, no matter the field of origin.
+</p>
+
+<p>
+Hamming frequently points out the failings of domain experts to perceive the fundamental underpinnings of their knowledge:
+</p>
+
+<blockquote>
+Lo and behold, the famous <i>transfer function</i> is exactly the <i>eigenvalues</i> of the corresponding eigenfunctions! Upon asking various electrical engineers what the transfer function was, no one has ever told me that! Yes, when pointed out to them that it is the same idea they have to agree, but the fact it is the same idea never seemed to have crossed their minds! The same, simple idea, in two or more different disguises in their minds, and they knew of no connection between them! Get down to the basics every time! <i>(emphasis original)</i>
+</blockquote>
+
+<p>
+Not only is a good grasp of fundamentals important for understanding your own domain, it also helps with creativity. Hamming argues that creative insights come from the subconscious, and that “flexible access to pieces of knowledge” is the most important way to give the subconscious the tools it needs to solve a problem. This flexible access arises from “looking at knowledge while you are acquiring it from many different angles,” making sure to capture its key features rather than simply memorizing the aspect relevant to the task at hand.
+</p>
+
+<p>
+(The idea that creativity comes from the subconscious is pretty common—see, for instance, Nisbett and Wallace’s article <a href=https://home.csulb.edu/~cwallis/382/readings/482/nisbett%20saying%20more.pdf>“Telling More Than We Can Know,”</a> which argues that basically all higher order cognitive processes are subconscious.)
+</p>
+
+<h3>
+3.2 Gain Insight Where Possible
+</h3>
+
+<p>
+No matter the task at hand, Hamming argues that the correct immediate step is always to gain insight about the situation, and then go from there. He uses the example of Planck and the “ultraviolet catastrophe” to illustrate how crucial insight can be:
+</p>
+
+<blockquote>
+Max Planck (1858–1947) fit the black-body radiation experimental data with an empirical curve, and it fit so well he “knew” it was “the right formula.” He set out to derive it, but had trouble. Finally he used a standard method of breaking up the energy into finite sizes and then going to the limit… Fortunately for Planck the formula fit only so long as he avoided the limit, and no matter how he took the limit the formula disappeared. He finally, being a very good, honest physicist, decided he had to stop short of the limit, and that is what defines Planck’s constant!
+<br><br>
+<i>[another historical paragraph omitted]</i>
+<br><br>
+Before going on, let me discuss how this piece of history has affected my behavior in science. Clearly Planck was led to create the theory because the approximating curve fit so well, and had the proper form. I reasoned, therefore, if I were to help anyone do a similar thing, I had better represent things in terms of functions they believed would be proper for their field rather than in the standard polynomials. I therefore abandoned the standard polynomial approach to approximation, which numerical analysts and statisticians among others use most of the time, for the harder approach of finding which class of functions I should use.
+</blockquote>
+
+<p>
+This episode demonstrates how insight can arise from a simulation, and enable future work (like, in this case, all of quantum mechanics), and also illustrates how the manner in which one performs simulations can make it either easier or harder to obtain underlying insights about the problem. Hamming emphasizes this point with a few stories from his time at Bell Labs, and argues that there are times where more computational power is actually counterproductive:
+</p>
+
+<blockquote>
+I have often wondered what would have happened [in the Nike guided missile project] if I had had a modern, high-speed computer. Would I ever have acquired the feeling for the missile, upon which so much depended in the final design? I often doubt hundreds more trajectories would have taught me as much—I simply do not know. But that is why <i>I am suspicious, to this day, of getting too many solutions and not doing enough very careful thinking about what you have seen.</i> Volume output seems to me to be a poor substitute for acquiring an intimate feeling for the situation being simulated… doing simple simulations at the early stages lets you get insights into the whole system which would be disguised in any full-scale simulation. <i>(emphasis original)</i>
+</blockquote>
+
+<p>
+This point—that simulation is not the same as understanding—is not unique to Hamming (see <i>inter alia</i> Roald Hoffmann on the subject: <a href=https://onlinelibrary.wiley.com/doi/full/10.1002/anie.201902527>1</a>, <a href=https://onlinelibrary.wiley.com/doi/full/10.1002/anie.201910283>2</a>, <a href=https://onlinelibrary.wiley.com/doi/full/10.1002/anie.201910285>3</a>), but hearing this from the father of scientific simulation certainly drives the message home!
+</p>
+
+<h3>
+3.3 Vision Matters
+</h3>
+
+<p>
+Hamming goes to great lengths to emphasize the importance of having a vision for your life:
+</p>
+
+<blockquote>
+It is well known the drunken sailor who staggers to the left or right with n independent random steps will, on the average, end up about √<i>n</i> steps from the origin. But if there is a pretty girl in one direction, then his steps will tend to go in that direction and he will go a distance proportional to <i>n</i>. In a lifetime of many, many independent choices, small and large, a career with vision will get you a distance proportional to <i>n</i>, while no vision will get you only the distance √<i>n</i>. In a sense, the main difference between those who go far and those who do not is some people have a vision and the others do not and therefore can only react to the current events as they happen… having a vision is what tends to separate the leaders from the followers.
+</blockquote>
+
+<p>
+This theme permeates his discussion of systems engineering: a successful systems engineer must, at all times, keep the overall vision and purpose of the system in mind, so as to optimize in the right direction. It also motivates what problems you must choose:
+</p>
+
+<blockquote>
+If you do not work on important problems, how can you expect to do important work? Yet direct observation and direct questioning of people show most scientists spend most of their time working on things they believe are not important and are not likely to lead to important things.
+</blockquote>
+
+<p>
+In Hamming’s view, it seems the precise vision one follows is less important than the simple act of having a vision at all. Forcing oneself to decide on goals and then strive to fulfill them will naturally lead you to excellence, even if the goals you choose aren’t the same as the one Hamming would have chosen:
+</p>
+
+<blockquote>
+The chief gain is in the effort to change yourself, in the struggle with yourself, and it is less in the winning than you might expect. Yes, it is nice to end up where you wanted to be, but the person you are when you get there is far more important. I believe a life in which you do not try to extend yourself regularly is not worth living—but it is up to you to pick the goals you believe are worth striving for.
+</blockquote>
+
+<h2>
+4. Should You Read This Book?
+</h2>
+
+<p>
+I began this book review by claiming that <i>The Art of Doing Science and Engineering</i> isn’t a textbook, or a self-help book, or a memoir, but failed to offer a positive vision of what it was. I now reveal my true opinion: <i>The Art of Doing Science and Engineering</i> is best viewed as a modern example of <a href=https://en.wikipedia.org/wiki/Wisdom_literature>“wisdom literature,”</a> in the style of ancient scriptures.
+</p>
+
+<p>
+Why is this? Wisdom literature frequently has the curious property that it’s accessible only to the wise. For instance, the book of Proverbs is ostensibly written to convey wisdom to those who seek it, but this hardly seems compatible with the following passage (Proverbs 26:7–9):
+</p>
+
+<blockquote>
+Like a lame man's legs, which hang useless, is a proverb in the mouth of fools.<br>
+Like one who binds the stone in the sling is one who gives honor to a fool.<br>
+Like a thorn that goes up into the hand of a drunkard is a proverb in the mouth of fools.<br>
+</blockquote>
+
+<p>
+If proverbs are useless—or worse than useless, a thorn in the hand of a drunkard—to those without wisdom, then what is the point of proverbs? If only the wise can understand your book of wisdom, why bother writing it at all?
+</p>
+
+<p>
+There are several ways to resolve this tension (one being “the book of Proverbs is stupid”), but I think the right answer goes something like this: wisdom is accessible to those who seek it, but simply reading through a book of wisdom isn’t sufficient to make one wise. Rather, the search for wisdom requires discipline and vigilance—one must meditate on wise sayings, appreciate the underlying principles, and learn to discern what’s right even in complicated circumstances. So, wisdom literature can help us on the journey to wisdom, but ultimately we will have to take the intellectual burden upon ourselves if we hope to get anywhere. (This is roughly how <a href=https://www.desiringgod.org/articles/the-best-discoveries-begin-as-problems>John Piper interprets Proverbs</a>.)
+</p>
+
+<p>
+Viewing Hamming’s book as essentially modern wisdom literature makes sense of his focus on the “style” of thinking, his insistence that the reader must rediscover much of what he’s saying for themselves, and his admonitions not to accept what he’s saying blindly but to think it over at length:
+</p>
+
+<blockquote>
+You the reader should take your own opinions and try first to express them clearly, and then examine them with counterarguments, back and forth, until <i>you are fairly clear as to what you believe and why you believe it</i>. It is none of the author’s business in this matter what you believe, but it is the author’s business to get you to think and articulate your position clearly. <i>(emphasis original)</i>
+</blockquote>
+
+<p>
+If we view this book—Hamming’s guide to future scientists and engineers, his <i>magnum opus</i> as a teacher and mentor—as wisdom literature, it implies that wisdom, not any specific technical skill, is rate-limiting for technical progress. This is very encouraging, because wisdom, unlike innate intelligence, is an acquired trait, and one which we can all cultivate in ourselves. We can’t all be Ramanujan or von Neumann, but (at least as Hamming tells it) we can all be Hamming.
+</p>
+
+<p>
+Thus far, I’ve mostly given reasons why you should read this book. Why shouldn’t you read this book? One reason is that this book is aimed at scientists and engineers, and furthermore it seems primarily aimed at people with an interest in the “hard” sciences—much of the advice assumes some contact with simulation, math, or physics. So a reader without at least a glancing interest in these topics might struggle to find some of the content relevant. (But maybe the act of extending his advice to other domains would prompt deeper consideration of the fundamental principles at play, and thus serve to cultivate wisdom!)
+</p>
+
+<p>
+Another reason you shouldn’t read this book is that it’s very much framed as a personal guide—it addresses the needs of an individual scientist, not ideas for how science writ large could be improved. So aspiring metascientists might be disappointed by Hamming’s perspective; he dedicates a lot of time to thinking about how one can navigate imperfect organizations, and much less time to thinking about what a perfect organization would look like.
+</p>
+
+<p>
+The strongest reason for reading this book, though, is that the world Hamming hopes to write for is almost exactly our world today. Hamming anticipates “the inevitable and extensive computerization of your organization and society generally,” a world in which scientists are frequently overwhelmed by the “rate of innovation and change of the dominant paradigm,” and a world where there is “not time to allow us the leisure which comes from separating the two fields” of science and engineering. From my perspective, this almost perfectly captures the feeling of working in science or tech today.
+</p>
+
+<p>
+And so Hamming’s message—the vision of scientists “trying to achieve excellence” through making “significant contributions to humanity” on important problems—seems more relevant today than ever. If you yourself work in a scientific field, and want to know how to have the greatest positive impact on your own character and on society, then Hamming’s wisdom is for you: but not without some struggle
+</p>
+
+<i>
+A transcript of Hamming’s talk “You and Your Research” (a shorter exposition of some of the ideas discussed above) is available <a href=https://www.cs.virginia.edu/~robins/YouAndYourResearch.html>here</a>, and </i>The Art of Doing Science and Engineering<i> can be purchased from Stripe Press <a href=https://press.stripe.com/the-art-of-doing-science-and-engineering>here</a>.
+</i>
+<br>
+<br>
+<i>Thanks to Michael Tartre for giving me this book originally, and to Jacob Thackston and Ari Wagen for extensive edits.</i>

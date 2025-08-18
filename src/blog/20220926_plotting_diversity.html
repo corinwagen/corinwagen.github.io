@@ -1,0 +1,136 @@
+---
+title: "Plotting Chemical Space with UMAP and Molecular Fingerprints"
+date: 2022-09-26
+blog: True
+summary: A quick guide to some introductory cheminformatics.
+image: corinwagen.github.io/public/img/20220926_umap.png
+---
+
+<p>
+In our recently published work on <a href="https://corinwagen.github.io/public/blog/20220901_screening_for_generality.html">screening for generality</a>, we selected our panel of model substrates in part using cheminformatic techniques. We're not the only people to do this, obviously: cheminformatics is a busy and important field, and even in organic chemistry there's lots of papers using similar techniques these days (I liked <a href="https://pubs.acs.org/doi/10.1021/jacs.1c12203">this work</a> from the Doyle lab). But since often the people who would benefit most from a new technique are the people who might be most intimidated by wading though documentation, I thought I'd post some simple example code here that others can copy-and-paste and modify to suit their own ends.
+</p>
+
+<p>
+There are lots of ways to approach plotting chemical space, but fundamentally all approaches must address two big questions:
+</p>
+
+<ol>
+  <li>
+    How do you convert molecules into some numeric representation?
+  </li>
+  <li>
+    Once you have numeric representations of all your molecules, how do you plot this?
+  </li>
+</ol>
+
+<p>
+I chose a relatively simple approach to the first question: molecular fingerprints (if you don't know what these are, I liked <a href=https://towardsdatascience.com/a-practical-introduction-to-the-use-of-molecular-fingerprints-in-drug-discovery-7f15021be2b1>this introduction</a> from <i>Towards Data Science</i>).
+Based on <a href="https://greglandrum.github.io/rdkit-blog/similarity/reference/2021/05/26/similarity-threshold-observations1.html">Greg Landrum's findings</a>, I used the RDKit7 fingerprint. RDKit is the premier cheminformatics package, and well worth a download for anyone interested in these concepts.
+</p>
+
+<p>
+For the second question (dimensionality reduction), I used the <a href="https://arxiv.org/abs/1802.03426">UMAP</a> algorithm. There are other approaches to this, like tSNE or PCA, but in my opinion there are <a href="https://blog.reverielabs.com/mapping-chemical-space-with-umap/">relatively convincing reasons</a> to favor UMAP (although <a href="https://jcheminf.biomedcentral.com/articles/10.1186/s13321-020-0416-x">this paper</a> points out some limitations).
+</p>
+
+<p>
+Without further ado, then, here's some example code to take a list of IUPAC-type names and generate a 2D representation:
+</p>
+
+<pre class=code-block>
+from rdkit import Chem
+from urllib.request import urlopen
+import re, tqdm, sys, umap
+import numpy as np
+import matplotlib.pyplot as plt
+
+# make matplotlib look good
+plt.rc('font', size=11, family="serif")
+plt.rc('axes', titlesize=12, labelsize=12)
+plt.rc(['xtick', 'ytick'], labelsize=11)
+plt.rc('legend', fontsize=12)
+plt.rc('figure', titlesize=14)
+%matplotlib inline
+%config InlineBackend.figure_format='retina'
+
+# function for turning names into SMILES strings, because I find writing SMILES by hand impossible
+def smiles_from_name(name):
+    try:
+        url_name = re.sub(" ", "%20", name)
+        url = 'http://cactus.nci.nih.gov/chemical/structure/' + url_name + '/smiles'
+        smiles = urlopen(url, timeout=5).read().decode('utf8')
+        return smiles
+    except Exception as e:
+        print(name + " failed SMILES conversion")
+
+class THbC():
+    """ A tetrahydrobetacarboline. """
+    def __init__(self, group, substituent, color="grey"):
+        self.name = f"2-benzyl-1-({group})-{substituent}2,3,4,9-tetrahydro-1H-pyrido[3,4-b]indole"
+        self.smiles = smiles_from_name(self.name)
+        self.mol = Chem.MolFromSmiles(self.smiles)
+        self.fingerprint = None
+        self.color = color
+
+    def get_fingerprint(self):
+        if self.fingerprint is None:
+            self.fingerprint = Chem.RDKFingerprint(self.mol, maxPath=7, branchedPaths=False)
+        return self.fingerprint
+
+# I just wrote out a lot of aromatic groups...
+groups = [
+    "phenyl", "4-methylphenyl", "4-methoxyphenyl", "4-fluorophenyl", "4-chlorophenyl", "4-bromophenyl",
+    "4-(trifluoromethyl)phenyl", "4-nitrophenyl", "4-cyanophenyl", "piperonyl", "dihydrobenzofuryl",
+    "3-methylphenyl", "3-methoxyphenyl", "3-fluorophenyl", "3-chlorophenyl", "3-bromophenyl",
+    "3-(trifluoromethyl)phenyl", "3-nitrophenyl", "3-cyanophenyl", "2-methylphenyl", "2-methoxyphenyl",
+    "2-fluorophenyl", "2-chlorophenyl", "2-bromophenyl", "2-(trifluoromethyl)phenyl",
+    "2-nitrophenyl", "2-cyanophenyl", "2-pyridyl", "3-pyridyl", "4-pyridyl", "2-thiophenyl", "3-thiophenyl",
+    "2-furyl", "3-furyl", "2-quinolinyl", "3-quinolinyl","6-quinolinyl", "5-quinolinyl", "8-quinolinyl",
+    "5-indolyl", "3-indolyl", "7-azaindol-3-yl", "2-pyrrolyl", "3-pyrrolyl", "2-thiazolyl", "4-thiazolyl",
+    "5-thiazolyl", "5-phenylisoxazol-3-yl", "imidazol-2-yl" "5-pyrimidyl", "5-indazolyl", "3-pyrazolyl",
+    "4-pyrazolyl", "4-imidazolyl"
+]
+
+# substituents on the indole ring, and corresponding colors
+subs = ["", "6-methoxy", "6-chloro"]
+colors = ["grey", "red", "green"]
+
+# build THbC objects (this might take a minute or two)
+mols = list()
+for group in tqdm.tqdm(groups):
+    for sub, c in zip(subs, colors):
+        mols.append(THbC(group=group, substituent=sub, color=c))
+
+# generate UMAP embedding
+crds = umap.UMAP(n_components=2, n_neighbors=20, min_dist=0.1, metric="jaccard").fit_transform([m.get_fingerprint() for m in mols])
+
+# plot the result
+fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(5,5))
+plt.scatter(crds[:,0], crds[:,1], c=[m.color for m in mols], s=20, alpha=0.8)
+ax.set_xticks([])
+ax.set_yticks([])
+plt.xlabel("UMAP1")
+plt.ylabel("UMAP2")
+plt.tight_layout()
+plt.show()
+</pre>
+
+<p>
+This code generates the following image:
+</p>
+
+<figure>
+  <img class=centered-img src=../img/20220926_umap.png style="width:400px;" />
+  <figcaption>
+    A 2D plot of the molecules shown above. Colors represent different substitution on the indole ring.
+  </figcaption>
+</figure>
+
+<p>
+  Although this program is a little clunky (slow calls to the CACTUS web service), it works well enough and is easy to modify as needed (to label the individual molecules, or apply a clustering algorithm to pick out model substrates). I hope you find this useful!
+</p>
+
+<p>
+<b>
+  Update: as of November 2024, you can generate plots of chemical space like this through <a href="https://www.rowansci.com">Rowan</a>, my computational chemistry startup. You can read more about this feature on <a href="https://www.rowansci.com/tools/descriptors">our website</a>.
+</b>
+</p>

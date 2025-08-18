@@ -1,0 +1,110 @@
+---
+title: "Low-Code Conformational Searching"
+date: 2022-12-19
+blog: True
+summary: "A simple recipe for running a conformational search."
+image: "https://1.bp.blogspot.com/-4c-WruwgP5k/WogoLbENR7I/AAAAAAAAElc/0Xvre719qkEmbZ7dt0rz4xBxfEM_49KDgCLcBGAs/s1600/screenshot_1126.png"
+---
+
+<p>
+Today I want to engage in some shameless self-promotion and highlight how <a href=https://github.com/ekwan/cctk><i>cctk</i></a>, an open-source Python package that I develop and maintain with Eugene Kwan, can make conformational searching easy.
+</p>
+
+<p>
+<b>Updated October 2024 with some more shameless self-promotion: you can now run even faster and more advanced conformer searches for free through <a href=rowansci.com>Rowan</a>, my computational chemistry startup. <a href=https://rowansci.com/tools/conformers>Here's some more information</a> about Rowan's conformational searching capabilities!</b>
+</p>
+
+<p>
+Conformational searching is a really crucial task in computational chemistry, because pretty much everything else you do depends on having the correct structure in the computer. In simple cases you can just draw out every conformer manually, but as the system under study gains degrees of freedom it becomes increasingly impractical to think through every possibility.
+</p>
+
+<p>
+Failure to identify the correct conformer can lead to completely incorrect results, as demonstrated by Neese and coworkeers in <a href="https://pubs.rsc.org/en/Content/ArticleLanding/2022/SC/D2SC02274E">this recent article</a>. They reexamine a reaction <a href="https://www.science.org/doi/10.1126/science.aaq0445">originally studied by Ben List</a> and demonstrate that the conformers examined in the initial publication are almost 5 kcal/mol above the true lowest-energy conformers.
+</p>
+
+<figure>
+  <img class=centered-img src=../img/20221219_neese_csearch.gif style="width:450px;" />
+  <figcaption>
+  Figure 1 from the paper; the previously reported conformers are shown in green.
+  </figcaption>
+</figure>
+
+<p>
+Conformational searching approaches attempt to prevent this sort of error by automating the process of finding conformers. There are lots of different algorithms one can use, like <a href="https://pubs.acs.org/doi/10.1021/ja952478m">low-mode searching</a>, metadynamics, and replica exchange (to name just a few), and decades of literature on this topic.
+</p>
+
+<p>
+Since conformational searching requires many individual calculations, it’s <a href=https://link.springer.com/protocol/10.1007/978-1-0716-0282-9_14>almost never practical</a> to do a conformational search at a high level of theory (e.g. using DFT or <i>ab initio</i> methods). Instead, <a href="https://pubs.acs.org/doi/10.1021/acs.joc.2c00066">forcefields</a> or <a href="https://pubs.acs.org/doi/10.1021/acs.jcim.5b00671">semiempirical</a> methods are generally used, with the caveat that the conformers generated might have somewhat inaccurate geometries.
+</p>
+
+<p>
+<i>cctk</i> uses <a href="https://crest-lab.github.io/crest-docs/">crest</a> (from Grimme and coworkers), which uses a <a href=https://crest-lab.github.io/crest-docs/page/overview/workflows.html#imtd-gc-algorithm>metadynamics-based algorithm</a> with the <i>GFN2-xtb</i> semiempirical method to generate and score conformers. Although <i>crest</i> isn’t perfect, it’s simple, easy to use, and often generates very reasonable results.
+</p>
+
+<p>
+I personally find the <i>crest</i> syntax a little tough to remember, so I’ve created a Python script so that I don’t have to look it up every time. 
+</p>
+
+<h3>Installing Packages</h3>
+
+<p>
+To run this tutorial, you’ll need to have <i>cctk</i> and <i>crest</i> installed. It’s often easiest to manage dependencies using a <i>conda</i> environment; if you don’t already have one, you can create one for this project with this code:
+</p>
+
+<pre class=code-block>
+conda create --name=chem python=3.8
+pip install cctk
+pip install pyyaml
+conda install -c conda-forge crest
+</pre>
+
+<p>
+And in the future, you can activate the environment like this:
+</p>
+
+<pre class=code-block>
+conda activate chem
+</pre>
+
+<h3>Running the Tutorial</h3>
+
+<p>
+The files for this tutorial can be found <a href="https://github.com/corinwagen/utilities/tree/master/csearch">here</a>. <span class=code>ex.yaml</span>, which is the only file you should need to modify, contains all the information needed for the python script <span class=code>do_crest.py</span>:
+</p>
+
+<pre class=code-block>
+# list of atoms to constrain
+# atom1, atom2, distance (or "auto" to keep distance from initial geometry)
+constraints:
+    constraint1: 17 31 auto
+    constraint2: 30 31 auto
+
+# location of input geometry, either as Gaussian .gjf or .out file
+input_geom: pictet_spengler.gjf
+
+# directory in which crest will run (will be created)
+directory: crest
+
+# name of logfile
+logfile: crest.log
+
+# whether or not this is a noncovalent complex (true or false).
+# this simply gets passed to crest; some settings are changed.
+noncovalent: false
+</pre>
+
+<p>
+To generate conformers, simply run:
+</p>
+
+<pre class=code-block>
+python do_crest.py ex.yaml
+</pre>
+
+<p>
+This takes about 30 seconds to run on my laptop, and will generate about a hundred output conformers, which can (if desired) be further refined using DFT.
+</p>
+
+<p>
+Hopefully this is useful! Please feel free to contact me with questions or bug reports.
+</p>

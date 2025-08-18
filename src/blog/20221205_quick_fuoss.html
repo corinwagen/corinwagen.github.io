@@ -1,0 +1,81 @@
+---
+title: "Introducing <i>quick_fuoss</i>"
+date: 2022-12-05
+blog: True
+summary: "A tiny program to estimate ion-pair dissociation constants."
+---
+
+<p>
+Modeling ion-pair association/dissociation is an incredibly complex problem, and one that's often beyond the scope of conventional DFT-based techniques. 
+(<a href="https://pubs.acs.org/doi/10.1021/acs.joc.1c01823">This study</a> is a nice demonstration of how hard modeling ion-pairing can be.)
+Nevertheless, it's still often important to gain insight into what the relative energy of solvent-separated ion pairs and contact-ion pairs might be;
+are solvent-separated configurations energetically accessible or not? 
+</p>
+
+<p>
+I've run into this problem a few times myself: in measuring pKas in nonpolar solvents, and again recently when trying to understand 
+<a href="https://pubs.acs.org/doi/10.1021/acs.orglett.2c03622">the solution structure of ethereal HCl.</a>
+When digging through the pKa literature, I was surprised to learn that there's a simple and relatively accurate way to estimate the dissociation constant of contact-ion pairs, 
+developed by Raymond Fuoss in the 1950s. 
+</p>
+
+<p>
+Despite modeling ions as charged spheres and solvent as a featureless dielectric, the "Fuoss model" is surprisingly good at reproducing experimental data.
+Here's one such example:
+</p>
+
+<figure>
+  <img class=centered-img src=../img/20221205_exp_vs_fuoss.png style="width:450px;" />
+  <figcaption>
+  Comparison of experimental ∆G<sub>diss</sub> for tetraisoamylammonium nitrate in various dioxane–water blends vs. Fuoss-calculated ∆G values.
+  (Data taken from <a href="https://pubs.acs.org/doi/10.1021/ja01330a023">Fuoss, <i>J. Am. Chem. Soc.</i>, <b>1933</b></a>, Table II.)
+  </figcaption>
+</figure>
+
+<p>
+It's not trivial to think about how to get similar results using more atomistic methods!
+(In principle one could actually model the exact solvent mixture and compute the energy of ion-pair dissociation using biased sampling and MD, but this 
+would be horrendously expensive and probably less accurate anyway.)
+</p>
+
+<p>
+The Fuoss model is pretty simple to implement oneself—but to make things even easier, I've implemented it as an open-source Python package, 
+which can be imported using <span class=code>pip</span>.
+The package contains only a single function, <span class=code>compute_kd</span>, which accepts the name of the cation, the name of the anion, and the dielectric constant of the medium.
+(Alternatively, <span class=code>.xyz</span> files, <span class=code>.gjf</span> files, or <span class=code>cctk.Molecule</span> objects can also be given.)
+</p>
+
+<p>
+Under the hood, the program builds molecules using <i>cctk</i>, computes their volume, and then applies the Fuoss model.
+The end result is a comically simple interface:
+</p>
+
+<pre class=code-block>
+$ pip install quick_fuoss
+$ python
+&gt;&gt;&gt; import quick_fuoss
+&gt;&gt;&gt; quick_fuoss.compute_kd("sodium", "chloride", 80)
+1.0793241279015366
+</pre>
+
+<p>
+On the associated <a href="https://github.com/corinwagen/quick-fuoss">Github repository</a>, there's also a little command-line script which makes this even simpler:
+</p>
+
+<pre class=code-block>
+$ python quick_fuoss.py tetraisoamylammonium nitrate 8.5
+Reading ion #1 from rdkit...
+Reading ion #2 from rdkit...
+Dissociation constant:	0.00004930 M
+Ionization energy: 5.873 kcal/mol
+$ python quick_fuoss.py tetraisoamylammonium nitrate 11.9
+Reading ion #1 from rdkit...
+Reading ion #2 from rdkit...
+Dissociation constant:	0.00094706 M
+Ionization energy: 4.122 kcal/mol
+</pre>
+
+<p>
+My hope is that this program promotes wider adoption of the Fuoss model, and in general enables more critical thinking about ion-pair energetics in organic solvents.
+Please feel free to send any bug reports, complaints, etc. my way!
+</p>

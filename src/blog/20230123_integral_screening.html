@@ -1,0 +1,103 @@
+---
+title: "The Importance of Integral Screening"
+date: 2023-01-23
+blog: True
+summary: "Quantum chemists and their sneaky tricks, part 1 of infinity."
+image: "https://corinwagen.github.io/public/img/20230125_dalle.png"
+---
+
+<p>
+For almost all Hartree–Fock-based computational methods, including density-functional theory, the rate-limiting step is calculating electron–electron repulsion. (This isn’t true for semiempirical methods, where matrix diagonalization is generally rate-limiting, or for <a href=https://pubs.acs.org/doi/10.1021/acs.jctc.2c00876>calculations on very large systems</a>.)
+</p>
+
+<p>
+When isolated single molecules are the subject of calculations (as opposed to solids or periodic systems), most programs describe electronic structure in terms of atom-centered basis sets, which reduces the electron–electron repulsion problem to one of calculating electron repulsion integrals (ERIs) over quartets of basis shells. Framed this way, it becomes obvious why ERIs are the bottleneck: the number of ERIs will scale as O(N<sup>4</sup>), meaning that millions of these integrals must be calculated even for relatively small molecules.
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20230125_dalle.png" style="width:350px;" />
+  <figcaption> 
+  I tried to get DALL-E to make a visual representation of integral screening; this was the best I got.
+  </figcaption>
+</figure>
+
+<p>
+One big advance in electronic structure calculations was the development of integral screening techniques, the most popular of which is the “Schwartz inequality” (derived from the <a href=https://en.wikipedia.org/wiki/Cauchy%E2%80%93Schwarz_inequality>Cauchy–Schwartz inequality</a>, but actually developed by <a href=https://onlinelibrary.wiley.com/doi/10.1002/jcc.540100111>Mario Häser and Reinhart Ahlrichs</a> [<b>EDIT: This is wrong, see correction at end!</b>]). If we denote an ERI over shells A, B, C, and D as (AB|CD), then the Schwartz inequality says:
+</p>
+
+<p>
+(AB|CD) ≤ (AB|AB)<sup>0.5</sup> (CD|CD)<sup>0.5</sup>
+</p>
+
+<p>
+This is pretty intuitive: each shell pair will interact with itself most, since it has perfect overlap with itself, and so the geometric mean of the interaction of each shell pair with itself is an upper bound for the interaction between the two shell pairs. (Why would (AB|AB) ever be a small value? Well, A and B might be super far away from each other, and so the “shell pair” has very little overlap is just negligible.)
+</p>
+
+<p>
+This result is very useful. Since there are many fewer integrals of the form (AB|AB), we can start by calculating all of those, and then use the resulting values to “screen” each shell quartet. If the predicted value is less than some predefined cutoff, the integral is skipped. While these screening methods don’t help much with small molecules, where all of the shells are pretty close to each other, they become crucial for medium-sized molecules and above.
+</p>
+
+<p>
+(What’s the cutoff value? Orca defaults to 10<sup>-8</sup>, <a href=https://gaussian.com/integral/>Gaussian</a> to 10<sup>-12</sup>, <a href=https://psicode.org/psi4manual/master/autodir_options_c/module__scf.html>Psi4</a> to 10<sup>-12</sup>, and <a href=https://manual.q-chem.com/5.2/Ch4.S3.SS2.html>QChem</a> to 10<sup>-8</sup>–10<sup>-10</sup> depending on the type of calculation.)
+</p>
+
+<p>
+The Schwartz inequality neglects, however, another way in which (AB|CD) might be very small: if (AB| and |CD) aren’t independently negligible, but are just really far away from each other. One elegant way to address this (out of many) comes from recent-ish work by <a href=https://aip.scitation.org/doi/10.1063/1.4994190>Travis Thompson and Christian Ochsenfeld</a>. They define an intermediate quantity M for each pair of shells, derived from different high-symmetry integrals:
+</p>
+
+<p>
+M<sub>AC</sub> := (AA|CC) /  ( (AA|AA)<sup>0.5</sup> (CC|CC)<sup>0.5</sup> )
+</p>
+
+<p>
+M<sub>AC</sub> intuitively represents the distance between the two shells, and is guaranteed to be in the range [0,1]. Thompson and Ochsenfeld then use this quantity to propose an estimate of a shell quartet’s value:
+</p>
+
+<p>
+(AB|CD) ≈ (AB|AB)<sup>0.5</sup> (CD|CD)<sup>0.5</sup> max(M<sub>AC</sub>M<sub>BD</sub>, M<sub>AD</sub>M<sub>BC</sub>)
+</p>
+
+<p>
+This is no longer a rigorous upper bound like the Schwartz inequality, but it’s a pretty good estimate of the size of the integral.
+</p>
+
+How much of a difference does this make in practice? To test this, I ran HF/STO-3G calculations on dodecane in the fully linear configuration. As shown by <a href=https://onlinelibrary.wiley.com/doi/10.1002/jcc.540030314>Almlöf, Faegri, and Korsell</a>, linear molecules benefit the most from integral screening (since the shells are on average farther apart), so I hoped to see a sizable effect without having to study particularly large molecules.
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20230125_graph.png" style="width:450px;" />
+  <figcaption> 
+  Almlöf, Faegri, and Korsell, Figure 5. This paper is terrific.
+  </figcaption>
+</figure>
+
+<p>
+I compared both the Schwartz (“QQ”) bound and Ochsenfeld’s CSAM bound for integral thresholds ranging from 10<sup>-9</sup> to 10<sup>-13</sup>, and compared the result to a calculation without any integral screening. The total time for the calculation, as a percent of the unscreened time, is plotted below against the error in µHartree (for the organic chemists out there, 1 µH = 0.00063 kcal/mol):
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20230125_graph2.png" style="width:400px;" />
+  <figcaption> 
+  Comparing CSAM and QQ.
+  </figcaption>
+</figure>
+
+<p>
+A few things are apparent for this data. First, even tight thresholds lead to dramatic speedups relative to the unscreened calculation—and with minimal errors. Secondly, the CSAM bound really does work better than the QQ bound (especially if you ignore the high-error 10<sup>-9</sup> threshold data point). For most threshold values, using CSAM leads to about a 20% increase in speed, at the cost of a 3-fold increase in an already small error. Viewed visually, we can see that the Pareto frontier for CSAM (blue) is just closer to the optimal bottom-left corner than the corresponding frontier for QQ (black).
+</p>
+
+<p>
+I hope this post serves to explain some of the magic that goes on behind the scenes to make “routine” QM calculations possible. (If you thought these tricks were sneaky, wait until you hear how the integrals that aren’t screened out are calculated!)
+</p>
+
+<p>
+<i>
+<b>CORRECTION</b>: In this post, I credited Mario Häser and Reinhart Ahlrichs with developing the Cauchy–Schwartz method for integral screening. A (famous) theoretical chemist who shall remain nameless reached out to me to correct the record—in fact, Almlöf included an overlap-based screening method in <a href=https://onlinelibrary.wiley.com/doi/10.1002/jcc.540030314>his landmark 1982 paper</a>. To the untrained eye, this appears unrelated to ERI-based screening, but we are using Gaussian basis sets and so “one can therefore write the integrals in terms of overlaps,” meaning that what looked like a different expression is actually the same thing. (Section 9.12 of Helgaker/Jorgensen/Olsen's textbook </i>Molecular Electronic Structure Theory<i>, a book I sadly do not own, apparently discusses this more.) 
+</i>
+</p>
+
+<p>
+<i>
+The professor traced this back to <a href=https://aip.scitation.org/doi/abs/10.1063/1.1681647?journalCode=jcp>Wilhite and Eumena</a> in 1974, and ultimately back to the work of Witten in the 1960s. It is a pleasure to get corrected by those you respect, and I welcome any readers who find errors in my writing to reach out; I will do my best to respond and take blame as appropriate.
+</i>
+</p>
