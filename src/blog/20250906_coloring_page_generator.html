@@ -1,0 +1,83 @@
+---
+title: "Vibe-Coding a Coloring-Page Generator"
+date: 2025-09-06
+blog: True
+summary: "Using the power of AGI to solve trivial parenting tasks."
+image: "https://corinwagen.github.io/public/img/20250906_france.png"
+---
+
+<p>
+  I don’t write about my non-working life much on the Internet; my online presence has been pretty closely tied to Rowan and I try to adhere to some level of what Mary Harrington calls <a href=https://www.maryharrington.co.uk/p/behind-closed-doors>“digital modesty”</a> regarding my family. Still, some basic demographics are helpful for context. 
+</p>
+
+<p>
+I have two kids (aged 2 and 4) and one more due in December. My children have many and varied interests: they like playing GeoGuessr with me, they like making forts, they like pretending to serve food, they like playing with Lego, and—most importantly for this post—they like coloring pictures. 
+</p>
+
+
+<figure>
+  <img class=centered-img src="../img/20250906_coloring_time.png" style="width:450px;" />
+  <figcaption>
+    Dad–daughter coloring time, ft. her toothbrush which she brought over for no apparent reason.
+  </figcaption>
+</figure>
+
+
+<p>
+I find myself printing out a lot of coloring pages these days, and I’ve been generally disappointed by the quality of coloring pages on Google Images. My son often has very specific requests (e.g. “a picture of Starscream fighting”) and it’s difficult to find a coloring page that matches his vision. I have similar problems: I like coloring historical maps because it helps me understand history a bit better, but it’s hard to find good coloring pages of historical maps.
+</p>
+
+<p>
+This problem has bothered me for a while. I tried using ChatGPT for this when 4o started being able to generate images, but the results were terrible. Here’s what ChatGPT thought a map of medieval Europe in 1000 AD should look like, for instance:
+</p>
+
+
+<figure>
+  <img class=centered-img src="../img/20250906_medieval_slop.png" style="width:500px;" />
+</figure>
+
+<p>
+  Points for making modern-day Romania part of the Eastern Roman empire (Ρωμανία), I suppose, but this is unusably bad.
+</p>
+
+<p>
+  After giving up for a few months, I revisited this problem again recently. My goal this time around was to vibe-code a way to convert any image into a coloring page. (If the idea of “vibe coding” is unfamiliar to you, refer to <a href=https://x.com/karpathy/status/1886192184808149383?lang=en>Andrej Karpathy’s post on X</a>.) I gave the prompt to both GPT 5 and Claude 4.1 Opus: while GPT 5 got confused and started creating epicyclically complex Numpy code, Claude 4.1 gave me a pretty clean solution using OpenCV. 
+</p>
+
+<p>
+  <a href=https://github.com/corinwagen/coloring-page-generator>The full code is on Github.</a> Here’s Claude’s summary of its approach, which I confess I don’t fully understand (in the spirit of vibe coding):
+</p>
+
+<blockquote>
+  This code converts colored images into black-and-white line drawings using multiple computer vision techniques tailored to different image types. The implementation provides three main extraction methods: character-based, color boundary-based, and adaptive threshold-based processing.
+  <br><br>
+The character extraction method combines three edge detection approaches. It first applies CLAHE (Contrast Limited Adaptive Histogram Equalization) with a clip limit of 3.0 and 8x8 tile grid to enhance local contrast. It then uses adaptive thresholding with a 9x9 Gaussian window, Canny edge detection (50-150 thresholds) on a Gaussian-blurred image, and Laplacian operators with a threshold of 30. These outputs are combined using bitwise AND operations to preserve edges while reducing noise. The pipeline includes connected component analysis to remove regions smaller than 25 pixels and morphological closing with a 2x2 kernel to fill gaps.
+  <br><br>
+The color boundary method operates in two parallel paths. The first path converts the image to LAB color space after bilateral filtering (d=5, sigmaColor=50, sigmaSpace=50) and runs Canny edge detection (40-80 thresholds) on each channel independently. The second path processes the grayscale image with a sharpening kernel, applies higher-threshold Canny detection (100-250), adaptive thresholding with a 7x7 window, and morphological gradient operations. Text features are preserved by combining these methods and removing components smaller than 4 pixels. Both paths merge via bitwise OR operations.
+  <br><br>
+All methods support adjustable line thickness through erosion or dilation with 3x3 cross-shaped kernels. The adaptive threshold method uses CLAHE preprocessing (clip limit 2.0) followed by 11x11 Gaussian adaptive thresholding combined with Canny edges (30-100 thresholds). Final outputs undergo morphological opening with a 2x2 kernel for noise reduction.
+</blockquote>
+
+<p>
+  Here’s a few examples. This is a picture of Optimus Prime from Google Images and the corresponding coloring page (for my son):
+</p>
+
+<figure>
+  <img class=centered-img src="../img/20250906_optimus.png" style="width:750px;" />
+</figure>
+
+<p>
+  This is a map of medieval French duchies and counties and the corresponding coloring page (for me):
+</p>
+
+<figure>
+  <img class=centered-img src="../img/20250906_france.png" style="width:750px;" />
+</figure>
+
+<p>
+  Neither of these are perfect! In both cases, the important boundaries are a bit lost in the details: Optimus’s outline is a bit unclear in some areas, and it’s tough to tell e.g. where Brittany’s boundaries are without the colored image as a reference. (The text also gets a little damaged in the map.) I’m sure someone who’s good at computer vision could do a better job here—using a tool like Dino v3 or Segment Anything could probably help, as could understanding what the above code is actually doing.
+</p>
+
+<p>
+  Still, this is good enough for routine usage and certainly better than the maps I could find floating around on the internet. I’m pretty happy with what a small amount of vibe-coding can accomplish, and I thought I’d share this anecdote in case other parents out there are looking for bespoke coloring pages.
+</p>

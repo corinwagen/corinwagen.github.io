@@ -35,7 +35,83 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='next-link'><a href='blog_p2.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20250816_long_range_forces_and_nnps.html'>Long-Range Forces and Neural Network Potentials</a></h2><i>August 16, 2025</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='next-link'><a href='blog_p2.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20250906_coloring_page_generator.html'>Vibe-Coding a Coloring-Page Generator</a></h2><i>September 6, 2025</i>
+<p>
+  I don’t write about my non-working life much on the Internet; my online presence has been pretty closely tied to Rowan and I try to adhere to some level of what Mary Harrington calls <a href=https://www.maryharrington.co.uk/p/behind-closed-doors>“digital modesty”</a> regarding my family. Still, some basic demographics are helpful for context. 
+</p>
+
+<p>
+I have two kids (aged 2 and 4) and one more due in December. My children have many and varied interests: they like playing GeoGuessr with me, they like making forts, they like pretending to serve food, they like playing with Lego, and—most importantly for this post—they like coloring pictures. 
+</p>
+
+
+<figure>
+  <img class=centered-img src="../img/20250906_coloring_time.png" style="width:450px;" />
+  <figcaption>
+    Dad–daughter coloring time, ft. her toothbrush which she brought over for no apparent reason.
+  </figcaption>
+</figure>
+
+
+<p>
+I find myself printing out a lot of coloring pages these days, and I’ve been generally disappointed by the quality of coloring pages on Google Images. My son often has very specific requests (e.g. “a picture of Starscream fighting”) and it’s difficult to find a coloring page that matches his vision. I have similar problems: I like coloring historical maps because it helps me understand history a bit better, but it’s hard to find good coloring pages of historical maps.
+</p>
+
+<p>
+This problem has bothered me for a while. I tried using ChatGPT for this when 4o started being able to generate images, but the results were terrible. Here’s what ChatGPT thought a map of medieval Europe in 1000 AD should look like, for instance:
+</p>
+
+
+<figure>
+  <img class=centered-img src="../img/20250906_medieval_slop.png" style="width:500px;" />
+</figure>
+
+<p>
+  Points for making modern-day Romania part of the Eastern Roman empire (Ρωμανία), I suppose, but this is unusably bad.
+</p>
+
+<p>
+  After giving up for a few months, I revisited this problem again recently. My goal this time around was to vibe-code a way to convert any image into a coloring page. (If the idea of “vibe coding” is unfamiliar to you, refer to <a href=https://x.com/karpathy/status/1886192184808149383?lang=en>Andrej Karpathy’s post on X</a>.) I gave the prompt to both GPT 5 and Claude 4.1 Opus: while GPT 5 got confused and started creating epicyclically complex Numpy code, Claude 4.1 gave me a pretty clean solution using OpenCV. 
+</p>
+
+<p>
+  <a href=https://github.com/corinwagen/coloring-page-generator>The full code is on Github.</a> Here’s Claude’s summary of its approach, which I confess I don’t fully understand (in the spirit of vibe coding):
+</p>
+
+<blockquote>
+  This code converts colored images into black-and-white line drawings using multiple computer vision techniques tailored to different image types. The implementation provides three main extraction methods: character-based, color boundary-based, and adaptive threshold-based processing.
+  <br><br>
+The character extraction method combines three edge detection approaches. It first applies CLAHE (Contrast Limited Adaptive Histogram Equalization) with a clip limit of 3.0 and 8x8 tile grid to enhance local contrast. It then uses adaptive thresholding with a 9x9 Gaussian window, Canny edge detection (50-150 thresholds) on a Gaussian-blurred image, and Laplacian operators with a threshold of 30. These outputs are combined using bitwise AND operations to preserve edges while reducing noise. The pipeline includes connected component analysis to remove regions smaller than 25 pixels and morphological closing with a 2x2 kernel to fill gaps.
+  <br><br>
+The color boundary method operates in two parallel paths. The first path converts the image to LAB color space after bilateral filtering (d=5, sigmaColor=50, sigmaSpace=50) and runs Canny edge detection (40-80 thresholds) on each channel independently. The second path processes the grayscale image with a sharpening kernel, applies higher-threshold Canny detection (100-250), adaptive thresholding with a 7x7 window, and morphological gradient operations. Text features are preserved by combining these methods and removing components smaller than 4 pixels. Both paths merge via bitwise OR operations.
+  <br><br>
+All methods support adjustable line thickness through erosion or dilation with 3x3 cross-shaped kernels. The adaptive threshold method uses CLAHE preprocessing (clip limit 2.0) followed by 11x11 Gaussian adaptive thresholding combined with Canny edges (30-100 thresholds). Final outputs undergo morphological opening with a 2x2 kernel for noise reduction.
+</blockquote>
+
+<p>
+  Here’s a few examples. This is a picture of Optimus Prime from Google Images and the corresponding coloring page (for my son):
+</p>
+
+<figure>
+  <img class=centered-img src="../img/20250906_optimus.png" style="width:750px;" />
+</figure>
+
+<p>
+  This is a map of medieval French duchies and counties and the corresponding coloring page (for me):
+</p>
+
+<figure>
+  <img class=centered-img src="../img/20250906_france.png" style="width:750px;" />
+</figure>
+
+<p>
+  Neither of these are perfect! In both cases, the important boundaries are a bit lost in the details: Optimus’s outline is a bit unclear in some areas, and it’s tough to tell e.g. where Brittany’s boundaries are without the colored image as a reference. (The text also gets a little damaged in the map.) I’m sure someone who’s good at computer vision could do a better job here—using a tool like Dino v3 or Segment Anything could probably help, as could understanding what the above code is actually doing.
+</p>
+
+<p>
+  Still, this is good enough for routine usage and certainly better than the maps I could find floating around on the internet. I’m pretty happy with what a small amount of vibe-coding can accomplish, and I thought I’d share this anecdote in case other parents out there are looking for bespoke coloring pages.
+</p>
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20250816_long_range_forces_and_nnps.html'>Long-Range Forces and Neural Network Potentials</a></h2><i>August 16, 2025</i>
 <figure>
   <img class=centered-img src="../img/20250816_vermeer.jpg" style="width:450px;" />
   <figcaption><i>The Astronomer</i>, Johannes Vermeer (c. 1668)</figcaption>
@@ -903,265 +979,6 @@ A few disjointed thoughts:
   If you’re presenting to organic chemists, it’s helpful to put chemical structures on almost every slide.
 </li>
 </ul>
-
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20250709_montaillou.html'>Book Review: Montaillou</a></h2><i>July 9, 2025</i>
-<p>
-The past is powerful evidence for arguments about the present. Since the time of Livy and Tacitus, it’s been common to cite history to advance some ideological, cultural, or political idea. While there’s nothing wrong with this in principle, these lines of discourse often break down because (1) people know very little history and (2) what little history they do know is usually wrong. 
-</p>
-
-<p>
-  Popular understanding of history is shaped mostly by popular culture: books, movies, and video games. These sources aren’t intrinsically bad—I’ll never remember early modern European states as well as my friend who played hundreds of hours of <i>Europa Universalis IV</i> in high school. But the overall effect of a history education dominated by <i>Gladiator</i>, <i>300</i>, and <i>Ben-Hur</i> is to give people a weird and distorted view of the past,<sup>1</sup> and one inchoate enough to be shaped into almost any argument about the present.
-</p>
-
-<p>
-If we want to build up a more accurate view of what it was like to live in the past, we want to start with the most fundamental questions: how did people live? How did they spend their time? What did they do for work and for leisure? What did they worry about? Unfortunately, these questions are almost always unanswerable. Most historical documents don’t touch on the daily life of average people, focusing instead on chronicling noble deeds, recording economic transactions, and so on. 
-</p>
-
-<p>
-But exceptions can be found. The village of Montaillou is a small, mountainous village of about 250 inhabitants in the French Pyrenees (in Occitania, what was then the Duchy of Foix and is today the department of Ariège). Montaillou was remote and unexceptional in almost every way, making it exactly the sort of place which we’d never expect to see in historical documents—except that by 1300 it was one of the last strongholds of Catharism, a Christian heresy which had been almost completely eliminated by the Albigensian Crusade in the 1210s. 
-</p>
-
-<p>
-This is typical of historical mountain societies. In his landmark work <i>The Mediterranean and the Mediterranean World in the Age of Philip II</i>, Fernand Braudel writes (pp. 38–39): 
-</p>
-
-<blockquote>
-  There can be no doubt that the lowland, urban civilization penetrated to the highland world very imperfectly and at a very slow rate… for the simple reason that mountains are mountains: that is, primarily an obstacle, and therefore also a refuge, a land of the free. For there men can live out of reach of the pressures and tyrannies of civilization: its social and political order, its monetary economy.
-</blockquote>
-
-<p>
-  The Cathars who had come to the mountains to flee persecution were dualist Gnostics who believed in the reincarnation of the soul. Their clerics and leaders, called goodmen (<i>bonhommes</i>) or <i>parfaits</i>, were celibate and refused to eat meat or drink wine. Ordinary Cathar followers didn’t hold themselves to this standard until their deathbed, when they would convert to Catharism in a ritual called the <i>consolamentum</i> and then completely fast until dying of hunger (called the <i>endura</i>). Cathars rejected the sacraments, mocked the priests and rituals of the Church, and saw themselves as the true worshipers of the Christian God.
-</p>
-
-<p>
-  Following the Albigensian Crusade, Montaillou and other rural towns became a refuge for Catharism. This eventually drew the attention of the French Inquisition in the person of Jacques Fournier, bishop of Pamiers. In 1320, Fornier arrested a large percentage of the population of Montaillou and interrogated them at length, recording “substantial and very detailed evidence” (xiv) about their lives. During his tenure at Pamiers, Fournier’s inquisition court investigated 578 people over 370 different days, with scribes and notaries keeping a detailed record of all proceedings in what is now known as the Fournier Register. This extraordinary document might have been lost to history except for the fact that Fournier became <a href=https://en.wikipedia.org/wiki/Pope_Benedict_XII>Pope Benedict XII</a> in 1334 and the Fournier Register was brought to the Vatican Library. 
-</p>
-
-<p>
-  The Fournier Register was revisited by Annales historian Emmanuel Le Roy Ladurie. His 1975 work <i>Montaillou, village occitan de 1294 à 1324</i> uses the details contained in the Register to reconstruct the world of Montaillou: who the people were, what they thought about, and how they lived. I originally read this book right before starting college and liked it a lot. Recently, I’ve found myself thinking back to Montaillou in everyday discussions about history and decided to read Le Roy Ladurie’s book again. 
-</p>
-
-<p>
-In this post, I hope to give a taste of the world of Montaillou, and how surprisingly normal (or abnormal) aspects of this world can seem to modern sensibilities. I’m focusing on the questions that interested me the most in this reading, and have omitted a lot of interesting characters and life histories for the sake of space and focus. If you find this review interesting, you should certainly pick up the book yourself—I’ve indicated page numbers in <a href=https://www.amazon.com/Montaillou-Promised-Emmanuel-Roy-Ladurie/dp/0807615986>the 30th anniversary edition</a> for easy reference.
-</p>
-
-<h2>Setting</h2>
-
-<p>
-Montaillou was (and is) a small village on the French side of the Pyrenees, at an elevation of approximately 4500 feet. In a physical and economic sense, Montaillou was incredibly isolated. There was essentially no non-foot traffic in or out of the village, so goods were carried by hand or with a mule. Montaillou had no blacksmith or tailor, and iron tools were rare (7). Montaillou was too small to have its own mill, so villagers would take wheat by mule to the larger town of Ax-les-Thermes, grind it at the mill, and return with flour, about 10 miles by Google Maps (9). 
-</p>
-
-<p>
-  Here's a picture of modern Montaillou from Wikipedia. The ruins of medieval Montaillou are visible at the top of the hill, and the snow-capped Pyrenees are visible some 20 miles to the south.
-</p>
-
-<figure>
-  <img class=centered-img src="../img/20250709_montaillou.jpg" style="width:700px;" />
-  <figcaption>Montaillou in April 2005. <a href=https://commons.wikimedia.org/wiki/File:Montaillou_28-04-05_8.jpg>See Wikimedia for higher resolution.</a></figcaption>
-</figure>
-
-
-<p>
-The bulk of calories came from bread (made from wheat or millet), and cheese was the primary protein source (8–9). Other documented animal foods include mutton, bacon, goat’s liver, eggs, and trout (9, 82, 83, 124). Cabbages, leeks, broad beans, and turnips were the most common vegetables (9). Most people in Montaillou farmed and raised animals: pigs, cows, sheep, chickens, geese, and so on. Almost everyone kept sheep, but there were some skilled itinerant “professional” shepherds who travelled across the Pyrenees living in the mountains and supervising large herds (69–135), stopping back home from season to season.
-</p>
-
-<p>
-Apart from the coinage that they used, the people of Montaillou were not “French” in any meaningful sense. They spoke a dialect of Occitanian that was distinct to their region, “about a thousand people at the most” (286). When forced to flee religious persecution, villagers went not to other regions of France but to Catalonia, Lombardy, Sicily, or Valencia (286). They almost always married within their village; in the cases where someone from Montaillou married someone from the outside, it was almost always from a neighboring village (183). Thus the world of Montaillou was, in a personal sense, very small indeed.
-</p>
-
-
-<h2>Housing and Personal Space</h2>
-
-<p>
-  The house (<i>domus</i> in Latin, <i>ostal</i> in Occitan) was the fundamental physical and social unit of Montaillou. Physically, the kitchen was the central room of the house, and perhaps the only one built of stone (39). The hearth and cooking utensils were in the middle of the kitchen, hams hung from the roof, and a table and chairs were off to the side (37–38). A cellar was often adjacent to the kitchen (38).
-</p>
-
-<p>
-Personal space was not as scarce as people sometimes imagine in medieval times. Most rooms had only one or two people, and people had separate beds (38–39). Children and adults slept in separate rooms (39). Most houses only had one story, but richer villagers might have two-story houses (39). Animals typically slept in the house at night, albeit in separate rooms, and used the same door as people; sick people were sometimes put near animals to keep them warm at night. Only relatively wealthy farms had separate stables, pigsties, and sheep-pens (40). 
-</p>
-
-<p>
-  The intellectual and social life of Montaillou revolved around the <i>domus</i>, “a unifying concept in social, family, and cultural life” (25). When villagers discussed Catharism and Catholicism, they identified beliefs not with individuals but with houses (28). To be the head of the house was a significant position of authority; to have one’s house confiscated or destroyed was cataclysmic (35–37). 
-</p>
-
-<figure>
-  <img class=centered-img src="../img/20250709_feb.png" style="width:400px;" />
-  <figcaption> Detail of the February scene from the <i>Très Riches Heures du Duc de Berry</i> (c. 1415)</figcaption>
-</figure>
-
-
-<h2>Family</h2>
-
-<p>
-It’s become somewhat popular in recent years to argue against the primacy of the nuclear family. In his 2020 article “<a href=https://www.theatlantic.com/magazine/archive/2020/03/the-nuclear-family-was-a-mistake/605536/>The Nuclear Family Was a Mistake</a>”, David Brooks argues that “big, interconnected, and extended families” are the historical norm and a healthier & more natural way to live. I’ve thought about this essay and argued about it with friends many times over the past few years; in fact, these arguments were a large part of why I originally wanted to reread Montaillou. 
-</p>
-
-<p>
-I expected the history of Montaillou to support Brooks’s position that extended families were more normal than nuclear families in medieval societies, but it didn’t. The vast majority of houses held nuclear families, or nuclear-ish families where an uncle or grandmother lived with the core family unit. Several examples of more extended families are documented, but they are “very rare cases” and usually unstable (48). As a rule, there was only one married couple per house and the house organized itself around this couple. 
-</p>
-
-<p>
-Montaillou was largely patriarchal, but not entirely so. There were maternal houses where the sons took their mother’s name and son-in-laws took their wife’s name (34). Nor was primogeniture absolute. Fathers generally determined who inherited the house, but the inheritor did not have to be the firstborn, and the other sons would receive a smaller portion called a fratrisia (36). Both these facts surprised me. 
-</p>
-
-<p>
-Marriage was typically arranged by the family and “involved much more than a mere agreement between two individuals” (180), with numerous relatives often involved. Dowries were substantial enough that families worried that marrying their daughters might bring economic ruin upon their houses, but remained the distinct property of the wife after marriage. If the husband died first, the widow retained her dowry separately from whomever might inherit the rest of the possessions (35–36).
-</p>
-
-<p>
-Widows were common because women were typically married young, between the ages of 15 and 20, while men typically waited until after 25 to marry (190). Le Roy Ladurie writes (191): 
-</p>
-
-<blockquote>
-Husbands in Montaillou were generally fully adult and they often married young innocents. The girls were beginners; the men were settling down. This difference in age in a world where people died young soon produced a crop of young widows. With one husband in the grave, women prepared to go through one or even two more marriages.
-</blockquote>
-
-<p>
-While marriage for love was not the primary objective, neither was it impossible: “it was possible to love passionately within apparently rigid structures which predisposed towards and presided over the choice of a marriage partner” (187). That being said, the sources rarely speak of women’s feelings towards their husbands (189):
-</p>
-
-<blockquote>
-It is probably, and sometimes provable, that the young men in love whom we find in the Register aroused similar feelings in the girls they married. But references are scarce. Rightly or wrongly, in upper Ariège the man was supposed to possess the initiative or even the monopoly in matters of love and affection, at least in the realm of courtship and marriage.
-</blockquote>
-
-<figure>
-  <img class=centered-img src="../img/20250709_jul.png" style="width:400px;" />
-  <figcaption> Detail of the July scene from the <i>Très Riches Heures du Duc de Berry</i> (c. 1415)</figcaption>
-</figure>
-
-
-<h2>Stages of Life</h2>
-
-<p>
-As might be expected, families in Montaillou were considerably larger than today. Based on data in the Register, Le Roy Ladurie estimates that there were 4.5 legitimate births per family, plus a small but non-negligible number of illegitimate births (204). For all but the wealthiest of families this was an asset: “a domus rich in children was a domus rich in manpower; in other words, rich, pure and simple” (207). Contraception was practiced, especially outside marriage, but not abortion (172–173, 209). Children were nursed for a long time, perhaps until two years old (208).
-</p>
-
-<p>
-  Modern people sometimes allege that love for young children is a modern phenomenon, citing the Roman <i>paterfamilias</i> as evidence to the contrary. In Montaillou, as today, men and women loved their young children, laughing & playing games with them and weeping bitterly when they died (210–213). The mortality rate for children and adolescents is not clear from our data but “was probably high” (221). Schooling was practical, not formal—children worked with their parents, outside and inside, and were taught religion (Catholic or Cathar) by their families. Children were often put to bed early; the Register records that a six-year-old girl is put to bed before dinner is served to guests (215). 
-</p>
-
-<p>
-  At the age of 12 or so, boys changed status. The word used to describe them shifts from <i>puer</i> (used from age 2 onwards) to <i>adulescens</i> or <i>juvenis</i>. As adolescents, they began to work as apprentice shepherds, were considered to have reached the age of reason, and could be arrested for heresy (215–216). At 18, men became full-fledged adults (216). I’ll quote Le Roy Ladurie directly on aging (216):
-</p>
-
-<blockquote>
-When it came to old age, there was a different pattern for men and women. In their thirties, men were in their prime. In their forties, they were still strong. But after about fifty a man was old in those days, and his prestige, unlike that of an elderly woman, did not increase with time. 
-</blockquote>
-
-
-<h2>Friends</h2>
-
-<p>
-Domestic servants and hired shepherds were common, and servants often lived in their employers’ houses (115). Labor markets seem quite liquid in this time period—shepherds are often hired for a season and “did not feel this instability as some kind of oppression or alienation” (114). People were part of a market economy, but the 1300s had “easy norms” (124):
-</p>
-
-<blockquote>
-Everyone who has studied the daily life of the people of Montaillou, whether locals or emigrants, has been struck by the relaxed rhythm of their work, whether they were shepherds, farmers, or artisans… When necessary [a shepherd] got his friends to look after his sheep for him while he went down to the neighbouring town, to take, or to collect, money. Or he might absent himself for purely personal reasons, without any problems of time-keeping or supervision, to go and visit friends, mistresses (unless they came up directly to see him in his cabane) or fellow-sponsors, friends acquired at baptisms recently or long ago…. [He] enjoyed parties and entertainment, and even just a good meal among friends.
-</blockquote>
-
-
-<p>
-  The social divide between nobles and non-nobles in Montaillou was not vast. Le Roy Ladurie writes that “ladies and <i>châtelaines</i>, when they met with peasant women, did not hesitate to settle down for a gossip; they might even kiss and embrace” (16). This was likely less true in larger towns or cities; “the absence of strong demarcation between groups can be explained by the relative poverty of the mountain nobility” as contrasted to “the nobles of Paris or Bordeaux, with their huge manorial estates and their vineyards worth their weight in gold” (17). 
-</p>
-
-<p>
-People had many close, intimate friendships outside the immediate or extended family. Groups of women socialized while fetching water, at the mill, in the kitchen, or sitting in the sun in the village square (251–254). Men met to sing, play chess, or speculate about if Heaven would run out of space for the souls of the dead (259–260). Sunday Mass was the central social event of the week, even for heretics or non-believers, but even so only about half the populace went to Mass any given week (265; 305). 
-</p>
-
-<p>
-  Even in a village of a few hundred people, it was possible to keep secrets. Heretic <i>parfaits</i> snuck from house to house via secret passages (41) or disguised themselves as woodcutters to move about incognito (75–76), while nosy neighbors peeked through holes in doors or lifted up roofs (which must have been flimsy) to spy on heretical conversations (245; 256). 
-</p>
-
-<figure>
-  <img class=centered-img src="../img/20250709_mar.png" style="width:400px;" />
-  <figcaption> Detail of the March scene from the <i>Très Riches Heures du Duc de Berry</i> (c. 1415)</figcaption>
-</figure>
-
-<h2>Religion and Ethics</h2>
-
-<p>
-The taxes owed to the nobility were relatively light, particularly compared to the heavy taxes extracted by the Church, and the latter were hated much more than the former (20–23). It was common for people who owed the Church money (including tithes) to be excommunicated (335). The success of Catharism in Montaillou can be largely attributed to the burdensome taxation of the Church, which gave rise to strong anti-clerical feelings far in advance of any theological rationale. I was surprised to learn that indulgences were a part of Catholic religious practice even in the early 1300s, and were hated then too (334). 
-</p>
-
-<p>
-Many people envision medieval Europe as a theocracy where Catholic morals reigned supreme, either for good or for ill. At least in the case of Montaillou, this wasn’t true—there were lots of mistresses, concubines, prostitution, illegitimate children, and sordid love affairs (45, 151, 169). Homosexuality is not recorded in Montaillou but is documented in the larger cities of Pamiers and Toulouse (144–149). Approximately 10% of couples in Montaillou during this time period were illicit or “living in sin,” and non-marital cohabitation was common enough that a visitor to one house was uncertain if the woman there was the man’s wife or his concubine. Le Roy Ladurie writes (169):
-</p>
-
-<blockquote>
-If anyone came across a couple openly living together, the reaction was much the same as it would be today. Were they legally married or not? 
-</blockquote>
-
-<p>
-  Sexual ethics aside,<sup>2</sup> crime was rare. While petty theft was not uncommon and grazing rights were always a source of conflict, Montaillou was an intimate society where “everyone knew everyone else and strangers were easy to find,” making crimes against property rather impractical (329). In cases in which a flock or house was confiscated, it was always under some legal mechanism rather than outright use of force. During the decades covered by the Fournier Register, a single murder and a handful of rapes are recorded—while this significantly exceeds the present on a per capita basis, these events were rare and shocking to the villagers.
-</p>
-
-<figure>
-  <img class=centered-img src="../img/20250709_nov.png" style="width:400px;" />
-  <figcaption> Detail of the November scene from the <i>Très Riches Heures du Duc de Berry</i> (c. 1415)</figcaption>
-</figure>
-
-<h2>Culture</h2>
-
-<p>
-The Fournier Register excels as a window into peasant culture in the 14th century. Peasants were “fond of abstract thought and even of philosophy and metaphysics” (232), and Le Roy Ladurie remarks on “the lack of social distance between the countryman… and the nobleman, the priest, the merchant, and the master craftsman, in a world where manual labour, especially craftsmanship, was not despised” (232). The primary social engagement was the evening meal, where groups of peasants would sit for hours at benches around the fire remembering village history, discussing the health of people and animals, arguing about the resurrection of the body, or simply gossiping (247, 250). Wine was served, but not to excess—drunkenness is only mentioned in urban contexts in the Fournier Register, and even there rarely (249). 
-</p>
-
-<p>
-  Books, while rare and expensive, were important and recognized cultural objects—both Cathar <i>parfaits</i> and Catholic priests derived intellectual legitimacy from the possession of books (211, 234–236). It was rare, but not unheard of, for laymen to be able to read: Le Roy Ladurie estimates that four out of the roughly 250 inhabitants of Montaillou were literate (239). As a result most ideas were transmitted orally, and the Cathar <i>parfaits</i> were renowned for their oration and eloquence.
-</p>
-
-<p>
-I was very surprised to learn that history was virtually unknown in Montaillou. Only in larger cities like Pamiers was Roman antiquity known and discussed, and there only rarely; in Montaillou, history “scarcely went back further than the previous Comte de Foix” (282). The Church filled this void, but imperfectly. Villagers knew almost nothing of Christian history besides Creation, the lives of Mary, Jesus, and the Apostles, and the coming Day of Judgement and the Resurrection (281). As Le Roy Ladurie describes it, “the people of Montaillou lived in a kind of ‘island in time,’ even more cut off from the past than from the future” (282).
-</p>
-
-<h2>Conclusion</h2>
-
-<p>
-I’ve only scratched the surface of Montaillou here. I haven’t told the story of Pierre Clergue, heretic village priest who had at least nine mistresses (and probably more) and used his brutal authority to crush village rivals; Pierre Maury, itinerant master shepherd with a love of poverty and a fatalist outlook on life; or Béatrice de Planissoles, twice-widowed noblewoman with a proclivity for dramatic love affairs with non-nobles between husbands. I feel some guilt in omitting these thrilling tales from my review, but I don’t think I can do them justice here.
-</p>
-
-<p>
-What I’ve instead attempted to do here is give the flavor of medieval life as recounted by Le Roy Ladurie. Since this is a microhistory, we have to be cautious about how much we can generalize; Montaillou was different in the 14th century than in the 10th century, and would be different again by the 17th century, to say nothing of how life would be different in Frisia, Andalusia, Calabria, or outside medieval Europe. (If there’s one thing we can learn from Montaillou, it’s that history is big and strange.)
-</p>
-
-<p>
-Still, I updated a number of my beliefs about the past after reading about Montaillou. Here’s a few common claims that I thought Montaillou directly addressed.
-</p>
-
-<ol>
-<li>
-    <b>“The nuclear family was a mistake.”</b> I discussed this claim from David Brooks above. Per his argument, Montaillou is exactly the sort of place that we might expect to show strong non-nuclear family living patterns, and yet if anything we see the exact opposite. This suggests that nuclear-family structures are more fundamental than Brooks argues (with the important caveat that this is just a single data point).
-</li>
-<li>
-    <b>“Medieval peasants lived miserable lives of suffering, toil, and death.”</b> Strikingly false in the case of Montaillou. Mortality rates were certainly high, but even the subsistence-level farmers and shepherds documented by the Register had active, social, and joyful lives. I’m not convinced that the median person in Montaillou was less happy than the median person today; if anything, possibly the opposite.<sup>3</sup>
-</li>
-<li>
-    <b>“Learning was forgotten in the Dark Ages.”</b> I was surprised by how true this was for Montaillou. There’s been a lot of pushback against misconceptions about the so-called “Dark Ages,” and popular conceptions about the time between the fall of the Western Roman Empire and the Renaissance are usually just wrong (cf. <a href=https://www.amazon.com/World-Late-Antiquity-150-750-Civilization/dp/0393958035>Peter Brown</a>). But the people of Montaillou were ignorant of almost all history, even just a few generations ago in their village. Maybe this was always true in rural areas, but I suspect this would have been much less true in Roman times and, again, stopped being true by the time of the Renaissance and the Reformation.
-</li>
-<li>
-    <b>“Medieval Europe was a Catholic society where people adhered to Christian morals.”</b> I hear this a lot from more traditional Catholic friends, and this is just bonkers. Maybe Montaillou is an edge case—again, village of heretics—but Le Roy Ladurie argues that the heresy was a symptom of disrespect for the Church, not a cause. The fact that 10% of couples were openly unmarried and cohabitating defied all my intuition about medieval Europe.
-</li>
-</ol>
-
-<p>
-I really enjoyed this microhistory and would love to read different accounts of everyday life in medieval Europe—if you have any recommendations, please let me know!
-</p>
-
-<br />
-<br /> 
-
-<h3>Footnotes</h3>
-<ol>
-<li>
-  As an aside, I’m a big fan of Bret Devereaux’s writing. He does a fantastic job of debunking myths about history, like <a href=https://acoup.blog/2019/05/28/new-acquisitions-not-how-it-was-game-of-thrones-and-the-middle-ages-part-i/>this series on <i>Game of Thrones</i></a> or <a href=https://acoup.blog/category/collections/this-isnt-sparta/>this series on Sparta</a>, and also does a lot of interesting long-form about pre-modern agriculture, textiles, logistics, and so on.
-</li>
-<li>
-  This moral laxity was gone by the 17th century. The Reformation and Counter-Reformation gave rise to an ocean of fierce debates about theology and ethics and created a society which, compared to Montaillou, was much more concerned about matters of orthodoxy and orthopraxy and much less tolerant of any deviancy. Massachusetts Puritanism can be understood as a facet of this transformation, as can the <a href=https://en.wikipedia.org/wiki/Reformation_of_Manners>Reformation of Manners</a>. This change is noted by Le Roy Ladurie, but my interpretation here comes mainly from Diarmid MacCulloch’s book <i>The Reformation</i>.
-</li>
-<li>
-    It’s worth noting that the feudal order as experienced in Montaillou was pretty lax—less rural areas like those around Paris were probably closer to popular depictions of feudal serfdom. I’m not sure which is more “typical” of feudalism, or if that question is even coherent; feudalism is a broad and often misunderstood concept, see <a href=https://www.amazon.com/Feudalism-F-L-Ganshof/dp/058248216X>Ganshof’s book</a> for a good overview.
-</li>
-</ol>
 
 </div><div class='next-link'><a href='blog_p2.html'>next page</a></div><br>
   </body>
