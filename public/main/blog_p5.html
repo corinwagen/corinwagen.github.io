@@ -35,7 +35,226 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p4.html'>previous page</a></div><div class='next-link'><a href='blog_p6.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20240510_difflinker.html'>Generative Linker Design</a></h2><i>May 10, 2024</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p4.html'>previous page</a></div><div class='next-link'><a href='blog_p6.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20240613_simple_md.html'>Running Simple MD Simulations</a></h2><i>June 13, 2024</i>
+<p>
+Scientific software can be confusing, particularly when you're doing something that the software isn't primarily intended for. 
+I often find myself wanting to run quick-and-dirty molecular dynamics simulations on small organic molecules, but I've struggled to find an easy way to do this using open-source tools like OpenMM. 
+</p>
+
+<p>
+This is particularly frustrating since I feel like I should be equipped to succeed at this task: 
+</p>
+
+<ul>
+<li>I know how to code (well enough for a scientist).</li>
+<li>I've read <a href=https://www.amazon.com/Understanding-Molecular-Simulation-Applications-Computational/dp/0122673514>a textbook on MD</a> cover-to-cover.</li>
+<li>I've even written <a href=https://github.com/corinwagen/presto>my own MD package</a> from scratch.</li>
+</ul>
+
+<p>
+Yet despite all this, I've probably tried and failed to use OpenMM for my research a half-dozen times over the past five years (<a href=https://github.com/openmm/openmm/issues/2937>evidence</a>). I always get bogged down somewhere: I don't have PDB files for my compounds, or I can't figure out how to get the forcefield parameters right for a small molecule, or I just get lost in a sea of similar-sounding classes and objects. Part of the problem here is that all the "intro to MD" tutorials seem to assume that you're hoping to run an MD simulation on a protein from the PDB—so if you have an .xyz file, it's not obvious how to proceed.
+</p>
+
+<p> Nevertheless, I've finally succeeded. Here's the code, with minor annotations interspersed:</p>
+
+<pre class=code-block>
+from openff.toolkit import Molecule, Topology
+
+from openmm import *
+from openmm.app import *
+
+import nglview
+import mdtraj
+import matplotlib.pyplot as plt
+import numpy as np
+import openmoltools
+import tempfile
+import cctk
+import openmmtools
+import math
+from random import random, randint
+
+from sys import stdout
+import pandas as pd
+
+from rdkit import Chem
+from rdkit.Chem import AllChem
+
+from openmmforcefields.generators import SMIRNOFFTemplateGenerator
+
+%config InlineBackend.figure_format='retina'
+</pre>
+
+<p> 
+Already, we're off to a complex start: we need OpenFF, OpenMM, <span class=code>openmoltools</span>, <span class=code>openmmtools</span>, and <span class=code>openmmforcefields</span>
+(not to mention <span class=code>nglview</span> and <span class=code>mdtraj</span>). There's a broader point to be made here about the state of scientific software and how this relates to academic incentive structure, but I digress...
+</p>
+
+<pre class=code-block>
+smiles = "c1cc(F)ccc1O"
+
+def generate_forcefield(smiles: str) -&gt; ForceField:
+    """ Creates an OpenMM ForceField object that knows how to handle a given SMILES string """
+    molecule = Molecule.from_smiles(smiles)
+    smirnoff = SMIRNOFFTemplateGenerator(molecules=molecule)
+    forcefield = ForceField(
+      'amber/protein.ff14SB.xml',
+      'amber/tip3p_standard.xml',
+      'amber/tip3p_HFE_multivalent.xml'
+     )
+    forcefield.registerTemplateGenerator(smirnoff.generator)
+    return forcefield
+
+def generate_initial_pdb(
+    smiles: str,
+    min_side_length: int = 25, # Å
+    solvent_smiles = "O",
+) -&gt; PDBFile:
+    """ Creates a PDB file for a solvated molecule, starting from two SMILES strings. """
+
+    # do some math to figure how big the box needs to be
+    solute = cctk.Molecule.new_from_smiles(smiles)
+    solute_volume = solute.volume(qhull=True)
+    solvent = cctk.Molecule.new_from_smiles(solvent_smiles)
+    solvent_volume = solvent.volume(qhull=False)
+
+    total_volume = 50 * solute_volume # seems safe?
+    min_allowed_volume = min_side_length ** 3
+    total_volume = max(min_allowed_volume, total_volume)
+
+    total_solvent_volume = total_volume - solute_volume
+    n_solvent = int(total_solvent_volume // solvent_volume)
+    box_size = total_volume ** (1/3)
+
+    # build pdb
+    with tempfile.TemporaryDirectory() as tempdir:
+        solute_fname = f"{tempdir}/solute.pdb"
+        solvent_fname = f"{tempdir}/solvent.pdb"
+        system_fname = f"system.pdb"
+
+        smiles_to_pdb(smiles, solute_fname)
+        smiles_to_pdb(solvent_smiles, solvent_fname)
+        traj_packmol = openmoltools.packmol.pack_box(
+          [solute_fname, solvent_fname],
+          [1, n_solvent],
+          box_size=box_size
+         )
+        traj_packmol.save_pdb(system_fname)
+
+        return PDBFile(system_fname)
+
+def smiles_to_pdb(smiles: str, filename: str) -&gt; None:
+    """ Turns a SMILES string into a PDB file (written to current working directory). """
+    m = Chem.MolFromSmiles(smiles)
+    mh = Chem.AddHs(m)
+    AllChem.EmbedMolecule(mh)
+    Chem.MolToPDBFile(mh, filename)
+
+forcefield = generate_forcefield(smiles)
+pdb = generate_initial_pdb(smiles, solvent_smiles="O")
+
+system = forcefield.createSystem(
+    pdb.topology,
+    nonbondedMethod=PME,
+    nonbondedCutoff=1*unit.nanometer,
+)
+</pre>
+
+<p> This code turns a SMILES string representing our molecule into an OpenMM System, which is a core object in the OpenMM ecosystem. To do this, we have to do a lot of shenanigans involving figuring out how many solvent molecules to add, calling <a href=https://m3g.github.io/packmol/>PACKMOL</a>, etc. One of the key steps here is the <span class=code>SMIRNOFFTemplateGenerator</span> (documented <a href=https://github.com/openmm/openmmforcefields>here</a>), which uses one of the recent OpenFF forcefields to describe our chosen molecule.
+</p>
+
+
+<pre class=code-block>
+# initialize Langevin integrator and minimize
+integrator = LangevinIntegrator(300 * unit.kelvin, 1 / unit.picosecond, 1 * unit.femtoseconds)
+simulation = Simulation(pdb.topology, system, integrator)
+simulation.context.setPositions(pdb.positions)
+simulation.minimizeEnergy()
+
+# we'll make this an NPT simulation now
+system.addForce(MonteCarloBarostat(1*unit.bar, 300*unit.kelvin))
+simulation.context.reinitialize(preserveState=True)
+
+checkpoint_interval = 100
+printout_interval = 10000
+
+# set the reporters collecting the MD output.
+simulation.reporters = []
+simulation.reporters.append(DCDReporter("traj_01.dcd", checkpoint_interval))
+simulation.reporters.append(
+    StateDataReporter(
+        stdout,
+        printout_interval,
+        step=True,
+        temperature=True,
+        elapsedTime=True,
+        volume=True,
+        density=True
+    )
+)
+
+simulation.reporters.append(
+    StateDataReporter(
+        "scalars_01.csv",
+        checkpoint_interval,
+        time=True,
+        potentialEnergy=True,
+        totalEnergy=True,
+        temperature=True,
+        volume=True,
+        density=True,
+    )
+)
+
+# actually run the MD
+simulation.step(500000) # this is the number of steps, you may want fewer to test quickly
+</pre>
+
+<p>
+Here, we configure the settings that will be familiar to people who read MD textbooks. I've chosen to use a Langevin integrator/thermostat to control temperature, and added a Monte Carlo barostat to make this an NPT simulation (constant pressure &amp; temperature). This isn't appropriate for all uses, but it means we don't have to worry about getting the box size exactly right. We also configure how we're going to save data from the simulation, and then the last line actually runs it (this might take a while if you don't have a GPU). 
+<p>
+
+<p> Once we've run this simulation, we can visualize the output and watch things wiggle around! The MDTraj trajectory is <a href=https://www.mdtraj.org/1.9.8.dev0/examples/index.html>a pretty versatile object</a> so you can do much more analysis here if you want to.</p>
+
+<pre class=code-block>
+# build MDTraj trajectory
+t = mdtraj.load("traj_01.dcd", top="init_01.pdb")
+
+# visualize the trajectory - this works in jupyter at least
+view = nglview.show_mdtraj(t)
+view.clear_representations()
+view.add_licorice()
+view.add_unitcell()
+view
+</pre>
+
+<figure>
+  <img class=centered-img src=../img/20240613_nglview.png style="width:550px;" />
+  <figcaption>NGLView is actually pretty great, except if you're forming or breaking bonds.</figcaption>
+</figure>
+
+<p>It's also good to check that the thermostat actually worked and nothing blew up:</p>
+
+<pre class=code-block>
+# check that the thermostat is working
+df = pd.read_csv("scalars_01.csv")
+df.plot(kind="line", x='#"Time (ps)"', y="Temperature (K)")
+</pre>
+
+<p>This is probably laughably simple to an OpenMM expert, but it works well enough for me. Here's my current list of things I still don't know how to do: </p>
+
+<ul>
+<li>Start with a specific set of 3D coordinates, not just a SMILES string. This is my biggest issue: it's not easy to specify the geometry of a supramolecular complex using SMILES strings, and while I feel that I ought to be able to modify one of these objects and supply the coordinate information directly, I'm not sure exactly how. (Relatedly, I've never gotten the hang of PDB files for small molecules.)
+<li>Fit specific torsions or interactions to high-level data—I see people do this in the literature, but I don't know how.</li>
+<li>Frankly, run any more interesting sorts of simulations! Normal MD is way too slow for a lot of things, but enhanced sampling methods get complicated fast: I've done WHAM using my own software, but I don't really know how to do WHAM or metadynamics in other software packages.</li>
+<li>Relatedly, I've never gotten the hang of <a href=https://www.plumed.org/>PLUMED</a>.</li>
+<li>Build or validate models of non-aqueous solvents. Can I just use this workflow to study, e.g., liquid HF? And how do I figure out if I have the right dipole moment or boiling point for liquid HF? </li>
+</ul>
+
+<p>Still, I hope this script is a useful asset to the community, and helps other people not make the same mistakes I did.</p>
+
+<i>Thanks to Dominic Rufa for answering some of my stupid questions.</i>
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20240510_difflinker.html'>Generative Linker Design</a></h2><i>May 10, 2024</i>
 <p>
 <b>
   Update: As of October 2024, you can now run DiffLinker calculations through <a href=rowansci.com>Rowan</a>, my computational chemistry startup. Read more about this in <a href=https://rowansci.substack.com/p/difflinker-mmff94-and-common-dft>our newsletter</a>!
@@ -339,157 +558,6 @@ But kinetics, and more generally the sort of careful physical organic chemistry 
 <p>
 It might have been inevitable that physical organic chemistry was always going to evolve away from incredibly detailed studies of simple reactions on simple molecules—just as biology has largely shifted from ecology and taxonomy to cell biology and biochemistry, organic chemistry too must change in order to keep working on the most interesting problems. And perhaps there's some truth to the argument that the old-school style of painstaking mechanistic study just isn't worth the effort and deserves to be de-emphasized. But it does seem to me that parts of the tradition of physical organic knowledge (to borrow <a href=https://samoburja.com/on-the-loss-and-preservation-of-knowledge/>Samo Burja’s phrasing</a>) is being slowly lost to time, despite the fact that lots of really good physical organic chemistry is still being done today on all sorts of problems (enzymatic chemistry, organometallic chemistry, catalysis, heterogenous catalysis, chemical biology, &amp;c), and that makes me sad.
 </p>
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20240103_norbornyl.html'>Looking Back on the Norbornyl Cation</a></h2><i>January 3, 2024</i>
-<p>
-<i>In this post, I’m trying something new and embedding calculations on Rowan alongside the text. You can view the structures and energies right in the page, or you can follow a link and view the full data in a new tab. While PDFs and printed journals are limited to displaying 2D renditions of 3D structures, there’s no reason why websites should follow suit—and now that all my calculations are already on the web, it’s simple to share the primary data.</i>
-</p>
-
-<p>
-The 2-norbornyl cation has a special place in the history of physical organic chemistry. <a href=https://pubs.acs.org/doi/abs/10.1021/ja01176a536>In 1949</a>, following up on <a href=https://pubs.rsc.org/en/content/articlelanding/1939/jr/jr9390001188>previous work</a> by Christopher Wilson, the great physical organic chemist Saul Winstein observed that acetolysis of <i>exo</i>-norbornyl sulfonates occurred about 350 times faster than solvolysis of the corresponding <i>endo</i> compounds.
-</p>
-
-<figure>
-  <img class=centered-img src=../img/20240103_summary.png style="width:550px;" />
-  <figcaption>“X” represents a leaving group and “Nu” a nucleophile.</figcaption>
-</figure>
-
-
-<p>
-Several stereochemical observations indicated that something puzzling was going on: both the <i>exo</i> and <i>endo</i> sulfonates gave <i>exo</i> acetate product, but enantioenriched <i>exo</i>-norbornyl sulfonate formed racemic <i>exo</i>-norbornyl acetate. Winstein argued that this data was best explained through the participation of an achiral nonclassical carbocation (“<b>II</b>”) featuring σ-delocalization and a three-center two-electron bond, as shown in the conclusion of the 1949 paper:
-</p>
-
-<figure>
-  <img class=centered-img src=../img/20240103_winstein.png style="width:400px;" />
-</figure>
-
-<p>
-The nonclassical structure, “<b>II</b>” above, is a little tough to visualize as drawn. Here’s the computed structure at the B3LYP-D3BJ/6-31G(d) level of theory, which should be a bit clearer. You can click on atoms to see bond distances, angles, and dihedrals; notice that the C1–C2 bond above (C14–C18 in Rowan) is markedly shorter than a normal C–C bond, whereas the C1–C6 and C2–C6 bonds (C13–C14 and C14–C18 in Rowan) are quite long.
-</p>
-
-<iframe src=https://labs.rowansci.com/iframe2/calculations/75efc4da-b19c-42d4-a49c-cb454741cb93 style="height:400px;width:400px;"></iframe>
-
-<p>
-In the 1960s Winstein’s interpretation was challenged by another preeminent chemist, H.C. Brown, who argued that the data could adequately be explained by rapidly equilibrating classical carbocations. Brown suggested that most of the observations made by Winstein could be explained simply by the differing steric profiles of the <i>exo</i> and <i>endo</i> faces of the norbornyl cation: the <i>endo</i> face is more shielded, and so ionization is slowed (explaining the 350:1 <i>exo</i>/<i>endo</i> rates) and attack is disfavored (explaining why both isomers of sulfonate give <i>exo</i> product). 
-</p>
-
-<p>
-This began an incredibly contentious series of debates which dragged on for decades. Rather than attempt to wade through the resulting sea of publications, I’ll quote from <a href=https://pubs.acs.org/doi/abs/10.1021/ar00096a004>an excellent 1983 review</a> by Cheves Walling to give a sense for the magnitude of the controversy: 
-</p>
-
-<blockquote>
-The debate [over the structure of the norbornyl cation] was vigorously pursued verbally in lectures, meetings, and seminars all over the U.S. and even abroad…. No one has ever counted the number of publications touching on the 2-norbornyl cation problem, but they include a number of reviews, chapters, and books, and a typcial <i>[sic]</i> research paper may well include references to over 100 others. 
-</blockquote>
-
-<p>
-Walling’s review goes on to give an excellent overview of the various pieces of evidence employed by both sides of the debate, which I won’t summarize in full here. 
-</p>
-
-<p>
-The most important data was obtained by George Olah and co-workers, who pioneered the use of superacidic media to generate stable solutions of carbocations which could be characterized spectroscopically. With Martin Saunders and others, Olah employed <sup>1</sup>H and <sup>13</sup>C NMR spectroscopy, IR spectroscopy, Raman spectroscopy, and core electron spectroscopy to study low-temperature solutions of norbornyl cations: in all cases, the data supported Winstein’s proposed symmetric structure. (While equilibration occurring faster than the spectroscopic timescale could not be ruled out by Olah’s work, spectroscopic measurements all the way down to 5 K showed no detectable classical structures, indicating that any barrier to interconversion must be &lt;0.2 kcal/mol.)
-</p>
-
-<figure>
-  <img class=centered-img src=../img/20240103_olah.png style="width:350px;" />
-  <figcaption>
-    <sup>13</sup>C NMR spectra at –159 ºC, showing the equivalence of C1 and C2. At –80 ºC, rapid Wagner–Meerwein rearrangements render C1, C2, and C6 equivalent. 
-    Data taken from <a href=https://onlinelibrary.wiley.com/doi/10.1002/anie.199513931>Olah's Nobel lecture</a>.
-    (This is a good use case for carbon NMR!) 
-  </figcaption>
-</figure>
-
-<figure>
-  <img class=centered-img src=../img/20240103_pes.png style="width:350px;" />
-  <figcaption>
-    Carbon 1s photoelectron spectrum of <i>tert</i>-butyl carbocation (left), showing a characteristic carbenium peak on the left, and the analogous spectrum for the norbornyl cation showing the absence of the carbenium peak. Data taken from <a href=https://onlinelibrary.wiley.com/doi/10.1002/anie.199513931>Olah's Nobel lecture</a>.
-  </figcaption>
-</figure>
-
-<p><b>
-Note: <a href=https://twitter.com/dasingleton/status/1742754148221649214>On Twitter/X</a>, Dan Singleton argues that the controversy was largely settled by 1982 and attributes this to the <a href=https://pubs.acs.org/doi/10.1021/ar00096a003>Saunders/Olah NMR experiments</a> and <a href=https://pubs.acs.org/doi/pdf/10.1021/ar00096a001>Cyril Grob's work in this area</a>, which I didn't mention. I appreciate the correction and welcome any further additions to the record.
-</b></p>
-
-<p>
-Computational chemistry, which became able to tackle problems like this in the late 1980s and early 1990s, also supported the nonclassical structure of the norbornyl cation. <a href=https://pubs.acs.org/doi/abs/10.1021/ja00186a073>A 1990 paper</a> used HF/6-31G(d) calculations in Gaussian 86 to show that the symmetric structure was a minimum on the potential energy surface. Here’s a scan I ran at the B3LYP-D3BJ/6-31G(d) level of theory, showing that the energy increases as the “classical” C–C bond forms:
-</p>
-
-<p>
-<i>(This iframe doesn't work well on the phone - still a work in progress, sorry.)</i>
-</p>
-
-<iframe src=https://labs.rowansci.com/iframe/scans/6e36bd88-1235-43e8-a505-91ac79d1bbf6 style="width:100%;height:400px;"></iframe>
-
-<p>
-Subsequent work has confirmed that Winstein was almost completely correct about the key issues. Most notably, <a href=https://www.science.org/doi/10.1126/science.1238849>a 2013 crystal structure</a> from Karsten Meyer demonstrates that the norbornyl cation is indeed nonclassical in the ground state, leading <i>Chemistry World</i> to <a href=https://www.chemistryworld.com/news/crystal-structure-closes-classic-carbocation-case/6352.article>declare the mystery solved</a>. Nevertheless, there’s still a little room for a classical cation supporter to doubt this result: crystal structures are snapshots of solid-state atomic configurations, while reactions occur in solution, where molecules are free to move around more. (In the <i>Chemistry World</i> article, Paul Schleyer predicts that Brown himself would have raised this objection.) 
-</p>
-
-<p>
-A paper from Ken Houk and co-workers, <a href=https://pubs.acs.org/doi/10.1021/acs.joc.3c02325>published a few days ago in <i>JOC</i></a>, addresses this issue by directly modeling the solvolysis process through <i>ab initio</i> molecular dynamics with explicit acetic acid solvent. In the solvolysis of the <i>exo</i> sulfonate, the authors find the nonclassical cation is formed on average within 9 femtoseconds of C–O bond cleavage, which is about as quickly as is physically possible. Once formed, the cation is entirely nonclassical: “classical 2-norbornyl cations are a negligible component of norbornyl cations in solution," thus addressing the last objection of classical cation partisans.
-</p>
-
-<figure>
-  <img class=centered-img src=../img/20240103_houk.jpeg style="width:550px;" />
-  <figcaption>
-    Simulations of the norbornyl cation in explicit acetic acid show complete nonclassical behavior (Figure 6 from Houk’s paper).
-  </figcaption>
-</figure>
-
-<p>
-In contrast, Houk et al find that the <i>endo</i> sulfonate doesn’t form the nonclassical cation until about 81 fs after the C–O bond breaks, explaining the slower reaction rate: the transition state isn’t stabilized by σ-dissociation, and so is higher in energy. This is a nice example of the principle of nonperfect synchronization, which is explained concisely in <a href=https://macmillan.princeton.edu/wp-content/uploads/PJS-Group-Meeting-no-layering.pdf>this presentation</a>.
-</p>
-
-<br>
-<div class=dinkus>* * *</div>
-<br>
-
-<p>
-What can modern scientists learn from the norbornyl cation controversy, besides the object-level fact that carbocations can exhibit nonclassical σ-delocalization?
-</p>
-
-<h3>1. Reality is confusing, and convincing arguments are often wrong.</h3> 
-
-<p>
-It’s a good exercise to go back and read the early H.C. Brown papers in this area, like <a href=https://pubs.acs.org/doi/abs/10.1021/ar50071a003>this account</a>. Brown was an incredible scientist (the 1979 Nobel laureate in chemistry), and his data and reasoning are quite good; I find myself sympathizing with his viewpoint while reading his papers. Nevertheless, with the benefit of hindsight we know that he was wrong and Winstein was right. “Humility comes before honor.”
-</p>
-
-<h3>2. Tools drive scientific progress.</h3> 
-<p>
-The argument over the norbornyl cation was ultimately settled only by the development of new techniques, like superacid chemistry, core electron spectroscopy, and high-level calculations. Now that we have these methods, it’s much easier to solve similar problems: if Winstein’s paper came out today, I doubt it would take more than a year or two to figure everything out. 
-</p>
-
-<p>
-This aligns nicely with what <a href=https://estudosdects.files.wordpress.com/2013/07/dyson-science-ideas-or-tools.pdf>Freeman Dyson</a> calls a “Galisonian” view of scientific progress, where scientific progress is driven not by ideas (the “Kuhnian” view) but by new tools and new data. In chemistry, at least, the tools-first view seems true to me—since 1950, it’s difficult to think of a development more important to organic chemistry than NMR spectroscopy, with flash column chromatography probably taking second place.
-</p>
-
-<h3>3. It’s easy for fields to get distracted by controversy and lose relevance.</h3> 
-<p>
-Here’s Walling again:
-</p>
-
-<blockquote>
-Since a significant fraction of the efforts of physical organic chemists was drawn into the problem [of the norbornyl cation], an unhappy consequence was a feeling on the part of many (including some of those concerned with the distribution of research funds) that physical organic chemistry was in danger of withdrawing into a world of its own.
-</blockquote>
-
-<p>
-As older scientists have explained to me, the norbornyl cation debacle scared a generation of chemists away from physical organic chemistry. The entire subfield became obsessed with a niche and somewhat irrelevant issue, while scientists in adjacent subfields looked on with bemusement and frustration. As a consequence, traditional physical organic chemistry is barely practiced today: few scientists have the skill or knowledge to conduct kinetic studies like those performed by Winstein, Brown, and others, and those still working in the area struggle to get funding or recognition (in the words of Dan Singleton, <a href=https://twitter.com/dasingleton/status/1275932027825664000>“sucks when you have to peddle your papers in cemeteries”</a>).
-</p>
-
-<p>
-(In <a href=http://acshist.scs.illinois.edu/bulletin_open_access/v25-2/v25-2%20p123-131.pdf>a nice historical perspective</a>, Stephen Weininger argues the norbornyl cation debate was “a hook on which to hang a much larger agenda,” fueled both by a UK/US divide and a deeper dispute about whether valence bond representations or molecular orbital representations of chemical structures were superior. If this is true, it was a self-defeating exercise by all involved.)
-</p>
-
-<p>
-Scientists should be motivated by a search for truth, but also by the desire to improve the world. Usually these two aims go together: basic research without obvious societal implications often leads to unexpected and important findings, which is why the government supports science in the first place. But it’s possible to become so myopically focused on a single issue in the name of truth that one forgets about other goals, as arguably happened in the norbornyl cation imbroglio.
-</p>
-
-<p>
-Controversy attracts attention: we’re drawn to it, against our better judgment, like moths to a flame. We have to be careful not to get captured by disputes that are, in the long run, not worth the effort.
-</p>
-
-<p><i>
-Update 1/5/2024: <a href=20240105_phys_org.html>some followup thoughts</a> based on feedback from X.
-</i></p>
-
-<i>Thanks to Eric Jacobsen for many conversations about the history of physical organic chemistry, Eugene Kwan for conversations about the principle of nonperfect synchronization, and to Ari Wagen for feedback on this post and six months of excellent front-end development for Rowan. Any errors are mine alone.</i>
 </div><div class='previous-link'><a href='blog_p4.html'>previous page</a></div><div class='next-link'><a href='blog_p6.html'>next page</a></div><br>
   </body>
   <br>
