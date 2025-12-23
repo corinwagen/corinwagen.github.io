@@ -35,7 +35,262 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p2.html'>previous page</a></div><div class='next-link'><a href='blog_p4.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20250517_hurry.html'>The Ruthless Elimination of Mottes</a></h2><i>May 17, 2025</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p2.html'>previous page</a></div><div class='next-link'><a href='blog_p4.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20250527_latitude.html'>How Does o3 Guess Latitude From Photos?</a></h2><i>May 27, 2025</i>
+<p>
+  Recently, <a href=https://x.com/KelseyTuoc/status/1917340813715202540>Kelsey Piper</a> shared that o3 (at time of writing, one of the latest reasoning models from OpenAI) could guess where outdoor images were taken with almost perfect accuracy. <a href=https://www.astralcodexten.com/p/testing-ais-geoguessr-genius>Scott Alexander</a> and others have since verified this claim. 
+</p>
+
+<p>
+I’ve been playing around with this too: with the prompt linked in Scott’s post, o3 can guess where my photos were taken almost every time, even when I intentionally avoid anything that looks like it might be too helpful. After inspecting the reasoning, I was surprised to learn that o3 can almost always estimate the latitude to within a few degrees, which vastly restricts the range of potential answers.
+</p>
+
+
+<p>
+I didn’t think this was possible before doing the research for this post. Here’s three recent examples—see if you can estimate the latitude yourself. (You may want to open the images in a new tab to zoom in.)
+</p>
+
+
+<figure>
+  <img class=centered-img src="../img/20250527_ohio.png" style="width:500px;" />
+</figure>
+
+<figure>
+  <img class=centered-img src="../img/20250527_mexico.png" style="width:550px;" />
+</figure>
+
+<figure>
+  <img class=centered-img src="../img/20250527_argentina.png" style="width:550px;" />
+</figure>
+
+<p>
+o3 guessed that these were 40–45º N,  25–28 ºN, and 34–36º S; in every case the answer was within that range. (I make sure to only give o3 screenshots, so it can’t access EXIF data or otherwise cheat at this assessment.) 
+</p>
+
+<p>
+How is this possible? Here’s my best understanding of what o3 is doing, informed by a bunch of back-and-forth conversations with a friendly neighborhood AI model. (I’ll be assuming that the photo also has compass information, in keeping with standard GeoGuessr rules.)
+</p>
+
+<h2>Local Noon, On The Equinox</h2>
+<p>
+Let’s make this as simple as possible to start. On the spring equinox, at noon, at the equator, the sun is directly overhead. As a result, tall objects without any overhang won’t cast any shadows. 
+</p>
+
+<p>
+If you’re not on the equator, then objects will still cast a shadow, and the length of the shadow S relative to the object’s height H tells you what latitude you’re at. Formally, we can define the solar elevation θ := arctan(H/S), and approximate the latitude φ as 90º − θ. 
+</p>
+
+<p>
+I don’t do much mental trigonometry these days, but it’s pretty easy to make a table with some key values: 
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>S/H</th>
+      <th>θ (Solar Elevation)</th>
+      <th>φ (Latitude)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>2:1</td>
+      <td>26º</td>
+      <td>64º</td>
+    </tr>
+    <tr>
+      <td>1.3:1</td>
+      <td>37º</td>
+      <td>53º</td>
+    </tr>
+    <tr>
+      <td>1:1</td>
+      <td>45º</td>
+      <td>45º</td>
+    </tr>
+    <tr>
+      <td>0.7:1</td>
+      <td>55º</td>
+      <td>35º</td>
+    </tr>
+    <tr>
+      <td>0.5:1</td>
+      <td>63º</td>
+      <td>27º</td>
+    </tr>
+    <tr>
+      <td>0 (no shadow)</td>
+      <td>90º</td>
+      <td>0º</td>
+    </tr>
+  </tbody>
+</table>
+
+
+<p>
+With a compass, figuring out which hemisphere you’re in is easy. In the northern hemisphere, the sun is south of you, so the shadows point north; in the southern hemisphere, the shadows point south.
+</p>
+
+<h2>Local Noon, Any Season</h2>
+<p>
+Unfortunately, it’s more complex than this—we’re not always on the equinox, meaning that we also have to account for solar declination (δ). The solar declination reflects how far away from the equator the sun is on any given date; δ is +23.4º on the summer solstice and -23.4º on the winter solstice. We have to adjust the above formula to take this into account: now φ ≈ 90º − θ + δ. 
+</p>
+
+<p>
+Qualitatively, this means that shadows are shorter in summer than winter. A H/S ratio of 1:1 implies a latitude of 22º in winter or a latitude of 68º in summer, which is the difference between Cuba and Iceland. In practice, though, o3 can often figure out the season from how the trees look and how people are dressed.
+</p>
+
+<h2>Any Time, Any Season</h2>
+<p>
+When we move away from noon, things get a bit more complicated. We have to employ h, the hour angle, which is equal to 0º at local noon (when the sun is directly overhead) and increments by 15º every hour. Here’s the full equation:
+</p>
+
+<p>
+sin(θ) = sin(φ)*sin(δ) + cos(φ)*cos(δ)*cos(h)
+</p>
+
+<p>
+(o3 says “It’s just the spherical-law-of-cosines applied to the right-angled triangle on the celestial sphere.” Trivial! If you’re curious how we go from this to the simplified noon equation above, see Appendix A.)
+</p>
+
+<p>
+This is a bit too involved for a GeoGuessr game—even o3 solves this in a Python environment. Qualitatively, though, this means that as we move away from noon and cos(h) becomes smaller, the solar elevation θ shrinks. Within an hour or two of noon, we’re only off by 1–2º, but after three hours we’re overestimating the latitude by 7–10º.
+</p>
+
+<p>
+This seems bad, but with a compass it’s relatively easy to check how far from noon it is. Shadows point exactly north–south at local noon, and point increasingly east or west as the hour angle increases, so looking at the shadow orientation can tell you how much to update the latitude. In practice o3 recommends just ignoring shadow-related math after 3:00 PM or before 9:00 AM, since the error becomes too high. 
+</p>
+
+<h2>Putting It All Together</h2>
+<p>
+Here’s another recent GeoGuessr picture. Can we solve this now? 
+</p>
+
+<figure>
+  <img class=centered-img src="../img/20250527_cambodia.png" style="width:550px;" />
+</figure>
+
+
+<p>
+Here’s my attempt to apply what we’ve learned: we’re looking east and we can see that shadows are pointing north, so the sun is south. This means that we’re in the northern hemisphere. The shadow–height ratio is a bit tough to estimate from this picture; based on the Prius, maybe 0.5:1. So that gives us an equinox latitude of 27º N, minus say 5º for time of day (since the shadows seem angled), which leaves us with a latitude of… 22º N ± 23º depending on the season. Not terribly helpful.
+</p>
+
+<p>
+I gave o3 the same image, and it told me the latitude was 12–15º N. The correct answer is 11.5 ºN (Phnom Penh). 
+</p>
+
+<p>
+What did we do wrong? I asked o3 what went wrong with my reasoning, and this is what it told me (lightly edited for clarity): 
+</p>
+<ul>
+  <li>
+    <b>Wrong S:H ratio.</b> “A Toyota Hilux / Prius roof is ≈ 1.5–1.6 m. Measuring the dark patch on the tarmac (allowing for perspective) the shadow is 0.6–0.7 m, giving height : shadow ≈ 2.3–2.5.”
+  </li>
+  <li>
+    <b>Wrong hour correction.</b> “How far the Sun drops below its noon altitude depends on the hour angle… Two hours before/after noon (h ≈ 30 °) knocks 10–15° off the altitude in the low latitudes, not 5°.”
+  </li>
+  <li>
+    <b>Very wrong season correction.</b> “Season changes δ by ±23.4 °, but the corresponding change in the Sun’s altitude is modulated by both time-of-day (cos h) and your own latitude (cos φ). Thus the swing is never a flat ±23 ° except at noon on/near the tropics… 
+Solve sin(67º) = sin(ϕ)*sin(δ) + cos(ϕ)*cos(δ)*cos(30º) for the full seasonal range. That inversion pins ϕ between 11° N (June solstice) and 16° N (December solstice), with the equinox coming out at ≈ 13° N.”
+  </li>
+</ul>
+
+<p>
+The last point deserves further discussion. The impact of solar declination on solar elevation is modulated both by the latitude and the hour angle—the 23.4º swing is scaled by cos(h) and by the actual latitude. With some Python code (Appendix B), we can quickly confirm that the effect is smaller at near-equatorial latitudes: 
+</p>
+
+<figure>
+  <img class=centered-img src="../img/20250527_theta_by_phi.png" style="width:550px;" />
+</figure>
+
+<p>
+Overall, though, there’s nothing here we haven’t already discussed; o3 just understands this material better than me and can do the math properly.
+</p>
+
+<h2>Conclusions</h2>
+<p>
+This is a fun activity for building AI-related intuition. o3 is very good at this and is able to do something that appears superhuman. Upon close inspection, the reasoning is legible, but I’m not really able to follow the same methods myself with any degree of precision; I’m just not quite able to do any step with sufficient accuracy. I’m hoping that I’ll be able to build up my skills over time—this would be a pretty fun party trick. 
+</p>
+
+<h2>Appendix A: Getting The Simplified Equation For Noon</h2>
+<p>
+The full equation is: 
+</p>
+<p>
+sin(θ) = sin(φ)*sin(δ) + cos(φ)*cos(δ)*cos(h)
+</p>
+<p>
+If we assume that we’re at local noon, cos(h) = 1. This lets us apply the following identity:
+</p>
+<p>
+cos(α−β) = cos(α)*cos(β) + sin(α)*sin(β)
+</p>
+<p>
+To get: 
+</p>
+<p>
+sin(θ) = cos(φ - δ)
+</p>
+<p>
+sin(θ) = sin(90º - φ + δ)
+</p>
+<p>
+θ = 90º - φ + δ
+</p>
+<p>
+Which is the simplified equation I presented above.
+</p>
+
+<h2>Appendix B: </h2>
+
+<p>
+  Here's the Python code to generate the above plot.
+</p>
+
+<pre class=code-block>
+import numpy as np
+import matplotlib.pyplot as plt
+
+%matplotlib inline
+%config InlineBackend.figure_format = 'retina'
+
+def solar_elevation_vs_month(hour_local: float, latitude_deg: float) -> np.ndarray:
+    """
+    Return an array of solar-elevation angles (degrees) for each day at a given true-solar hour and latitude.
+    """
+    lat = np.deg2rad(latitude_deg)
+    doy = np.arange(365)
+
+    # Approximate solar-declination model (±23.44° sine fit)
+    delta = np.arcsin(np.sin(np.deg2rad(23.44)) * np.sin(2 * np.pi / 365 * (doy - 80)))
+
+    # Hour angle: 0° at solar noon; +15° per hour in the afternoon
+    H = np.deg2rad((hour_local - 12.0) * 15.0)
+
+    # Solar-elevation formula
+    h = np.arcsin(np.sin(lat) * np.sin(delta) + np.cos(lat) * np.cos(delta) * np.cos(H))
+    return np.rad2deg(h)
+
+
+if __name__ == "__main__":
+    plt.figure(figsize=(6, 4))
+
+    months = np.array([15, 46, 75, 105, 135, 162,  198, 228, 258, 288, 318, 344])
+
+    for h, l in [(15, 0), (15, 15), (15, 30), (15, 45), (15,60)]:
+        elevations = solar_elevation_vs_month(h, l)
+        plt.plot(np.arange(365), elevations, label=f"{h:.1f} h, {l:.1f}° N")
+    
+    plt.xticks(months, ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
+    plt.ylabel(f"Solar elevation (°)")
+    plt.xlim(0,365)
+    plt.ylim(0,60)
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
+</pre>
+
+
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20250517_hurry.html'>The Ruthless Elimination of Mottes</a></h2><i>May 17, 2025</i>
 <br>
 <figure>
   <img class=centered-img src="../img/20250517_icon.jpg" style="width:400px;" />
@@ -364,218 +619,6 @@ Stand still, yet we will make Anduril acqu-hire.
 <p>Better instrumentation and analytical tooling has revolutionized chemistry over the past sixty years, and better design &amp; simulation tools can do the same over the next sixty years. But as we’ve seen with NMR and mass spectrometry, enabling technologies must become commonplace tools usable by lots of people, not arcane techniques reserved for a rarefied caste of experts. Only when computational chemistry undergoes the same transition can we fulfill the vision that Van Drie outlined years ago—one in which every bench scientist can employ the predictive tools once reserved for specialists, and in which computers can amplify the ingenuity of expert drug designers instead of attempting to supplant it.</p>
 
 <i>Thanks to Ari Wagen for feedback on drafts of this piece.</i>
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20250303_achilles_and_the_tortoise.html'>What Achilles Said to the Tortoise About Binding-Affinity Prediction</a></h2><i>March 3, 2025</i>
-<p>
-This post is an attempt to capture some thoughts I have about ML models for predicting protein–ligand binding affinity, sequence- and structure-based approaches to protein modeling, and what the interplay between generative models and simulation may look like in the future. I have a lot of open questions about this space, and <a href=https://www.owlposting.com/p/a-socratic-dialogue-over-the-utility>Abhishaike Mahajan’s recent Socratic dialogue on DNA foundation models</a> made me curious to try the dialogue format here. 
-</p>
-
-<p>
-(With apologies to <a href=https://en.wikipedia.org/wiki/What_the_Tortoise_Said_to_Achilles>Lewis Carroll</a> and <a href=https://en.wikipedia.org/wiki/G%C3%B6del,_Escher,_Bach>Douglas Hofstadter</a>.)
-</p>
-
-<br>
-<br>
-<figure>
-  <img class=centered-img src="../img/20250303_ribbon_face.jpg" style="width:450px;" />
-</figure>
-
-<p><em>[The TORTOISE is sitting on a park bench with a thermos of tea and a stack of papers beside him. Enter ACHILLES, holding a stack of papers.]</em></p>
-
-<p><strong>ACHILLES:</strong> Hello, Mr. T. Mind if I join you on your bench?</p>
-
-<p><strong>TORTOISE:</strong> Of course, Achilles. What are you reading on this fine spring day?</p>
-
-<p><strong>ACHILLES:</strong> Right now, I’m reviewing some recent literature on the economics of seating in Mongolian yurts. And yourself?</p>
-
-<p><strong>TORTOISE:</strong> I’m looking through two fascinating papers criticizing modern protein–ligand co-folding methods.</p>
-<p><a href="https://www.biorxiv.org/content/10.1101/2024.06.03.597219v1">The first</a> is by Matthew Masters and co-workers and is entitled “Do Deep Learning Models for Co-Folding Learn the Physics of Protein–Ligand Interactions?” The authors show that AlphaFold 3 predicts the “correct” binding site for a variety of complexes even when the entire binding site is mutated to glycine, when bulky residues are added to fill the binding pocket, or when the polarity of key interactions is reversed. The authors argue that this demonstrates that AlphaFold is overfit to specific protein families, and that models need to be validated on “their compliance with physical and chemical principles.” 
-
-<p><strong>ACHILLES:</strong> Interesting, but not surprising.</p>
-
-<p><strong>TORTOISE:</strong> <a href=https://www.biorxiv.org/content/10.1101/2025.02.03.636309v2>The second</a> is by Peter Škrinjar and co-workers and is entitled “Have protein–ligand co-folding methods moved beyond memorization?” Here, the authors show that the success rate of co-folding methods is dictated by the similarity of structures to the training set. The models appear to perform well in cases where there is high train–test similarity, but on truly different structures their performance is dismal. The authors’ conclusion is even stronger than that of the first paper:</p>
-
-<blockquote>Incorporating physics-based terms to more accurately model protein-ligand interactions, potentially from simulations, conformational ensembles, or other sources, are likely needed to achieve more exciting results in this field.</blockquote>
-
-<p>Taken together, it’s clear that pure deep-learning-based approaches to solving these important scientific problems are doomed to fail.</p>
-
-<p><strong>ACHILLES:</strong> Well, let’s not rush ahead too quickly—perhaps we’ve been spending too much time together. It’s not surprising that these structure-based methods are prone to overfitting, but I expect that the next generation of sequence-only methods will overcome these hurdles.</p>
-
-<p><strong>TORTOISE:</strong> Hm, I admit this intuition leaves me in the dust. Can you enlighten me as to why your response to unphysical overfitting is to reject one of the only physical descriptors that we have—the 3D structures of the protein and the ligand? It seems to me that reducing the amount of available data is a peculiar way to improve the performance of one’s model.</p>
-
-<p><strong>ACHILLES:</strong> Of course, I’m happy to explain. Consider the problem from first principles. It’s not surprising that using 3D structures leads to overfitting—the dimensionality of these problems is vast, and our datasets are comparatively miniscule. So any given set of coordinates is virtually a guaranteed fingerprint for a particular protein or ligand, and we’re just training models that have one-hot encoded the structures they’ve seen. See for instance the recent work of <a href="https://arxiv.org/abs/2412.02889">Jain, Cleves, and Walters</a> arguing that DiffDock is simply a fancy lookup table.</p>
-
-<p><strong>TORTOISE:</strong> Of course I agree, which is why it’s important that we find ways to generate more training data, not jettison what little data we have. The problem is not intractable; it seems that DiffDock-L is superior at this task. We need only wait for another order-of-magnitude increase in the amount of training data available to arrive at a robust deep-learning-based docking method.</p>
-
-<p><strong>ACHILLES:</strong> But, if you will, follow me a little further down this line of thinking. We know that protein–ligand structures are but a single snapshot of a dynamic ensemble of possibilities that interconvert smoothly in solution. This is why attempting to guess the binding affinity from a single pose is so futile, and why extensive sampling is needed for free-energy methods like FEP or TI.</p>
-
-<p>Protein–ligand co-folding models must labor under the same constraints. Just because we’ve changed the scoring function from a forcefield to a neural network doesn’t mean that we can go back to considering a single averaged pose—let alone whatever pose happened to crystallize out of solution best. No, any method predicated on considering just a single pose is doomed to fail.</p>
-
-<p><strong>TORTOISE:</strong> So your proposal is to disregard all poses, and hope that “machine learning” can just call the right answer from <a href="https://www.goodreads.com/quotes/362627-i-can-call-the-spirits-from-the-vasty-deep-hotspur">the vasty deeps</a>? I fear that you’ve been spending too much time on LinkedIn, my dear friend. Perhaps it’s time for you to return to a time before computing, like 5th-century Greece.</p>
-
-<p><strong>ACHILLES:</strong> <em>Au contraire</em>, tortuga. We know that it’s possible to go from sequence to structure with machine learning, unless you’ve already forgotten about this year’s Nobel Prize. And others have shown you can generate structural ensembles this way—look at <a href="https://arxiv.org/abs/2402.04845">AlphaFlow</a>, or <a href="https://www.biorxiv.org/content/10.1101/2024.12.05.626885v1">BioEmu</a>. One could imagine running these models to generate candidate structures, then feeding these structures into a docking model, then feeding the docked structures into a scoring model, then combining the scoring predictions to generate a single predicted binding affinity.</p>
-
-<p><strong>TORTOISE:</strong> I agree in principle, provided each of these models can be benchmarked and verified to follow proper thermodynamic and statistical mechanical principles. But creating a perfect Boltzmann generator won’t be easy; and <a href="https://www.sciencedirect.com/science/article/pii/S0005273616300347#s0055">methods that do not reproduce the canonical ensemble lead to pathological failures in practice</a>.</p>
-
-<p><strong>ACHILLES:</strong> Precisely! Many of these intermediate models are difficult to train, since we don’t have good ground truth for protein structural ensembles or individual binding affinities per pose. In fact, almost the only piece of data we can reliably acquire data for is the very task we want to predict—macroscopic protein–ligand binding affinity. So the entire problem becomes far more tractable if we simply combine the individual models into one end-to-end model so that we can backpropagate through the entire stack. Then we can scale to larger datasets that don’t have associated structural information, like DNA-encoded libraries or Terray’s microarray technology.</p>
-
-<p>Thus, by combining the models into one, we at once simplify our task and make it possible to scale to much larger datasets: <em>e pluribus unum</em>.</p>
-
-<p><strong>TORTOISE:</strong> A surprisingly plausible vision, but I’m still not convinced. (And you ought to be speaking Greek, not Latin.)</p>
-
-<p>Partitioning this problem into multiple models, each of which performs a defined task, means that there are verifiable, low-dimensional intermediate states that can be inspected. Structural ensembles can be saved to PDB files, and individual binding affinities can be sanity-checked. When we dump everything together into one massive mega-model, who knows what the model will try to do? These low-dimensional checkpoints might even be critical for giving us the right inductive bias to prevent overfitting.</p>
-
-<p>By way of comparison, consider LLMs—we use textual checkpointing all the time, from chain-of-thought to retrieval-augmented generation. “Just train a model to do the entire task in a single pass” sounds like the accelerationist, AI-informed position, but in reality interpretability and modularity have proven to be valuable levers across many fields of machine learning. Gleefully jettisoning them hardly seems prudent.</p>
-
-<p><strong>ACHILLES:</strong> Perhaps. But forcing a model to go through a certain intermediate state only makes sense when that intermediate state is actually relevant to the task at hand. <a href="https://www.nature.com/articles/s41422-024-01010-6">How will structure-based methods handle intrinsically disordered proteins</a>?</p>
-
-<p><strong>TORTOISE:</strong> Even disordered proteins must have a structure.</p>
-
-<p><em>[Enter CRAB.]</em></p>
-
-<p><strong>CRAB:</strong> Hullo, dear friends! Are we talking about ESM2? I fear that these methods are passé; if you haven’t heard yet, ascribing individual importance to mere proteins is an inadequate assumption now obsoleted by deep learning.</p>
-
-<p><strong>ACHILLES:</strong> Whatever do you mean?</p>
-
-<p><strong>CRAB:</strong> Exactly what I said! Proteins don’t exist in a vacuum—they possess different post-translational modifications, they aggregate, they float in and out of biomolecular condensates, and many of the most important cellular functions don’t even involve proteins.</p>
-
-<p><strong>ACHILLES:</strong> You’re correct, of course, but it’s clear that proteins are one of the key structural and functional elements of the cell. How else do you explain the history of successful therapeutics that target specific proteins?</p>
-
-<p><strong>CRAB:</strong> Selection bias, my dear friend. Of course the brute-force medicinal chemistry strategies of yesteryear managed to identify a handful of indications amenable to single-protein therapies, just like a handful of traits can be ascribed to single genes. But most traits that matter are polygenic, and most diseases are doubtless treatable only at the systems-biology level. Any lesser approximations are simply inadequate.</p>
-
-<p><strong>TORTOISE:</strong> Oh dear, I fear this is becoming a bit too much for me.</p>
-
-<p><strong>CRAB:</strong> I’ve just accepted a position at a biotech company personally backed by the high suzerains of artificial intelligence. We take millions of brightfield images of cells that have been exposed to different molecules and use deep learning to connect the observed cell-state modifications to molecular structure. Think phenotypic screening, but grander and more glorious.</p>
-
-<p><strong>ACHILLES:</strong> Now I feel out of my depth. Perhaps Mr. T is right and this new world is not for me. The 5th century does have a certain rustic charm…</p>
-
-<p><strong>TORTOISE:</strong> Wait, I think I understand. Previously, we discussed how, by training a single model, we could circumvent the need for explicitly generating protein structural ensembles and scoring individual docked poses—a single meta-model could implicitly perform all these tasks in an end-to-end differentiable fashion and simply learn all the patterns, or perhaps perform some more advanced and less constrained form of logic. Achilles, do you consider this a fair summary of your position?</p>
-
-<p><strong>ACHILLES:</strong> Yes, that seems fair enough, although I hardly see how my proposal connects to this outlandish suggestion.</p>
-
-<p><strong>TORTOISE:</strong> If we wanted to extrapolate this to entire cells, we could perform a similar exercise. We could enumerate all the proteins in the cell with all their various post-translational modifications, and then use Achilles’s model to score a given molecule’s interaction with all of them. It would be a mighty amount of work—but, in theory, it’s possible.</p>
-
-<p><strong>CRAB:</strong> Ah, but you’d still be neglecting the effects of environment, aggregation, and so on. Think of an E3 ligase—do you think you could model that one protein at a time? And what do you say to DNA, RNA, lipids, and so on and so forth.</p>
-
-<p><strong>TORTOISE:</strong> <em>Touché.</em> Perhaps “protein” is the wrong word here—but there must be some number of defined, localized structural entities in the cell which interact with an exogenous small molecule, and these entities must be at least somewhat separable per the principle of locality.</p>
-
-<p><strong>ACHILLES:</strong> Yes, that’s right. After all, a molecule can only be at one place at a time.</p>
-
-<p><strong>TORTOISE:</strong> So if we could use Achilles’s model to predict the interaction of the small molecule with each of these entities, we would have a sort of interaction fingerprint in entity space. We could then, with sufficient data, train a new model to learn the interaction network between each entity and predict an overall cell-level response. Do you agree, Mr. Crab?</p>
-
-<p><strong>CRAB:</strong> I suppose so, although it sounds ungainly. How exactly do you plan to study the effects of a bunch of small molecules on a particular region of chromatin?</p>
-
-<p><strong>TORTOISE:</strong> Ah, but this is where we use Achilles’s trick once more. Instead of learning one model that accounts for per-entity interactions, and another model that combines the individual per-entity predictions into a cell-level prediction, we can just learn a single model and backpropagate through the entire stack. So now our single foundation model is implicitly learning not only protein conformational ensembles, protein–ligand docking, docking rescoring—we’re also learning post-translational modifications, systems biology, and so on.</p>
-
-<p><strong>ACHILLES:</strong> Ah, now I see. Our aquatic colleague here is taking my same logic a step further—instead of implicitly learning individual structures in the course of predicting a protein–ligand interaction, he’s implicitly learning individual protein–ligand interactions in the course of predicting a single cell response.</p>
-
-<p><strong>TORTOISE:</strong> Exactly. The question then becomes if he’ll have enough data to learn the entire stack, or if his model will suffer the same overgeneralization problems as today’s protein–ligand interaction models.</p>
-
-<p><strong>ACHILLES:</strong> Right. It’s clear that at some scale, questions of information theory must predominate—every problem has some minimum amount of data that it takes to solve. Otherwise we’d all be able to solve drug toxicity just from <a href="https://practicalcheminformatics.blogspot.com/2023/08/we-need-better-benchmarks-for-machine.html">the 1500 structures in the ClinTox dataset</a>.</p>
-
-<p><strong>TORTOISE:</strong> Precisely. We could imagine such a strategy working at the infinite-data limit, but in practice the mismatch between problem complexity and data availability seems vast, and slow to fill.</p>
-
-<p><strong>CRAB:</strong> This has been an interesting philosophical aside, but I’m afraid that trying to cram your preconceived notions about biological dogma into my model is ill-advised. Today’s scientists think of proteins because that’s all they know how to study—but true biological understanding can only come when we’re able to learn directly on cellular data without the foolish assumptions that have plagued biochemistry to date. Trying to interpret my cell-level models through the viewpoint of proteins is like trying to decompose a Cybertruck into a linear combination of horses.</p>
-
-<p>But in any event, I must be off. An army of H100s awaits me, and I must deploy them!</p>
-
-<p><em>[Exit CRAB.]</em></p>
-
-<p><strong>ACHILLES:</strong> That fellow has no scientific humility. Of course proteins are important! These Silicon-Valley types have no respect for the deep biological body of knowledge that came before them, and think they can just pour images and SMILES strings into a transformer and “solve biology.” But we’d better return to our previous discussion, or things may become too recursive.</p>
-
-<p><strong>TORTOISE:</strong> There seem to be more and more fellows like him around these days... but I suppose <a href="https://en.wikipedia.org/wiki/Carcinisation">carcinization</a> is a well-documented phenomenon. Where were we before this unexpected conversational loop?</p>
-
-<p><strong>ACHILLES:</strong> I was just proposing the idea that sequence-based models will implicitly learn structure where it’s helpful.</p>
-
-<p><strong>TORTOISE:</strong> Ah, yes. I am beginning to catch up with your lightning-fast intuition. Are you opposed to structure for ideological reasons, or because you think structural information will never be achievable on the scale required to solve this problem?</p>
-
-<p><strong>ACHILLES:</strong> Both—I’m opposed to structure because accurate structural ensembles, which are what’s needed here, will never be available. Even a billion cryoEM structures won’t be enough because single ground-state snapshots will never be enough.</p>
-
-<p><strong>TORTOISE:</strong> But you must concede that, for instance, <a href="https://www.owlposting.com/p/an-argument-for-integrating-molecular">molecular dynamics could provide a way to generate relevant structural information</a> under non-ground-state conditions.</p>
-
-<p><strong>ACHILLES:</strong> I freely admit that the Platonic ideal of MD simulations might furnish us with such data, to run the risk of sounding overly Greek. But you know as well as I do that MD simulations are unreliable and provide data that’s far worse than crystallography. What makes you think that dumping millions of AMBER trajectories into an ML model will do anything except increase demand for H100s?</p>
-
-<p><strong>TORTOISE:</strong> Improving MD simulations seems to be quite tractable. There have been a few papers over the past 12 months that use neural network potentials for protein simulation—consider <a href="https://www.science.org/doi/10.1126/sciadv.adn4397">GEMS</a>, or <a href="https://www.nature.com/articles/s41586-024-08127-z">AI2BMD</a>, or even the most recent <a href="https://arxiv.org/abs/2312.15211">MACE-OFF</a> preprint. <a href="https://www.nature.com/articles/s42256-023-00740-3">Scaling NNPs works well</a>; why not just scale NNPs and use them to run MD simulations?</p>
-
-<p><strong>ACHILLES:</strong> For one, NNPs are ridiculously slow compared to normal MD—capturing protein conformational motion through MD is expensive enough without making it three orders of magnitude slower. You may be content with slow and accurate simulations, but I myself feel the need to go quickly. MD simulations will never be fast enough for high-throughput virtual screening. And how are we supposed to verify the alleged accuracy of these simulations, anyway?</p>
-
-<p><strong>TORTOISE:</strong> NMR measurements, perhaps, or terahertz spectroscopy. The ingenuity of experimentalists cannot be underestimated.</p>
-
-<p><strong>ACHILLES:</strong> I grant that this might work for a single protein. But you’ve managed to select methods that are even less scalable than growing crystals in a tray. This can’t be a general solution—it’s the age of “big data” now, not painstaking spectral analysis measured in graduate-student years.</p>
-
-<p><strong>TORTOISE:</strong> Ah, but we don’t need massive amounts of data for our benchmarks. NNPs and MD are physically motivated, so they’re much less prone to overfitting than the approaches you discuss. Generalization occurs naturally, without needing to resort to the sorts of paranoid dataset splits seen with sequence-only methods.</p>
-
-<p><strong>ACHILLES:</strong> Might this not simply arise from how small the models are today? Once an NNP must handle long-range forces, complex many-body interactions, and so on, these models will be just as susceptible to overfitting as co-folding methods. I know you like to hide in your shell from time to time, but robustness isn’t everything—if all you want is to prevent overfitting, you might as well go back to using AutoDock Vina.</p>
-
-<p><strong>TORTOISE:</strong> Not all approaches are equally susceptible to overfitting, and encoding proper inductive biases is one of the most important tasks of an ML researcher. The sorts of properties predicted by NNPs—forces, energy, charges, and so on—are intrinsically local and thus can be learned much more easily from a limited dataset. In fact, this is one of the strongest arguments for using a geometric GNN in the first place; we naturally account for the symmetries of the problem, as opposed to needing to learn them through vast datasets. Consider the analogies to <a href="https://en.wikipedia.org/wiki/Noether%27s_theorem">Noether’s theorem</a>.</p>
-
-<p><strong>ACHILLES:</strong> I must confess, I rarely revisit the 1910s.</p>
-
-<p><strong>TORTOISE:</strong> More fundamentally, learning energy as an intermediate variable is an incredibly fundamental task, and it’s unlikely that we can avoid some version of this task—particularly since diffusion models and AlphaFold are <a href="https://pubs.acs.org/doi/10.1021/acsphyschemau.4c00004">almost certainly both implicitly learning forcefields</a> anyway.</p>
-
-<p>Trying to one-shot the hardest problems in computational biochemistry and biophysics with “deep learning” will forever be hamstrung by memorization and overfitting, since the approach is fundamentally agnostic to the nature of the problem. I’m simply proposing that trying to learn physically motivated, verifiable, and practical models that correspond to our physical understanding of the world may be a more tractable strategy, even if it seems slower to you.</p>
-
-<p><strong>ACHILLES:</strong> You know that I respect your stepwise approach to scientific discovery, but I fear you’re confusing your own intrinsic conservatism for enlightenment. Haven’t you heard of Sutton’s <a href="http://www.incompleteideas.net/IncIdeas/BitterLesson.html">“bitter lesson”</a>? Encoding expert intuition always makes the researcher feel accomplished, and is often effective in the small-data regime, but never pays off in the end.</p>
-
-<p><strong>TORTOISE:</strong> Mr. Crab could say the same thing to you.</p>
-
-<p><strong>ACHILLES:</strong> Admittedly. But the task of the ML researcher is not dissimilar to that of the philosopher: to carve reality at its joints, <a href="https://classics.mit.edu/Plato/phaedrus.html">as my kinsman Plato said</a>, and find the natural partitions between concepts that make our tasks tractable. Choosing the right problem to tackle with deep learning might seem like encoding expert intuition in an un-Suttonian way, but really it’s a higher-order consideration, and one which itself still remains impervious to learning.</p>
-
-<p><strong>TORTOISE:</strong> And what, pray tell, makes your protein–ligand model a natural partition, and my NNPs an unnatural partition?</p>
-
-<p><strong>ACHILLES:</strong> The elegance of the protein–ligand task is that it corresponds to a real information bottleneck—all the complexity of the system can easily be distilled into a single number, and in practice the measurement is performed that way. In contrast, your model is only indirectly testable and verifiable.</p>
-
-<p><strong>TORTOISE:</strong> Only as indirectly as any other physics-based method is testable. Scientists have been doing this for some time, you know.</p>
-
-<p><strong>ACHILLES:</strong> And even more fundamentally, even a “physics-based model” is anything but. Scratch the surface of an NNP-powered MD simulation and you’ll see an ocean of questionable assumptions: band-gap collapse, nuclear quantum effects, spin–orbit coupling, quantum vs. classical zero-point energy, and so on and so forth. Even a model trained on full-configuration-interaction calculations won’t perfectly reflect reality. At the end of the day, you’ll have wasted ten million dollars on AWS computers generating gnostic simulated data that you could have spent getting real, tangible results without approximations.</p>
-
-<p><strong>TORTOISE:</strong> I’m willing to concede that at some scale, what you’re proposing might work. But you have no idea how much data you need to learn protein–ligand interactions. Have you done a scaling study; do you even have a back-of-the-envelope estimate for what your proposed model will cost? Who knows what the true dimensionality of protein–ligand interaction space is, or if it’s remotely learnable with the general architectures you propose? Someone’s going to have to generate all this data, and it’s not cheap—even fleet-footed Achilles can’t outrun the fundamental limitations of laboratory science.</p>
-
-<p><strong>ACHILLES:</strong> Ah, let’s not let our conversation fold back on itself. Isn’t it possible that there are latent low-dimensional representations of protein–ligand interactions that can make my structure-only training process more efficient?</p>
-
-<p><strong>TORTOISE:</strong> Possible, yes, but not guaranteed. To make matters worse, even if you train a protein–ligand model you’ll have to turn around and train another foundation model for protein–protein interactions, and another model for nucleotides, and another model for lipids, and so on and so forth.</p>
-
-<p><strong>ACHILLES:</strong> Presuming the first model succeeds, I would think this a fine outcome.</p>
-
-<p><strong>TORTOISE:</strong> We know what the scaling laws for NNPs are, and we know that <a href="https://arxiv.org/abs/2401.00096">they can scale across different domains of science even at sub-GPT1 parameter count</a>. These are real advantages, and we ought to not be hasty in discarding them. Plus, it’s not like today’s methods are inconceivably far from where we want to go. Forcefield-based free-energy methods aren’t perfect, but <a href="https://www.nature.com/articles/s42004-023-01019-9">they’re good enough to be useful</a>. Doesn’t that suggest that we don’t need to get e.g. nuclear quantum effects exactly right to build a useful model?</p>
-
-<p><strong>ACHILLES:</strong> Scaling simulation across the chemical sciences is intriguing. You should tell Adam Marblestone; maybe you can build an FRO out of this idea. But we must stay focused on running the race at hand first and worry about the whole decathlon later. Perhaps we’ll be able to perform <a href="https://arxiv.org/abs/2403.13187v2">evolutionary model merging</a> and pull out conformational ensembles at a later date, but I fear that your bias towards legacy simulation methods blinds you to the task at hand.</p>
-
-<p>And arguing that FEP+ is good enough to be useful proves too much. <a href="https://link.springer.com/chapter/10.1007/0-306-46883-2_7">Simply creating a histogram of distance by atom types is good enough to be useful</a>; even plastic model kits are useful. Being useful at the small-data limit and being a viable path towards the future are very different, and I fear you confuse them at your own peril.</p>
-
-<p><strong>TORTOISE:</strong> Think strategically, my tactical friend. Let’s say we’re trying to get to the ultimate protein–ligand prediction model, which I’ll call the Galapagos Giant Model. If I train an NNP that’s halfway there, I’ve built something that’s immediately practically useful and which I can deploy to real problems. If you build a one-shot prediction model that’s halfway there, you’re going to get an overfit and confused model that takes a SMILES string and a sequence and returns meaningless noise.</p>
-
-<p><strong>ACHILLES:</strong> (Of course, first I’d have to train a model that was halfway to being halfway complete…)</p>
-
-<p><strong>TORTOISE:</strong> The ability of startups and research programs to bootstrap their way through increasing complexity is a critical determiner of their success—this is why YC tells companies to ship and start talking to users as soon as possible. We know that NNPs are already useful. How can you accomplish a similar feat with your approach?</p>
-
-<p><strong>ACHILLES:</strong> Ah, but your line of argumentation seems to rely on its own conclusion. Why is my hypothetical half-baked model unusable but yours is useful? Isn’t it just as possible that my model is useful across many domains but struggles to generalize to bizarre systems, while your model manages to be deeply useful nowhere?</p>
-
-<p>The greatest advantage of simulation—its exactitude—is also its greatest weakness. A simulation-based workflow is only as strong as its weakest link, or what one might call its Achilles heel.</p>
-
-<p><strong>TORTOISE:</strong> Science aside, I fear the self-reference here will soon become ponderous.</p>
-
-<p><strong>ACHILLES:</strong> This might explain why <a href="https://arxiv.org/abs/2410.16818">the data on using NNPs in FEP are pretty bleak with today’s models</a>, even though these models are undeniably a big improvement over the predecessor forcefield methods. Furthermore, <a href="https://pubs.rsc.org/en/content/articlelanding/2021/sc/d1sc01185e">fine-tuning models to be better at specific tasks seems to make them less general</a>.</p>
-
-<p><strong>TORTOISE:</strong> I caution you not to rush to dismiss my approach prematurely. True ML FEP has never been tried, since the timescales remain inaccessible. Ligand-only corrections neglect the most important part of the system, which is the protein–ligand interactions—and <a href="https://www.science.org/doi/10.1126/sciadv.adn4397">we know that protein conformational motion is poorly described by forcefields</a>, potentially biasing the entire simulation in deleterious ways. So no, I cannot feign surprise that these results are underwhelming.</p>
-
-<p><strong>ACHILLES:</strong> Still, you can’t deny that even the “overfit” ML methods of today like DiffDock are practically useful—it’s not like most drug programs deal with first-in-class structural families. How well do you think AlphaFold 3 works for kinase inhibitors? I would be surprised if the performance is not excellent.</p>
-
-<p><strong>TORTOISE:</strong> The dimensionality of ligand space is much higher than that of protein space.</p>
-
-<p><strong>ACHILLES:</strong> True. But it’s possible that generalization is easier in ligand space. I’m growing hungry—how about we continue this discussion over brunch?</p>
-
-<p><strong>TORTOISE:</strong> A capital idea. Shall we leave now?</p>
-
-<p><strong>ACHILLES:</strong> You are welcome to, but I may sit and read for a bit longer. As you know, I have a considerable speed advantage over you, and keeping up with the literature takes more and more of my time.</p>
-
-<p><strong>TORTOISE:</strong> Best of luck. We’ll see who gets there first!</p>
-
-<p><em>[Exit TORTOISE.]</em></p>
-
-<br>
-<br>
-
-<i>Thanks to Abhishaike Mahajan, Navvye Anand, Tony Kulesa, Pat Walters, and Ari Wagen for helpful conversations on these topics. I've also taken inspiration from talks I heard by Tom Sercu (Evolutionary Scale) and Pranam Chatterjee (Duke). Any errors are mine alone.</i>
 </div><div class='previous-link'><a href='blog_p2.html'>previous page</a></div><div class='next-link'><a href='blog_p4.html'>next page</a></div><br>
   </body>
   <br>
