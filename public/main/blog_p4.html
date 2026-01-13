@@ -35,7 +35,137 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p3.html'>previous page</a></div><div class='next-link'><a href='blog_p5.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20250303_achilles_and_the_tortoise.html'>What Achilles Said to the Tortoise About Binding-Affinity Prediction</a></h2><i>March 3, 2025</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p3.html'>previous page</a></div><div class='next-link'><a href='blog_p5.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20250305_democratizing_cadd.html'>Democratizing Computer-Assisted Drug Design: How Are We Doing?</a></h2><i>March 5, 2025</i>
+<p>In 2007, John Van Drie wrote <a href=https://link.springer.com/article/10.1007/s10822-007-9142-y>a perspective</a> on what the next two decades of progress in computer-assisted drug design (CADD) might entail. <a href="https://medchemash.substack.com/p/drug-discovery-and-modeling-the-view">Ash Jogalekar recently looked back</a> at this list, and rated the progress towards each of Van Drie’s goals on a scale from one to ten. There’s a lot in Jogalekar’s piece that’s interesting and worth discussing, but I was particularly intrigued by the sixth item on the list (emphasis added):</p>
+
+<blockquote>
+<p><strong>Outlook 6: today’s sophisticated CADD tools only in the hands of experts will be on the desktops of medicinal chemists tomorrow. The technology will disperse</strong></p>
+
+<p>Twenty-five years ago, modelers worked with million-dollar room-sized computers with 3D display systems half the size of a refrigerator. Today, the computer which sits on my lap is far more powerful, both in computation speed and in 3D display capabilities. Twenty-five years ago, the software running on those computers was arcane, with incomprehensible user interfaces; much of the function of modelers in those days was to serve as a user-friendly interface to that software, and their assistance was often duly noted in manuscripts, if not as a co-author then as a footnote. Today, scientists of all backgrounds routinely festoon their publications with the output of molecular graphics software, running on their desktop/laptop machines with slick easy-to-use graphical user interfaces, e.g. Pymol.</p>
+
+  <p>This is a trend that will accelerate. Things that seem sophisticated and difficult-to-use, but are truly useful, will in 20 years be routinely available on desktop/laptop machines (and even laptops may be displaced by palmtops, multi-functional cellphones, etc.). <b>Too many modelers are still in the business of being ‘docking slaves’ for their experimental collaborators (i.e. the experimentalist asks the modeler ‘please dock my new idea for a molecule’, and waits for the result to see if it confirms their design); this will ultimately disappear, as that type of routine task will be handled by more sophisticated user interfaces to current docking algorithms, </b>e.g. the software from Molsoft is well on its way to fill such a role. Whereas the ‘information retrieval specialists’ that once populated corporate libraries have disappeared, replaced by desktop Google searches, this trend of modeling-to-the-desktop should not be a source of job insecurity for CADD scientists—this will free us up from the routine ‘docking slave’ tasks to focus our energies on higher-valued-added work. <b>As a rule, things today that seem finicky and fiddly to use (e.g. de novo design software), or things that take large amount of computer resources (e.g. thermodynamic calculations, or a docking run on the full corporate database) are things that one can easily imagine will in the future sit on the desktops of chemists, used by them with minimal intervention by CADD scientists</b></p>
+</blockquote>
+
+<p>Jogalekar gives the field a 6/10 on this goal, which I find optimistic. In his words:</p>
+
+<blockquote>
+<p>From tools like Schrödinger’s Live Design to ChemAxon’s Design Hub, medicinal chemists now use more computational tools than they ever did. Of course, these tools are used in fundamental part because the science has gotten better, leading to better cultural adoption, but the rapidly dwindling cost of both software and hardware enabled the cloud has played a huge rule in making virtual screening and other CADD tools accessible to medicinal chemists.</p>
+</blockquote>
+
+<p>It’s true that there are more computational tools available to non-computational scientists than there once were—but based on the conversations we’ve had with industry scientists (which also informed <a href=https://rowansci.com/publications/quantum-chemistry-in-drug-discovery>this piece</a>), the role of computational chemists as “docking slaves” (Van Drie’s phrase, not mine) to their experimental colleagues still rings true. The number of experimental scientists able to also run non-trivial computational studies remains vanishingly low, despite the improvements in computing hardware and software that Van Drie and Jogalekar discussed.</p>
+
+<p>Why hasn’t our field made more progress here? In my view, there are three principal reasons: immature scientific tools demand expert supervision, poorly designed technology deters casual usage, and cultural inertia slows adoption even further.</p>
+
+<h2>1. Immature Scientific Tools Demand Expert Supervision</h2>
+
+<p>Most scientific tools optimize for performance and tunability, not robustness or ease of use. Quantum chemistry software forces users to independently select a density functional, a basis set, any empirical corrections, and (for the brave) allows them to tune dozens of additional parameters with obscure and poorly documented meanings. (“Oh, the default settings for transition states aren’t very good… you need to configure the initial Hessian guess, the integral tolerance, the optimizer step size, and a few other things… I’ll email you a couple scripts.”)</p>
+
+<figure>
+<img class=centered-img src="../img/20250305_errors.png" style="width:450px;" />
+<figcaption>Settings like these are difficult to understand.</figcaption>
+</figure>
+
+<p>And these issues aren’t unique to quantum chemistry; virtually every area of scientific simulation or modeling has its own highly specialized set of tools, customs, and tricks, so switching fields even as a PhD-level computational chemist is challenging and treacherous. Some of this complexity is inherent to the subject matter—there are lots of unsolved computational problems out there for which no simple solution is yet known. For instance, handing changes in ionization state or tautomerization during free-energy-perturbation (FEP) simulations is (to my knowledge) just intrinsically difficult right now, and no robust solution exists that can be plainly put into code.</p>
+
+<p>But better hardware and better methods can alleviate these issues. Searching through different conformers of a complex molecule used to be a challenging task that demanded chemical expertise and considerable software skill—now, metadynamics programs like <a href=https://crest-lab.github.io/crest-docs/>CREST</a> make it possible to run conformer searches simply from a set of starting coordinates. These new “mindless” methods are less efficient than the old methods that relied on chemical intuition, but in many cases the simulations are fast enough that we no longer care.</p>
+
+<p>Similarly, the increasing speed of quantum chemistry makes it simpler to run high-accuracy simulations without extensive sanity checks. <a href=https://pubs.acs.org/doi/abs/10.1021/jacs.2c06688>In my PhD research</a>, I carefully benchmarked different tiny basis sets against high-level coupled cluster calculations to find a method that was fast enough to let me study the reaction dynamics of a catalytic transition state—now, methods like r<sup>2</sup>SCAN-3c give better accuracy in virtually every case and avoid the dangerous basis-set pathologies I used to worry about, making it possible to use them as a sane default for virtually every project.</p>
+
+<p>Other fields have undergone similar transformations. Writing assembly code, when done right, produces substantially faster and more efficient programs than writing a compiled language like C, and writing C produces faster code than writing a high-level language like Python. But computers are fast enough now that writing assembly code is now uncommon. Python is much more forgiving, and makes it possible for all sorts of non-experts (like me) to write useful code that addresses their problems. Back in the days of the PDP-10, every FLOP was precious—but with today’s computers, it’s worth accepting some degree of inefficiency to make our tools quicker to learn, easier to use, and far more robust.</p>
+
+<figure>
+<img class=centered-img src="../img/20250305_assembly.png" style="width:450px;" />
+<figcaption>Image from <a href=https://thechipletter.substack.com/p/the-unnecessary-obscurity-of-assembly>The Chip Letter</a>.
+</figure>
+
+
+<p>Computational chemistry needs to make the same transition. There will always be cutting-edge computational problems that demand specific expertise, and these problems will invariably remain the rightful domain of experts. But vast improvements in the speed and accuracy of computational chemistry promise to move more and more problems into a post-scarcity regime where maximum efficiency is no longer required and the field’s impact will no longer predominately be determined by performance.</p>
+
+<p>Once a method becomes robust enough to be routinely used without requiring expert supervision, it’s safe to turn over to the non-experts. I’d argue that this is true of a decent proportion of computational workflows today, and advances in simulation and machine learning promise to make this true for a much greater proportion in the next decade.</p>
+
+<h2>2. Poorly Designed Technology Keeps People Out</h2>
+
+<p>Sadly, scientific considerations aren’t all that prevents molecular modeling from being more widely employed. The second underlying reason limiting the reach of computational tools is that most of the tools are, frankly, just not very good software. Scientific software frequently requires users to find and manage their own compute, write scripts to parse their output files and extract the data, and do plenty of needless work in post-processing—in many respects, being a computational chemist means stepping back in time to 1970s-era software.</p>
+
+<figure>
+<img class=centered-img src="../img/20250305_ibm.png" style="width:450px;" />
+</figure>
+
+<p>These difficulties are considerable even for full-time computational chemists; for experimental scientists without coding experience, they’re insurmountable. No medicinal chemist should need to understand <code>rsync</code>, <code>sed</code>, or <code>malloc</code> to do their job! Some of the error messages from computational chemistry software are so obtuse that there are <a href="https://docs.alliancecan.ca/wiki/Gaussian_error_messages">entire web pages</a> devoted to decrypting them:</p>
+
+<pre class=code-block>RFO could not converge Lambda in  999 iterations.
+ Linear search skipped for unknown reason.
+ Error termination via Lnk1e in /disc30/g98/l103.exe.
+ Job cpu time:  0 days  7 hours  9 minutes 17.0 seconds.
+ File lengths (MBytes):  RWF=   21 Int=    0 D2E=    0 Chk=    6 Scr=    1
+</pre>
+
+<p>Why is so much scientific software so bad? Academic software development prioritizes complexity and proof-of-concepts because these are the features that lead to publications. More prosaic considerations like robustness, maintainability, and ease of use are secondary considerations at best, and it’s hard for academic research groups to attract or maintain the sort of engineering talent required for most impactful work in scientific software. In <a href=https://newscience.org/how-software-in-the-life-sciences-actually-works-and-doesnt-work/?ref=rafah.site>a piece for <em>New Science</em></a>, Elliot Hirshberg documents the consequences of this situation (emphasis added):</p>
+
+<blockquote>
+<p>…most life sciences software development happens in academic labs. These labs are led by principal investigators who spend a considerable portion of their effort applying for competitive grants, and the rest of their time teaching and supervising their trainees who carry out the actual research and engineering. Because software development is structured and funded in the same way as basic science, citable peer-reviewed publications are the research outputs that are primarily recognized and rewarded. <strong>Operating within this framework, methods developers primarily work on building new standalone tools and writing papers about them, rather than maintaining tools or contributing to existing projects….</strong></p>
+
+<p>This organizational structure for developing methods and software has resulted in a tsunami of unusable tools…. <strong>Scientists need to learn how to download and install a large number of <a href="https://hgdownload.soe.ucsc.edu/admin/exe/">executable programs</a>, battle with <a href="https://xkcd.com/1987/">Python environments</a>, and even compile C <a href="http://www.htslib.org/download/">programs</a> on their local machine if they want to do anything with their data at all.</strong> <strong>This makes scientists new to programming throw up their hands in confusion, and seasoned programmers tear their hair out with frustration.</strong> There is a reason why there is a long-running joke that half of the challenge of bioinformatics is installing software tools correctly, and the rest is just converting between different <a href="http://genome.ucsc.edu/FAQ/FAQformat.html">file formats</a>.</p>
+</blockquote>
+
+<p>Frustratingly, relatively few academic scientists seem to view this as a problem. In a thread discussing the lack of graphical user interfaces (GUIs) for scientific software on the Matter Modeling Stack Exchange, <a href="https://mattermodeling.stackexchange.com/a/7089">a user writes</a> about how GUIs are not just a distraction but actively harmful for scientific software (emphasis added):</p>
+
+<blockquote>
+<p>[GUI development takes time] that could be spent on other tasks, like developing more functionality in the core program, developing different programs for different tasks, or even doing other things like lab research that has clearer advantages for one’s career… <strong>But then, after the GUI has been designed and created, it’s a new source of maintenance burden. That means a program with a GUI will have to have time dedicated to fixing GUI issues for users, especially if an OS (or other system library) update breaks it. That’s time that could be spent on other things more productive to one’s career or research aspirations.</strong></p>
+</blockquote>
+
+<p>This is a textbook case of misaligned incentives. Researchers who create scientific software aren’t rewarded for making it easy for others to build on or use, only for making it increasingly powerful and complex—as a result, there are hundreds of complex and impossible-to-use scientific software packages floating around on Github. Almost all the scientific software projects which defy this trend are commercial or supported by commercial entities: at least from the users’ point of view, the incentives of a for-profit company seem superior to academic incentives here.</p>
+
+<figure>
+<img class=centered-img src="../img/20250305_typedfemale.png" style="width:500px;" />
+  <figcaption><a href=https://x.com/typedfemale/status/1871704190910943440>Original post from @typedfemale</a></figcaption>
+</figure>
+
+<p>Better tools are the solution to <a href=https://slatestarcodex.com/2017/11/09/ars-longa-vita-brevis/>the ever-increasing scientific burden of knowledge</a>. Every day, experimental scientists use tools without fully understanding their internal workings—how many chemists today could build a mass spectrometer from scratch, or an HPLC? We accept that experimental tools can be productively used by non-experts who don’t understand their every detail—but when it comes to computational chemistry, we expect every practitioner to build their own toolkit practically from scratch.</p>
+
+<p>This has to change. If we want scientific software to be more widely used, our field needs to find a way to make software that’s as elegant and user-friendly as the software that comes out of Silicon Valley. This can happen through any number of different avenues—improved academic incentives, increased commercial attention, and so on—but without this change, large-scale democratization of simulation will never be possible.</p>
+
+<h2>3. Cultural Inertia Slows Adoption</h2>
+
+<p>But even with robust methods and well-designed software products, cultural differences between computational and experimental scientists persist. Generations of PhD students have been taught that they’re either “computational” or “experimental,” with the attendant stereotypes and communication barriers that accompany all such dichotomies. In industry, scientists are hired and promoted within a given skillset; while scientists occasionally hop from experiment to computation, it’s rare to meet truly interdisciplinary scientists capable of contributing original research insights in both areas.</p>
+
+<p>Many scientists, both computational and experimental, are happy with this state-of-the-art. Experimental scientists can avoid having to learn a set of confusing skills and delegate them to a colleague, while maintaining a comfortable skepticism of any computational predictions. Computational scientists, in contrast, get to serve as “wizards” who summon insights from the Platonic realm of the computer.</p>
+
+<p>Some computational scientists even come to take pride in their ability to navigate a confusing web of scripts, tools, and interfaces—it becomes their craft, and a culture to pass along to the next generation. On Stack Exchange, <a href="https://mattermodeling.stackexchange.com/a/5010">one professor writes</a> in response to a beginner asking about graphical user interfaces:</p>
+
+<blockquote>
+<p>Trust me: it is better to learn the command line… I began using UNIX when I was 9 years old. It’s time for you to learn it too.</p>
+</blockquote>
+
+<p>As Abhishaike Mahajan put in <a href="https://owlpostingshop.com/products/rowan">his poster about Rowan</a>—“enough”! It doesn’t have to be this way.</p>
+
+<figure>
+<img class=centered-img src="../img/20250305_rowan.png" style="width:450px;" />
+</figure>
+
+<p>Why care about democratizing simulation? We think that putting simulation into the hands of every scientist will enable innovation across the chemical sciences. As of 2025, it seems clear that computation, simulation, and ML will play a big role in the future of drug discovery. But as long as “computation” remains a siloed skillset distinct from the broader activity of drug discovery, the impact that these breakthroughs can have will remain limited by cultural and organizational factors.</p>
+
+<p>If the importance of computer-assisted drug discovery continues to increase but the tools remain unusable by the masses, will computational chemists and biologists simply grow in importance more and more? Taken to the extreme, one can envision what Alice Maz terms <a href="https://www.alicemaz.com/writing/priesthood.html">“a priesthood of programmers,”</a> a powerful caste dedicated to interceding between man and computer. Perhaps computational tools will remain inaccessible forever, and those who excel at drug discovery will be those who can best deploy a litany of arcane scripts. Perhaps the future of chemistry will be run by CS majors, and today’s drug hunters will merely be employed to synthesize compounds and run biological assays in service of the new elite.</p>
+
+<figure>
+<img class=centered-img src="../img/20250305_priesthood.jpg" style="width:450px;" />
+<figcaption><i>Scholar by a Waterfall</i>, Ma Yuan. Image from Alice Maz's aforementioned post <a href=https://www.alicemaz.com/writing/priesthood.html>“A Priesthood of Programmers”</a>.
+</figure>
+
+<p>But one can envision a future in which computational chemistry becomes a tool to aid drug designers, not supplant them. In 2012, Mark Murcko and Pat Walters (distinguished industry scientists both) wrote <a href=https://pmc.ncbi.nlm.nih.gov/articles/PMC3268970/>“Alpha Shock,”</a> a speculative short story about drug discovery in the year 2037. I want to highlight a scene in which Sanjay (the protagonist) uses structure-based drug design to discover a new candidate and avoid paying his rival Dmitri royalties:</p>
+
+<blockquote>
+  <p>With the structures and custom function in hand, Sanjay was ready to initiate the docking study. But despite recent advances in the TIP32P** water model, Sanjay still didn’t completely trust the predicted protein-ligand binding energetics. Next, he transferred the experimental data into the Google Predictive Analytics engine and quickly designed a new empirical function to fit the experimental data. <strong>Now he launched the dynamic docking simulator, dropping the empirical function into the hopper... A progress bar appeared in front of him showing “10^30 molecules remaining, 2,704 h 15 min to completion.”</strong> Sanjay quickly stopped the process and constrained the search to only those molecules that fell within the applicability domain of his empirical function. This reduced the search to 10^12 molecules and allowed the analysis to complete in a few minutes.</p>
+
+  <p>After a bit of visual inspection to confirm the results of his docking study, Sanjay moved on to the next step. <strong>He knew that slow binding kinetics could provide a means of lowering the dose for his compound. To check this, he ran a few seconds of real-time MD on each of the top 50,000 hits from the docking study. A quick scan of the results turned up 620 structures that appeared to have the required residence time.</strong> Sanjay submitted all these structures to PPKPDS, the Primate Pharmacokinetic and Pharmacodynamic Simulator, a project developed through a collaboration of industry, academia, and the World Drug Approval Agency. Of the compounds submitted, 52 appeared to have the necessary PK profile, including the ability to be actively transported into the brain. All but a few were predicted to be readily synthesizable.</p>
+</blockquote>
+
+<p>In “Alpha Shock,” a drug designer like Sanjay can leverage interactive, intuitive software to quickly test his hypotheses and move towards important conclusions. Sanjay’s tools serve to augment his own intuition and vastly increase his productivity, yet don’t require him to use bespoke scripts or memorize arcane incantations. To anyone with any experience with computer-assisted drug design, this will read like science fiction—but that is exactly the point. The world of “Alpha Shock” gives us a vision of where we need to go as a field, and highlights where we’re deficient today.</p>
+
+<p>Better instrumentation and analytical tooling has revolutionized chemistry over the past sixty years, and better design &amp; simulation tools can do the same over the next sixty years. But as we’ve seen with NMR and mass spectrometry, enabling technologies must become commonplace tools usable by lots of people, not arcane techniques reserved for a rarefied caste of experts. Only when computational chemistry undergoes the same transition can we fulfill the vision that Van Drie outlined years ago—one in which every bench scientist can employ the predictive tools once reserved for specialists, and in which computers can amplify the ingenuity of expert drug designers instead of attempting to supplant it.</p>
+
+<i>Thanks to Ari Wagen for feedback on drafts of this piece.</i>
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20250303_achilles_and_the_tortoise.html'>What Achilles Said to the Tortoise About Binding-Affinity Prediction</a></h2><i>March 3, 2025</i>
 <p>
 This post is an attempt to capture some thoughts I have about ML models for predicting protein–ligand binding affinity, sequence- and structure-based approaches to protein modeling, and what the interplay between generative models and simulation may look like in the future. I have a lot of open questions about this space, and <a href=https://www.owlposting.com/p/a-socratic-dialogue-over-the-utility>Abhishaike Mahajan’s recent Socratic dialogue on DNA foundation models</a> made me curious to try the dialogue format here. 
 </p>
@@ -725,82 +855,6 @@ Thanks to Abhishaike Mahajan for helpful feedback on this post.
 </i>
 </p>
 
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20240917_robotics.html'>Robots Won't Solve Organic Synthesis</a></h2><i>September 17, 2024</i>
-<p>
-Abhishaike Mahajan recently wrote <a href=https://www.owlposting.com/p/generative-ml-in-chemistry-is-bottlenecked>an excellent piece</a> on how generative ML in chemistry is bottlenecked by synthesis (<i>disclaimer: I gave some comments on the piece, so I may be biased</i>). One of the common reactions to this piece has been that self-driving labs and robotics will soon solve this problem—this is a pretty common sentiment, and one that I’ve heard a lot. 
-</p>
-
-<p>
-Unfortunately, I think that the strongest version of this take is wrong: organic synthesis won’t be “solved” by just replacing laboratory scientists with robots, because (1) figuring out what reactions to run is hard and (2) running reactions is even harder and (3) we need scientific advances to fix this, not just engineering. 
-</p>
-
-<h2>
-Predicting What Reactions To Run Is Hard
-</h2>
-
-<p>
-Organic molecules are typically made through a sequence of reactions, and figuring out how to make a molecule involves both the strategic question of which reactions to run in what order and the tactical question of how to run each reaction. 
-</p>
-
-<p>
-There’s been a ton of work on both of these problems, and it’s certainly true that computer-assisted retrosynthesis tools have come a long way in the last decade! But retrosynthesis is one of those problems that’s (relatively) easy to be good at and almost impossible to be great at. In part, this is because data in this field tends to be very bad: publications and patents are full of irreproducible or misreported reactions, and negative results are virtually never reported. (<a href=https://www.science.org/content/blog-post/sorta-artificial-intelligence>This post</a> by Derek Lowe is a good overview of some of the problems that the field faces.)
-</p>
-
-<p>
-But also, the problems are just hard! I got the chance to try out one of the leading retrosynthesis software packages back in my career as an organic chemist, and when we fed it some of the tough synthetic problems we were facing, it gave us all the logical suggestions that we had already tried (unsuccessfully) and then began suggesting insane reactions to us. I can’t really blame the model for not being able to invent new chemistry—but this illustrates the limits of what pure retrosynthesis can accomplish, absent new scientific discoveries.
-</p>
-
-<p>
-The tactical problem of optimizing reaction conditions is also difficult. In cases where there are a lot of continuous variables (like temperatures or concentrations), conventional optimization methods like design-of-experiments can work well—but where reagents or catalysts are involved, optimization becomes significantly more challenging. Lots of cheminformatics/small-data ML work has been done in this area, but it’s still not straightforward to reliably take a reaction drawn on paper and get it to work in the lab. 
-</p>
-
-<h2>
-Running Reactions Is Even Harder
-</h2>
-
-<p>
-All of the above problems are, in principle, solvable. Where I think robotics is likely to struggle even more is in the actual execution of these routes. Synthetic organic chemistry is an arcane and specialized craft that typically requires at least five years of training to be decent at—most published reaction procedures assume that the reader is themselves a trained organic chemist, and omit most of the “obvious” details that are needed to unambiguously specify a sequence of steps. (The incredibly detailed procedures in <a href=https://www.orgsyn.org/><i>Organic Syntheses</i></a> illustrate just how much is missing from the average publication.)
-</p>
-
-<p>
-My favorite illustration of how irreproducible organic chemistry can be is BlogSyn, a brief project that aimed to anonymously assess how easily published reactions could be reproduced. <a href=https://blog-syn.blogspot.com/2013/02/blog-syn-002-pd-catalyzed-c-3-selective.html>The second BlogSyn post</a> found that a reported olefination of pyridine could not be reproduced—the original author of the paper, Jin-Quan Yu (Scripps) responded, and the shape of reaction tube was ultimately found to be critical to reaction success.
-</p>
-
-<p>
-<a href=https://blog-syn.blogspot.com/2013/02/blog-syn-003-benzylic-oxidation-of_18.html>The third BlogSyn post</a> found that an IBX-mediated benzylic oxidation reported by Phil Baran (also of Scripps) could not be reproduced at all as written. Phil and his co-authors responded pretty aggressively, and after several weeks of back-and-forth <a href=https://blog-syn.blogspot.com/2013/03/blog-syn-003a-secret-ingredient.html>it was ultimately found</a> that the reaction could be reproduced after modifying virtually every parameter. A comment from Phil’s co-author Tamsyn illustrates some of the complexities at play:
-</p>
-
-<blockquote>
-There is in [BlogSyn’s] discussion a throw away comment about the 2-methylnaphthalene not being volatile. Have you never showered and then left your hair to dry at room temperature? – water evaporates at RT, just as 2-methylnaphthalene does at 95 ºC. I suggest to you that at the working temperatures of this reaction, the biggest problem may be substrate evaporation (or “hanging out” on the colder parts of the flask as Phil said)... We need fluorobenzene to reflux in these reactions and in so-doing wash substrate back into the reaction from the walls of the vessel, but it clearly slows/inhibits the reaction also – so, we need to tune this balance carefully and with patience. Scale will have a big influence on how well this process works.
-</blockquote>
-
-<p>
-Tamsyn is, of course, right—volatile substrates can evaporate, and part of setting up a reaction is thinking about the vapor pressure of your substrates and how you can address this. But this sort of thinking requires a trained chemist, and isn’t easily automated. There are a million judgment calls to make in organic synthesis—what concentration to use, how quickly to add the reagent, how to work up the reaction, what extraction solvent to use, and so on—and it’s hard enough to teach first-year graduate students how to do all this, let alone robots. Perhaps at the limit as robots achieve AGI this will be possible, but for now these remain difficult problems. 
-</p>
-
-<h2>
-We Need Scientific Advances To Fix This
-</h2>
-
-<p>
-What can be done, then? 
-</p>
-
-<p>
-From a synthetic point of view, we need more robust reactions. Lots of academics work on reaction development, but the list of truly reliable reactions remains miniscule: amide couplings, Suzuki couplings, addition to Ellman auxiliaries, SuFFEx chemistry, and so on. From a practical point of view, every reaction like this is worth a thousand random papers with a terrible substrate scope (<a href=https://onlinelibrary.wiley.com/doi/full/10.1002/1521-3773%2820010601%2940%3A11%3C2004%3A%3AAID-ANIE2004%3E3.0.CO%3B2-5>Sharpless said it better in 2001 than I ever could</a>; see also <a href=https://pubs.acs.org/doi/10.1021/acs.jmedchem.5b01409>this 2015 study</a> about how basically no new reactions are used in industry). Approaches like skeletal editing are incredibly exciting, but there’s a limit to how impactful any non-general methodology can be.
-</p>
-
-<p>
-Perhaps even more important is finding better methods for reaction purification. Purification is one of those topics which doesn’t get a lot of academic attention, but being able to efficiently automate purification unlocks a whole new set of possibilities. Solid-phase synthesis (which makes purification as simple as rinsing off some beads) has always seen some amount of use in organic chemistry, but a lot of commonly-used reactions aren’t compatible with solid support: either new supports or new reactions could address this problem. There are also cool approaches like Marty Burke’s <a href=https://www.nature.com/articles/s44160-024-00558-w?fromPaywallRec=false>“catch-and-release”</a> boronate platform which haven’t yet seen broad adoption.
-</p>
-
-<p>
-Ultimately, I share the dream of the robotics enthusiasts: if we’re able to make organic synthesis routine, we can stop worrying about how to make molecules and start thinking about what to make! I’m very optimistic about the opportunity of new technologies to address synthetic bottlenecks and enable higher-throughput data generation in chemistry. But getting to this point will take not only laboratory automation but also a ton of scientific progress in organic chemistry, and the first step in solving these problems is actually taking them seriously and recognizing that they’re unsolved.
-</p>
-
-<i>
-  Thanks to Abhishaike Mahajan and Ari Wagen for helpful comments about this post.
-</i>
 </div><div class='previous-link'><a href='blog_p3.html'>previous page</a></div><div class='next-link'><a href='blog_p5.html'>next page</a></div><br>
   </body>
   <br>
