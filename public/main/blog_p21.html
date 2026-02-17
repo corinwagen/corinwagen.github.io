@@ -35,7 +35,98 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p20.html'>previous page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220620_glycosylation.html'>Site-Selective Glycosylation: Reflections</a></h2><i>June 20, 2022</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='previous-link'><a href='blog_p20.html'>previous page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220628_plenty_of_room_at_the_bottom.html'>Plenty of Room at the Bottom</a></h2><i>June 28, 2022</i>
+<p>
+  <a href=https://edoc.ub.uni-muenchen.de/15211/1/Sailer_Christian.pdf>This thesis</a>, from Christian Sailer at Ludwig Maximilian University in Munich, 
+  is one of the most exciting studies I’ve read this year. 
+</p>
+
+<p>
+  Sailer and coworkers are able to generate benzhydryl carbocations from photolysis of the corresponding phosphonium salts, and can monitor their 
+  formation and lifetime via femtosecond transient absorption spectroscopy. 
+  (There are some technical challenges which I’ll omit here.) 
+  They then use this platform to study the addition of alcohols to these cations and obtain nice kinetic data on some shockingly fast reactions:
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20220628_electrophile.png" style="width:400px;" alt="rates of reactions with electrophiles" />
+  <figcaption> Rates of reaction between methanol and various cations (page 77). </figcaption>
+</figure>
+
+<p>
+  Although these species are extremely reactive, substituent effects are still paramount: 
+  adding two methyl groups to stabilize the benzhydryl carbocation extends its lifetime by 6.3x, whereas adding two electron-withdrawing fluorines shortens its lifetime by 5.6x. 
+  The most electrophilic species studied, (dfp)<sub>2</sub>CH<sup>+</sup>, reacts with methanol in only 2.6 ps! 
+  These findings demonstrate how even an extremely reactive carbocation like Ph<sub>2</sub>CH<sup>+</sup> doesn’t react at the rate of diffusion with nucleophiles; 
+  although this reaction is almost instant on an absolute scale, there are still tens or hundreds of unproductive alcohol–carbocation interactions before product is finally formed.
+</p>
+
+<p>
+  In contrast to Sailer’s results on the electrophile, which align nicely with results from more conventional kinetic measurements, different alcohols behave very differently:
+</p>
+
+<figure>
+  <img class="centered-img" src="../img/20220628_nucleophile.png" style="width:350px;" alt="rates of reactions with nucleophiles" />
+  <figcaption> Rates of reaction between mfp(Ph)CH<sup>+</sup> and various alcohols (page 75). </figcaption>
+</figure>
+
+<p>
+  This rate difference is surprising, since Mayr’s measurements demonstrate that there’s no conventional difference in nucleophilicity between these species—and intuitively, 
+  one wouldn’t expect adding additional carbons to substantially hinder approach to the oxygen. 
+  However, as Sailer notes, larger molecules rotate and reorient much more slowly than smaller molecules. 
+  This is evident from a number of different physical properties: larger alcohols form more viscous liquids and have slower dielectric relaxation times 
+  (how long it takes them to reorient in response to a new charge).
+</p>
+
+<table>
+  <tr>
+    <th> alcohol </th> 
+    <th> viscosity (<a href=http://murov.info/orgsolvents.htm>ref</a>) </th>
+    <th> dielectric relaxation time (<a href=https://pubs.acs.org/doi/pdf/10.1021/j100048a004>ref</a>) </th>
+    <th> reaction time (above) </th>
+  </tr>
+  <tr>
+    <td> methanol </td>
+    <td> 0.54 cP </td>
+    <td> 5.0 ps </td>
+    <td> 22 ps </td>
+  </tr>
+  <tr>
+    <td> ethanol </td>
+    <td> 1.08 cP </td>
+    <td> 16 ps </td>
+    <td> 41 ps </td>
+  </tr>
+  <tr>
+    <td> <i>n</i>-propanol </td>
+    <td> 1.95 cP </td>
+    <td> 26 ps </td>
+    <td> 62 ps </td>
+  </tr>
+  <tr>
+    <td> <i>iso</i>-propanol </td>
+    <td> 2.07 cP </td>
+    <td> </td>
+    <td> 106 ps</td>
+  </tr>
+  </tr>
+</table>
+
+<p>
+  Sailer thus concludes that, as the timescale of reaction approaches the timescale of molecular motion, nucleophile reorientation becomes rate-limiting. 
+  This is a really cool conclusion, and highlights how the environment that reacting molecules “see” differs from our macroscopic chemical intuition: 
+  although we think of reorientation as barrierless, for very fast reactions reorientation is actually slower than bond formation.
+  (Philosophically related, in my mind, is Dan Singleton’s <a href=https://pubs.acs.org/doi/10.1021/jacs.0c06295>work on non-instantaneous solvent relaxation</a>, 
+  and how this influences the stability of reactive intermediates.)
+</p>
+
+<p>
+  Thus, this work simultaneously highlights both similarities and differences between ultrafast reactions and their benchtop congeners. 
+  My hope is that future studies can find ways to move beyond just benzhydryl cations and study elementary questions of selectivity with different nucleophiles (e.g. addition/elimination). 
+  The ability to observe what is typically the “invisible” step in S<sub>N</sub>1 is incredibly powerful, and I think we’ve barely scratched the surface with what we can learn from measurements like these.
+</p>
+
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20220620_glycosylation.html'>Site-Selective Glycosylation: Reflections</a></h2><i>June 20, 2022</i>
 <p>
   Now that our lab’s site-selective glycosylation has been <a href="https://www.nature.com/articles/s41586-022-04958-w">published</a>,
   I wanted to share some reflections from the computational portion of the work.
