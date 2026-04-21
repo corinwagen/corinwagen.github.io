@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      Multiparameter Compound Optimization with LLMs
+    </title>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="language" content="en">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--twitter-->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@github" />
+    <meta name="twitter:title" content="Multiparameter Compound Optimization with LLMs" />
+    <meta name="twitter:description" content="If you just tell an LLM to make the number go down, it keeps going down." />
+    <meta name="twitter:image" content="https://corinwagen.github.io/public/img/20260421_docking_score.png" />
+
+    <link rel="stylesheet" href="../../static/style.css">
+
+    <link rel="alternate" type="application/rss+xml" title="RSS feed for the blog" href="/rss.xml">
+
+    <!--google-->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MTNZ0ZSG3W"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MTNZ0ZSG3W');
+    </script>
+
+  </head>
+  <body>
+    <ul class="menu-list">
+      <li class="menu-item"><a href="../main/index.html" class="menu-link menu-title">Corin Wagen</a></li>
+      <li class="menu-item"><a href="../main/index.html#about" class="menu-link">About</a></li>
+      <!--<li class="menu-item"><a href="../main/index.html#projects" class="menu-link">Projects</a></li>-->
+      <!--<li class="menu-item"><a href="../main/index.html#past_work" class="menu-link">Past Work</a></li>-->
+      <li class="menu-item"><a href="../main/index.html#pubs" class="menu-link">Papers</a></li>
+      <li class="menu-item">
+        <a href="../main/blog_p1.html" class="menu-link">Blog</a>
+        <a href='../main/archive.html' class="menu-link">(Archive)</a>
+      </li>   
+    </ul>
+    <h1> Multiparameter Compound Optimization with LLMs </h1>
+    <i>April 21, 2026</i>
+    
+<p>
+Yesterday, an interesting paper was released by Prescient Design (Genentech), <a href="https://arxiv.org/pdf/2604.16279">“Evaluating the Progression of Large Language Model Capabilities for Small-Molecule Drug Design.”</a> The authors formulate a variety of problems in small-molecule drug design as reinforcement-learning (RL) problems and use RL-based post-training to improve the performance of a 30B-parameter Qwen model (specifically, Qwen3-30B-A3B-Thinking-2507). They then compare the performance of this fine-tuned Qwen model (“Aspen”) to various frontier models on property prediction, molecular representation tasks, and property-constrained generation. 
+</p>
+
+<p>
+I was particularly interested in the authors’ demonstration that both Aspen and frontier models like GPT 5.2 & Claude Opus 4.6 could perform well in simulated lead-optimization scenarios. Here’s how the authors describe this evaluation in the paper (newlines added for visual clarity):
+</p>
+
+<blockquote>
+	Next, we examine the capabilities of these models in a multi-turn setting, consisting of an iterative molecular optimization loop that simulates real-world lead optimization. Specifically, we consider optimizing a docking score—as a weak proxy for potency—under a set of property constraints, consisting of a combination of DMPK and RDKit properties that can all be computed. 
+	<br><br>
+	For the experiments here, we consider a single target, a carbonic anhydrase IX (PDB ID: 8TTR), and a starting seed molecule obtained from (Elshamsy et al., 2025). Each trajectory starts from the same molecule and runs for 20 turns; at each turn the model proposes a modified SMILES and is provided with the resulting docking score and the corresponding property values of the constraints (see Appendix C.2). In the system prompt (see Appendix C.1), we instruct the model to always propose structurally novel molecules across all 20 turns.
+	<br><br>
+	Importantly, we blind the target name from the model, resulting in a black-box optimization setting that restricts the model from leveraging knowledge about the protein to carry out the optimization.
+</blockquote>
+
+<p>
+This sort of multiparameter optimization is a relatively non-trivial task; while it’s relatively easier to increase docking scores by simply making the molecules bigger or adding hydrogen-bond donors, it’s substantially harder to generate useful improvements that don’t simultaneously compromise solubility, permeability, and other relevant drug-like properties. As such, it’s standard to use specialized frameworks like <a href=https://github.com/MolecularAI/REINVENT4>REINVENT</a> for tasks like this (and even these tools have well-known pathologies).
+</p>
+
+<p>
+What the Genentech team did is much simpler. Essentially, they:
+</p>
+<ol>
+	<li>
+	Tell an LLM that it’s supposed to act like a medicinal chemist, what the design target is, and what the initial SMILES is.
+	</li>
+	<li>
+	Let it propose a new SMILES.
+	</li>
+	<li>
+	Score the SMILES using various computational methods.
+	</li>
+	<li>
+	Return the results to the LLM and let it try again.
+	</li>
+</ol>
+
+<p>
+Surprisingly, this works! Over time, the LLM-proposed molecules get better (as assessed by docking score) while generally abiding by the requested constraints. Although the guess-and-check nature of this workflow implies that even random perturbations should eventually lead to improvements, several factors suggest that chemical intelligence is actually at play here: (1) the base Qwen model is barely able to improve over the baseline, suggesting that it’s unable to meaningfully reason about molecule structures, and (2) the later models from each family fare better than the earlier models, suggesting that increased intelligence leads to better optimizations even within a model family. 
+</p>
+
+<p>
+This approach is compelling because of its simplicity. To run the reported multi-parameter optimization approach, you don’t need a fancy pre-trained generative model or a library of potential synthons: instead, all you need is your favorite LLM and a way to score candidate molecules. I wanted to see if I could recapitulate this with Rowan, so I used Claude Code to build an optimization loop around Rowan’s API. I copied the system prompt almost exactly from Genentech and used Rowan’s docking, solubility, and membrane-permeability workflows to score each candidate compound. While the specific numbers are different than those reported by the Genentech team, the trend is clear:
+</p>
+
+
+<figure>
+  <img class=centered-img src="../img/20260421_docking_score.png" style="width:650px;" />
+</figure>
+
+<figure>
+  <img class=centered-img src="../img/20260421_metrics.png" style="width:650px;" />
+</figure>
+
+<p>
+Although this particular demonstration (optimizing a docking score on carbonic anhydrase) is unlikely to be incredibly impactful, the approach is incredibly general—any computational oracle that can be run via API can, in theory, be optimized using this approach. One could imagine optimizing kinome selectivity, tuning free-radical stability in a polymerization inhibitor, designing molecules with the desired optical properties, or any number of other applications. 
+</p>
+
+<p>
+And while the present implementation is relatively light on scientific context, even blinding the protein’s identity so that the LLMs can’t cheat with pre-existing carbonic anhydrase knowledge, it’s not hard to imagine using data from previous projects or existing scientific literature to help the LLM devise new ideas. (Even providing a representation of the protein–ligand binding site would probably be very helpful.) There’s a lot of ways that this can be improved!
+</p>
+
+<p>
+<a href=https://corinwagen.github.io/public/blog/20251021_seven_thoughts_on_ai_scientists.html>
+Last October, I wrote that AI-driven multi-parameter optimization was one of the most promising short-term applications for “AI scientists”:  
+</a>
+</p>
+
+<blockquote>
+Above that, we can imagine “AI scientists” managing well-defined multi-parameter optimization campaigns. These agents can work to combine or orchestrate the underlying simulation tasks in pursuit of a well-defined goal, like a given target–product profile, while generating new candidates based on scientific intuition, previous data, and potentially human input. Importantly, the success or failure of these agents can objectively be assessed by tracking how various metrics change over time, making it easy for humans to supervise and verify the correctness of the results. Demos of agents like this are already here, but I think we’ll start to see these being improved and used more widely within the next few years.
+</blockquote>
+
+<p>
+This is exactly what we’re seeing now. Despite having been optimistic about agentic AI–driven optimization for months now, I’m still impressed that a single evening of Claude Code (plus Rowan’s API) can produce a competent med-chem optimization agent—no domain-specific fine-tuning or specialized literature access necessary. Capabilities are advancing incredibly quickly in this field, and it’s possible to do things today that were hard to imagine a year ago. 
+</p>
+
+<p>
+<a href=https://github.com/corinwagen/agentic-multiparameter-optimization>I’ve put all my code in a GitHub repository</a>; if you’re interested in this approach, feel free to clone the repository and modify it however you see fit (oracles, system prompt, LLMs, etc). Full methodological details are in the repo.
+</p>
+
+    <br>
+    <br>
+    <i>If you want email updates when I write new posts, you can subscribe <a href=https://cwagen.substack.com/>on Substack.</a></i>
+  </body>
+  <br>
+  <br>
+  <footer>
+    <a href="mailto:corin.wagen+blog@gmail.com">email</a>
+    <a href="https://github.com/corinwagen">github</a>
+    <a href="https://twitter.com/CorinWagen">twitter</a>
+    <div style="float:right;">
+      <a href="/rss.xml">rss</a>
+      <a href="https://cwagen.substack.com">substack</a>
+    </div>
+  </footer>
+</html>

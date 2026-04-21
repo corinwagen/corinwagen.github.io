@@ -35,7 +35,88 @@
         <a href='archive.html' class="menu-link">(Archive)</a>
       </li>
     </ul>
-    <h1 class='blogroll-header'>Blog</h1><div class='next-link'><a href='blog_p2.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20260217_reformation.html'>Book Review: The Reformation As Renewal</a></h2><i>February 17, 2026</i>
+    <h1 class='blogroll-header'>Blog</h1><div class='next-link'><a href='blog_p2.html'>next page</a></div><br><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20260421_multiparameter_optimization.html'>Multiparameter Compound Optimization with LLMs</a></h2><i>April 21, 2026</i>
+<p>
+Yesterday, an interesting paper was released by Prescient Design (Genentech), <a href="https://arxiv.org/pdf/2604.16279">“Evaluating the Progression of Large Language Model Capabilities for Small-Molecule Drug Design.”</a> The authors formulate a variety of problems in small-molecule drug design as reinforcement-learning (RL) problems and use RL-based post-training to improve the performance of a 30B-parameter Qwen model (specifically, Qwen3-30B-A3B-Thinking-2507). They then compare the performance of this fine-tuned Qwen model (“Aspen”) to various frontier models on property prediction, molecular representation tasks, and property-constrained generation. 
+</p>
+
+<p>
+I was particularly interested in the authors’ demonstration that both Aspen and frontier models like GPT 5.2 & Claude Opus 4.6 could perform well in simulated lead-optimization scenarios. Here’s how the authors describe this evaluation in the paper (newlines added for visual clarity):
+</p>
+
+<blockquote>
+	Next, we examine the capabilities of these models in a multi-turn setting, consisting of an iterative molecular optimization loop that simulates real-world lead optimization. Specifically, we consider optimizing a docking score—as a weak proxy for potency—under a set of property constraints, consisting of a combination of DMPK and RDKit properties that can all be computed. 
+	<br><br>
+	For the experiments here, we consider a single target, a carbonic anhydrase IX (PDB ID: 8TTR), and a starting seed molecule obtained from (Elshamsy et al., 2025). Each trajectory starts from the same molecule and runs for 20 turns; at each turn the model proposes a modified SMILES and is provided with the resulting docking score and the corresponding property values of the constraints (see Appendix C.2). In the system prompt (see Appendix C.1), we instruct the model to always propose structurally novel molecules across all 20 turns.
+	<br><br>
+	Importantly, we blind the target name from the model, resulting in a black-box optimization setting that restricts the model from leveraging knowledge about the protein to carry out the optimization.
+</blockquote>
+
+<p>
+This sort of multiparameter optimization is a relatively non-trivial task; while it’s relatively easier to increase docking scores by simply making the molecules bigger or adding hydrogen-bond donors, it’s substantially harder to generate useful improvements that don’t simultaneously compromise solubility, permeability, and other relevant drug-like properties. As such, it’s standard to use specialized frameworks like <a href=https://github.com/MolecularAI/REINVENT4>REINVENT</a> for tasks like this (and even these tools have well-known pathologies).
+</p>
+
+<p>
+What the Genentech team did is much simpler. Essentially, they:
+</p>
+<ol>
+	<li>
+	Tell an LLM that it’s supposed to act like a medicinal chemist, what the design target is, and what the initial SMILES is.
+	</li>
+	<li>
+	Let it propose a new SMILES.
+	</li>
+	<li>
+	Score the SMILES using various computational methods.
+	</li>
+	<li>
+	Return the results to the LLM and let it try again.
+	</li>
+</ol>
+
+<p>
+Surprisingly, this works! Over time, the LLM-proposed molecules get better (as assessed by docking score) while generally abiding by the requested constraints. Although the guess-and-check nature of this workflow implies that even random perturbations should eventually lead to improvements, several factors suggest that chemical intelligence is actually at play here: (1) the base Qwen model is barely able to improve over the baseline, suggesting that it’s unable to meaningfully reason about molecule structures, and (2) the later models from each family fare better than the earlier models, suggesting that increased intelligence leads to better optimizations even within a model family. 
+</p>
+
+<p>
+This approach is compelling because of its simplicity. To run the reported multi-parameter optimization approach, you don’t need a fancy pre-trained generative model or a library of potential synthons: instead, all you need is your favorite LLM and a way to score candidate molecules. I wanted to see if I could recapitulate this with Rowan, so I used Claude Code to build an optimization loop around Rowan’s API. I copied the system prompt almost exactly from Genentech and used Rowan’s docking, solubility, and membrane-permeability workflows to score each candidate compound. While the specific numbers are different than those reported by the Genentech team, the trend is clear:
+</p>
+
+
+<figure>
+  <img class=centered-img src="../img/20260421_docking_score.png" style="width:650px;" />
+</figure>
+
+<figure>
+  <img class=centered-img src="../img/20260421_metrics.png" style="width:650px;" />
+</figure>
+
+<p>
+Although this particular demonstration (optimizing a docking score on carbonic anhydrase) is unlikely to be incredibly impactful, the approach is incredibly general—any computational oracle that can be run via API can, in theory, be optimized using this approach. One could imagine optimizing kinome selectivity, tuning free-radical stability in a polymerization inhibitor, designing molecules with the desired optical properties, or any number of other applications. 
+</p>
+
+<p>
+And while the present implementation is relatively light on scientific context, even blinding the protein’s identity so that the LLMs can’t cheat with pre-existing carbonic anhydrase knowledge, it’s not hard to imagine using data from previous projects or existing scientific literature to help the LLM devise new ideas. (Even providing a representation of the protein–ligand binding site would probably be very helpful.) There’s a lot of ways that this can be improved!
+</p>
+
+<p>
+<a href=https://corinwagen.github.io/public/blog/20251021_seven_thoughts_on_ai_scientists.html>
+Last October, I wrote that AI-driven multi-parameter optimization was one of the most promising short-term applications for “AI scientists”:  
+</a>
+</p>
+
+<blockquote>
+Above that, we can imagine “AI scientists” managing well-defined multi-parameter optimization campaigns. These agents can work to combine or orchestrate the underlying simulation tasks in pursuit of a well-defined goal, like a given target–product profile, while generating new candidates based on scientific intuition, previous data, and potentially human input. Importantly, the success or failure of these agents can objectively be assessed by tracking how various metrics change over time, making it easy for humans to supervise and verify the correctness of the results. Demos of agents like this are already here, but I think we’ll start to see these being improved and used more widely within the next few years.
+</blockquote>
+
+<p>
+This is exactly what we’re seeing now. Despite having been optimistic about agentic AI–driven optimization for months now, I’m still impressed that a single evening of Claude Code (plus Rowan’s API) can produce a competent med-chem optimization agent—no domain-specific fine-tuning or specialized literature access necessary. Capabilities are advancing incredibly quickly in this field, and it’s possible to do things today that were hard to imagine a year ago. 
+</p>
+
+<p>
+<a href=https://github.com/corinwagen/agentic-multiparameter-optimization>I’ve put all my code in a GitHub repository</a>; if you’re interested in this approach, feel free to clone the repository and modify it however you see fit (oracles, system prompt, LLMs, etc). Full methodological details are in the repo.
+</p>
+</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20260217_reformation.html'>Book Review: The Reformation As Renewal</a></h2><i>February 17, 2026</i>
 <figure>
   <img class=centered-img src="../img/20260217_reformers.jpg" style="width:550px;" />
   <figcaption><i>Martin Luther in the Circle of Reformers</i> (1600s)</figcaption>
@@ -906,82 +987,6 @@ And there are myriad uses for computer vision and robotics in lab automation and
 
 <p><i>Thanks to many folks whom I cannot name for helpful discussions on these topics, and to Ari Wagen, Charles Yang, Spencer Schneider, and Taylor Wagen for editing drafts of this piece.</i></p>
 
-</div><div class='blogroll-container'><h2><a class='blogroll-title' href='../../public/blog/20250906_coloring_page_generator.html'>Vibe-Coding a Coloring-Page Generator</a></h2><i>September 6, 2025</i>
-<p>
-  I don’t write about my non-working life much on the Internet; my online presence has been pretty closely tied to Rowan and I try to adhere to some level of what Mary Harrington calls <a href=https://www.maryharrington.co.uk/p/behind-closed-doors>“digital modesty”</a> regarding my family. Still, some basic demographics are helpful for context. 
-</p>
-
-<p>
-I have two kids (aged 2 and 4) and one more due in December. My children have many and varied interests: they like playing GeoGuessr with me, they like making forts, they like pretending to serve food, they like playing with Lego, and—most importantly for this post—they like coloring pictures. 
-</p>
-
-
-<figure>
-  <img class=centered-img src="../img/20250906_coloring_time.png" style="width:450px;" />
-  <figcaption>
-    Dad–daughter coloring time, ft. her toothbrush which she brought over for no apparent reason.
-  </figcaption>
-</figure>
-
-
-<p>
-I find myself printing out a lot of coloring pages these days, and I’ve been generally disappointed by the quality of coloring pages on Google Images. My son often has very specific requests (e.g. “a picture of Starscream fighting”) and it’s difficult to find a coloring page that matches his vision. I have similar problems: I like coloring historical maps because it helps me understand history a bit better, but it’s hard to find good coloring pages of historical maps.
-</p>
-
-<p>
-This problem has bothered me for a while. I tried using ChatGPT for this when 4o started being able to generate images, but the results were terrible. Here’s what ChatGPT thought a map of medieval Europe in 1000 AD should look like, for instance:
-</p>
-
-
-<figure>
-  <img class=centered-img src="../img/20250906_medieval_slop.png" style="width:500px;" />
-</figure>
-
-<p>
-  Points for making modern-day Romania part of the Eastern Roman empire (Ρωμανία), I suppose, but this is unusably bad.
-</p>
-
-<p>
-  After giving up for a few months, I revisited this problem again recently. My goal this time around was to vibe-code a way to convert any image into a coloring page. (If the idea of “vibe coding” is unfamiliar to you, refer to <a href=https://x.com/karpathy/status/1886192184808149383?lang=en>Andrej Karpathy’s post on X</a>.) I gave the prompt to both GPT 5 and Claude 4.1 Opus: while GPT 5 got confused and started creating epicyclically complex Numpy code, Claude 4.1 gave me a pretty clean solution using OpenCV. 
-</p>
-
-<p>
-  <a href=https://github.com/corinwagen/coloring-page-generator>The full code is on Github.</a> Here’s Claude’s summary of its approach, which I confess I don’t fully understand (in the spirit of vibe coding):
-</p>
-
-<blockquote>
-  This code converts colored images into black-and-white line drawings using multiple computer vision techniques tailored to different image types. The implementation provides three main extraction methods: character-based, color boundary-based, and adaptive threshold-based processing.
-  <br><br>
-The character extraction method combines three edge detection approaches. It first applies CLAHE (Contrast Limited Adaptive Histogram Equalization) with a clip limit of 3.0 and 8x8 tile grid to enhance local contrast. It then uses adaptive thresholding with a 9x9 Gaussian window, Canny edge detection (50-150 thresholds) on a Gaussian-blurred image, and Laplacian operators with a threshold of 30. These outputs are combined using bitwise AND operations to preserve edges while reducing noise. The pipeline includes connected component analysis to remove regions smaller than 25 pixels and morphological closing with a 2x2 kernel to fill gaps.
-  <br><br>
-The color boundary method operates in two parallel paths. The first path converts the image to LAB color space after bilateral filtering (d=5, sigmaColor=50, sigmaSpace=50) and runs Canny edge detection (40-80 thresholds) on each channel independently. The second path processes the grayscale image with a sharpening kernel, applies higher-threshold Canny detection (100-250), adaptive thresholding with a 7x7 window, and morphological gradient operations. Text features are preserved by combining these methods and removing components smaller than 4 pixels. Both paths merge via bitwise OR operations.
-  <br><br>
-All methods support adjustable line thickness through erosion or dilation with 3x3 cross-shaped kernels. The adaptive threshold method uses CLAHE preprocessing (clip limit 2.0) followed by 11x11 Gaussian adaptive thresholding combined with Canny edges (30-100 thresholds). Final outputs undergo morphological opening with a 2x2 kernel for noise reduction.
-</blockquote>
-
-<p>
-  Here’s a few examples. This is a picture of Optimus Prime from Google Images and the corresponding coloring page (for my son):
-</p>
-
-<figure>
-  <img class=centered-img src="../img/20250906_optimus.png" style="width:750px;" />
-</figure>
-
-<p>
-  This is a map of medieval French duchies and counties and the corresponding coloring page (for me):
-</p>
-
-<figure>
-  <img class=centered-img src="../img/20250906_france.png" style="width:750px;" />
-</figure>
-
-<p>
-  Neither of these are perfect! In both cases, the important boundaries are a bit lost in the details: Optimus’s outline is a bit unclear in some areas, and it’s tough to tell e.g. where Brittany’s boundaries are without the colored image as a reference. (The text also gets a little damaged in the map.) I’m sure someone who’s good at computer vision could do a better job here—using a tool like Dino v3 or Segment Anything could probably help, as could understanding what the above code is actually doing.
-</p>
-
-<p>
-  Still, this is good enough for routine usage and certainly better than the maps I could find floating around on the internet. I’m pretty happy with what a small amount of vibe-coding can accomplish, and I thought I’d share this anecdote in case other parents out there are looking for bespoke coloring pages.
-</p>
 </div><div class='next-link'><a href='blog_p2.html'>next page</a></div><br>
   </body>
   <br>
