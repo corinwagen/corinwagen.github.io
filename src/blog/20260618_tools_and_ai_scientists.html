@@ -1,0 +1,200 @@
+---
+title: 'Tool Use and "AI Scientists"'
+date: 2026-06-18
+blog: True
+summary: "Four reasons we should expect tooling to remain an integral part of the modern scientific stack."
+image: "https://corinwagen.github.io/public/img/20250618_temple.jpg"
+---
+
+<figure>
+  <img class=centered-img src="../img/20260618_temple.jpg" style="width:400px;" />
+  <figcaption><i>The Rebuilding of the Temple is Begun</i>, Gustave Doré (1866)</figcaption>
+</figure>
+
+<p>
+As AI systems get more powerful and better at scientific tasks, what will the new research ecosystem look like? 
+</p>
+
+<p>
+One perspective, which is rarely stated explicitly but comes up implicitly or in conversation, is that AIs will render much of conventional theory and modeling obsolete: either AI will write its own scientific tools and simulations, or AI will somehow reason from first principles and circumvent the need for conventional simulation tools at all. This view often presumes that conventional approaches to understand or model natural phenomena are flawed or incapable and that LLMs are better off ditching the old ways &amp; starting from scratch.
+</p>
+
+<p>
+As someone who works full-time on simulation tools for chemistry and materials science, I’m clearly a bit biased against this take. But I think I’m not alone here; the vast majority of actual industry scientists I know who are optimistic about AI are eager to give their agents access to the full panoply of tools that they themselves rely on. 
+</p>
+
+<p>
+In this post I want to briefly defend the thesis that we should be excited about the prospect of giving design + simulation tools to scientific AI agents. I think that there are real durable advantages to tool integration. Rather than feeling like agentic tool use is a short-term crutch until the true “bitter lesson” kicks in, I believe that we should expect scientific agents to use tools indefinitely, and I expect tool integration to be an increasingly important aspect of frontier agentic science.
+</p>
+
+<p>
+  (Long-time blog readers may recall that I first wrote about these ideas in <a href=https://corinwagen.github.io/public/blog/20251021_seven_thoughts_on_ai_scientists.html>my October 2025 posts about “AI scientists”</a>, scare quotes deliberate. Since writing that post, I’ve been spending an increasing fraction of my time working with both AI agents inside Rowan and external companies building AI agents atop Rowan. This post attempts to distill some of the ways that I feel my thoughts have changed or sharpened since then.)
+</p>
+
+<p>
+In my mind, there are four big advantages to giving LLMs access to dedicated scientific tools.
+</p>
+
+<h2>1. Tools As Domain-Specific Crystallized Intelligence</h2>
+
+<figure>
+  <img class=centered-img src="../img/20260618_ezra.jpg" style="width:400px;" />
+  <figcaption><i>Ezra Reads the Law to the People</i>, Gustave Doré (1866)</figcaption>
+</figure>
+
+<p>
+In psychology, fluid intelligence is the raw ability that an individual has to flexibly solve totally new problems, while crystallized intelligence is their ability to use existing knowledge and expertise to solve problems similar to those they’ve encountered before (see this Wikipedia article for more details, nuance, and sources). Crystallized intelligence is what differentiates experts in a field from newcomers. While working on frontier science problems for years probably won’t increase your fluid intelligence, it’ll certainly increase your crystallized intelligence for similar problems.
+</p>
+
+<p>
+Specialized scientific tools can’t increase the raw fluid intelligence of a model, but they can act as reservoirs of crystallized intelligence to deploy against specific problems. Giving LLMs access to scientific tools (and skills) is a simple way to inject a certain amount of expertise into the conversation in a token- and context-efficient way.
+</p>
+
+<p>
+To make this concrete, let’s think about a fairly simple task: running a MD simulation starting from a PDB structure of a protein–ligand complex. To do this from scratch, an agent has to figure out how to solve lots of moderately tricky sub-problems, To name just a few:
+</p>
+<ul>
+  <li>
+    How should the protein structure be prepared?
+    <ul>
+      <li>
+        Does the protein have hydrogens? If not, how should they be added?
+      </li>
+      <li>
+        Are there unresolved residues? 
+      </li>
+      <li>
+        Are there any crystallization artifacts that need to be removed?
+      </li>
+    </ul>
+  </li>
+  <li>
+    What forcefield should be chosen for the protein, the ligand, and the water?
+    <ul>
+      <li>
+        And how should the ligand be parameterized? (Is there a starting topology?)
+      </li>
+    </ul>
+  </li>
+  <li>
+    How should the system be simulated? 
+  <ul>
+    <li>
+      What thermodynamic ensemble?
+    </li>
+    <li>
+      What forcefield settings, barostat, thermostat, and so on? 
+    </li>
+    <li>
+      How long should equilibration run for? 
+    </li>
+    <li>
+      How many replicates should be run?
+    </li>
+  </ul>
+  </li>
+  <li>
+    What properties should be analyzed? What insights are we looking for, and how do we rigorously extract these without introducing bias?
+  </li>
+</ul>
+
+<p>
+Modern LLMs are quite competent at problems like this and can often figure out good answers to all of these questions, if given time and the ability to iterate &amp; self-correct. The models have read lots of papers and have substantial latent expertise. But, just like a person doing a new task for the first time, LLMs often spend a substantial amount of time, tokens, and context experimenting with various parameters and trying to figure out the best way to approach a given problem.
+</p>
+
+<p>
+This is fine in isolation but quickly becomes a drag in the process of larger projects. If you’re trying to get an LLM to run a complex scientific process autonomously (i.e. “screen these compounds with docking, run MD, identify the important interactions, score them with SAPT, and propose 20 new compounds”), then the LLM needs to be able to confidently and routinely run each individual step to be able to execute the entire end-to-end workflow. Providing an LLM with purpose-built tools/APIs that work out of the box is a simple way to accomplish this.
+</p>
+
+<p>
+This is already how tools like Claude Code and Codex work so well. Rather than reinventing version control, filesystems, sandboxes, and subprocesses from first principles, coding agents excel because they’re able to leverage pre-existing high-level tools like Git and focus only on the important and differentiated tasks. 
+</p>
+
+<h2>2. Tools As World Model</h2>
+
+<p>
+Another advantage of simulation tools is that they act as an external check on LLMs’ internal reasoning. This is particularly salient for many problems in chemistry; reasoning about 3D structures without a visual aid is notoriously difficult, which is why organic chemistry is such a visual discipline and why ball-and-stick molecular modeling kits have been a mainstay of chemistry education for decades. 
+</p>
+
+<p>
+While AI agents are generally very smart, they still mostly operate based on text-based representations and can struggle to reason correctly about 3D problems.* Starting from just a PDB file and a SMILES string, it’s not very easy to tell if a given molecule will fit into the pocket or which residues it’s likely to interact with: expert human chemists aren’t good at this task, and even a superintelligent agent is unlikely to prefer interacting with chemistry in this way.
+</p>
+
+<p>
+Using a tool like docking or co-folding here is just a better choice for the problem—it’s built to handle this input modality, works reproducibly, and serves as an external check on LLM reasoning. The agent might really think that a given molecule should fit into the ATP binding site, but actually running the docking calculation will tell the agent whether or not this is true.**
+</p>
+
+<p>
+In practice, I think this sort of external “sanity check” helps to keep agents on track and prevent them from hallucinating too much. It can be dangerous for “AI scientists” to think for too long without testing their ideas, much as it is for human scientists. Simulation tools provide a simple and fast way to check ideas before committing to costly or time-consuming laboratory testing. 
+</p>
+
+<p>
+  This is analogous to how static type checking and other automated code-review tools have become so important in the age of agentic coding (<a href='https://jevandezande.github.io/blog/agentic-coding/'>as my colleague Jonathon’s written about</a>). Even frontier LLMs still make trivial errors when writing code, but simple easy-to-run sanity checks that exist outside the LLM’s control can dramatically reduce the error rate and increase the quality of the resultant code.
+</p>
+
+<p>
+  * <i>I think this is one of the reasons why math and programming have seen so much more dramatic progress than chemistry, biology, and materials science.</i>
+</p>
+
+<p>
+  ** <i>Docking is not a good tool for predicting binding affinity, but it’s pretty good at predicting if something’s too big to fit in the pocket.</i>
+</p>
+
+<h2>3. Tools As Efficient Test-Time Compute</h2>
+
+<p>
+Large language models are, as the name implies, large and expensive to run. Even if one assumes that the LLMs of the future possess superhuman reasoning powers and (following the above example) can dock compounds using only string representations of protein and ligand, it’s very unlikely that this will be a pragmatically useful way to run these calculations.
+</p>
+
+<p>
+  Math is a helpful case study here. I can do arithmetic up to some scale in my head, but pretty soon I prefer to use a calculator (particularly if I want to ensure I get the answer right). Similarly, LLMs are perfectly capable of doing math on their own, but <a href='https://corinwagen.github.io/public/blog/20250527_latitude.html'>ask them to compute a tricky trigonometric equation and they far prefer to open a Python notebook</a>. Computers are notoriously good at doing math, and it’s much more efficient to do math directly on a computer than to essentially emulate a calculator in the weights of an LLM.
+</p>
+
+<p>
+  I have similar feelings about asking LLMs to do complicated chemical prediction problems without tools. <a href='https://www.anthropic.com/research/making-claude-a-chemist'>While it’s great to see that Claude is able to predict NMR shifts with accuracy similar to (or even exceeding) that of ChemDraw / MNova</a>,* I personally would far prefer a physics- or ML-based NMR prediction model that runs quickly and can be systematically improved with more data.** Quantitatively accurate NMR prediction is just not a task that Claude needs to excel at! It would be much more efficient to give Claude an NMR tool and save its context window for the difficult-to-encode parts of the task (like spectrum-to-structure inductive reasoning). 
+</p>
+
+<p>
+The cost and token savings of using simple simulation tools instead of frontier LLMs will matter too. As agentic science moves beyond demos and towards wider adoption, workflow cost will become more important (as is already happening for big engineering teams), and asking Fable or GPT 6 to do routine cheminformatics or property-prediction tasks will be not only inefficient but impractically expensive. The right scientific tool can serve as a much more efficient form of test-time compute than naive LLM reasoning.
+</p>
+
+<p>
+* <i>While this is a bit of a tangent, I would also note that the ChemDraw/MNova NMR-prediction tools are hardly state-of-the-art; I’m pretty sure that modern spectrum-prediction models will handily outperform Claude here.</i>
+</p>
+
+<p>
+  ** <i>Early readers note that Claude too can be improved by looking at more NMR data. While this is true, it’s a bit harder to fine-tune an LLM than simply refitting a ChemProp model like many pharma teams do weekly; maybe this will change in the future.</i>
+</p>
+
+<h2>4. Tool Calls As Audit Log</h2>
+
+<figure>
+  <img class=centered-img src="../img/20260618_angel.png" style="width:400px;" />
+  <figcaption>
+    GPT Image 2–generated illustration of the angel with the writing case from Ezekiel 9, in the style of Gustave Dore.
+  </figcaption>
+</figure>
+
+<p>
+While we may one day be comfortable letting our “AI scientists” run rogue and queue whatever lab experiments they want, in the short term I suspect that most organizations would prefer to have an idea of what their agents are doing and why they’re making a given decision. Much as in coding, external tool calls can serve as an interpretable signal about what an LLM is doing. 
+</p>
+
+<p>
+  Companies following a predict-first paradigm (<i>inter alia</i> <a href='https://www.bms.com/life-and-science/science/predictive-molecule-invention.html'>BMS</a>) already routinely run all their human-designed molecules through the same battery of simulations; asking an LLM to use the same tools makes it easy to compare an agent’s results and reasoning to what humans are already doing. In cases where agents are working well, this will likely increase institutional trust; if they start to perform poorly, the external audit log of tool calls might be a helpful tool in figuring out what went wrong.
+</p>
+
+<p>
+Fundamentally, tool calls are also a nicely interpretable way to track LLM decision-making. Scientists already have a fundamental understanding of what different scientific tools are useful for; seeing an agent run a torsion scan or a SAPT calculation between a ligand and a given protein residue is an easy way for scientists to quickly grok what a LLM is doing, right or wrong.
+</p>
+
+<br>
+<br>
+
+<p>
+There’s certainly additional nuance that’s missed by the above reasons, but I think this captures the spirit of my objections to the “no tools” position. In other domains—software development, math, CS, and so on—it seems like LLMs are increasing the need for high-quality tooling, not decreasing it, and I think we should expect the same trend to continue in science.
+</p>
+
+<i>
+Thanks to Ari Wagen, Eli Mann, Eugene Kwan, and Ishaan Ganti for helpful comments on this post, and to many others for conversations on these topics.
+</i>
+
