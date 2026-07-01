@@ -1,0 +1,84 @@
+---
+title: "Small Molecules Have More Information Per Atom Than Biologics"
+date: 2026-07-01
+blog: True
+summary: "And what this means for machine learning..."
+---
+
+<p>
+Something I’ve been thinking about recently is the information content of different biomolecules. While small molecules, peptides, antibodies, and oligonucleotides can all be valuable therapeutic assets in various contexts, they’re strikingly different to synthesize, develop, and simulate. There are well-known reasons for many of these differences—oligonucleotide synthesis can be highly automated, xenobiotic small-molecule metabolism proceeds through totally different pathways than peptide metabolism, and so on—but at a high level I think many of these differences can be seen as downstream of the observation that small molecules have much higher information entropy per atom.
+</p>
+
+<p>
+Information entropy, also known as Shannon entropy (after Claude Shannon), quantifies the amount of “surprise” associated with each new piece of data. A sequence like “AAAAAAAAAAAAACAAAAA” has low entropy, since almost every letter is A—seeing another A gives us little new information, and so we can guess with pretty good odds that the next letter will be “A.” In contrast, a sequence like “ACTAGGACATAAGACAGGCT” has high entropy, since it seems that any position has four different possibilities. Since there are many possible sequences like this (just over a trillion for this length), each new letter conveys a lot of information about which particular sequence this is.
+</p>
+
+<p>
+(This is a very brief introduction to Shannon entropy, and may be insufficient for those new to the topic—you can find plenty of better ones on Google.)
+</p>
+
+<p>
+For molecules, we can approximate the information content per atom as the base-2 logarithm of the number of possible molecules divided by the number of possible atoms. This definition lets us make some quick estimates for the per-atom entropy of different modalities:
+</p> 
+
+<ol>
+  <li>
+    There are 4 valid nucleotides, or two bits of entropy per nucleotide. If we approximate a nucleotide as having 20 heavy atoms, we find that an oligonucleotide contains <b>0.1 bits of entropy per heavy atom</b>.
+  </li>
+  <li>
+    For proteins and other peptides, there are 20 valid amino acids, or 4.32 bits of entropy per residue. Assuming 8.3 heavy atoms per residue, this gives us a value of <b>0.52 bits of entropy per heavy atom</b>.
+  </li>
+  <li>
+    Small molecules are a different story. <a href="https://pubs.acs.org/doi/10.1021/ci300415d">The GDB-17 paper</a> estimates that there are 166 billion druglike molecules with 17 or fewer heavy atoms, with the vast majority of these having 15–17 heavy atoms. This corresponds to <b>2.2 bits of entropy per heavy atom</b>.
+</li>
+</ol>
+
+<p>
+  The small-molecule value quoted above may even be conservative: GDB-17 applies fairly conservative filters and doesn’t include elements like S, P, B, and so on. If you take the oft-cited figure of 10<sup>60</sup> possible drug-like molecules below 500 Da and approximate that as 35 heavy atoms, you arrive at a significantly larger value of 5.7 bits of entropy per heavy atom.
+</p>
+
+<p>
+The markedly higher entropy of small molecules helps explain why small molecules are so tricky to synthesize. Fundamentally, any synthetic route must be specific and selective enough to disambiguate between virtually infinite numbers of potential products, which drives chemists to use complex and obscure reactions to achieve selectivity. Most approaches to simplifying small-molecule synthesis do so by vastly reducing the addressable space, enabling simple “Lego brick”–style routes to be employed. While there are sure to be improvements in synthetic technology over the decades to come, I think that making arbitrary small molecules will continue to be a difficult and complex task for fundamental and unescapable reasons.
+</p>
+
+<p>
+  The high information content of small molecules also explains why they can be such effective drugs. The ability to pack so much information into a small number of atoms makes it possible to achieve impressive selectivity with a tiny molecule—consider, e.g., the fact that you can have highly selective kinase inhibitors that are also small and non-polar enough to diffuse through the blood–brain-barrier. This sort of thing just isn’t possible with peptides!<sup><a href="#fn1">1</a></sup>
+</p>
+
+<p>
+But the area where I’ve been thinking about this most is simulation and machine learning. It seems empirically true that it’s much easier to predict or model protein–protein binding than protein–small molecule binding. While protein-binder design with models like BindCraft works well and metrics like ipSAE seem to correlate well with protein–protein binding affinity, the analogous problems for small molecules still seem mostly unsolved (see e.g. <a href="https://patwalters.github.io/Three-Papers-Demonstrating-That-Cofolding-Still-Has-a-Ways-to-Go/">Pat Walters’ writing from last year</a>).
+</p>
+
+<p>
+I think that this is downstream of information content. While a 300-residue protein has just as much total information as any small molecule, the overall complexity of any individual region of intermolecular interactions is much lower. There are a relatively small number of chemically distinct groups in proteins—indoles, imidazoles, amides, and so on—and it’s plausible that co-folding models or other biomolecular ML models can “learn” at a high level how these groups naturally interact with one another without needing to fundamentally understand the systems on the all-atom level. This means that learning to predict protein–protein or protein–oligonucleotide interactions is much easier than learning to predict protein–small molecule interactions, perhaps many orders of magnitude easier. 
+</p>
+
+<p>
+In contrast, there are almost infinitely many such small-molecule functional groups—pyridines, quinazolines, azaindoles, thiadiazoles, and so on—each with different chemical properties and a different interaction profile with protein sidechains. This means that the data scarcity problem is much worse than it seems for small molecules, and makes me skeptical that purely ML-based approaches for predicting binding affinity will work in the medium term. (I may be wrong here!)
+</p>
+
+<p>
+  (How much data will it take to actually learn arbitrary interatomic interactions? It’s hard to say for sure, but evidence from the neural-network-potential field suggests that it might take a lot. The OMol25 dataset comprises over 100 million DFT calculations with energy and per-atom force labels, so roughly 1–10 billion individual labels, and OMol25-trained models are the first models that seem to actually match the performance of physics-based methods on e.g. non-covalent interactions. While initiatives like OpenBind are promising and very valuable, I’m skeptical that even tens of thousands of new protein–ligand complexes will be enough here.)<sup><a href="#fn2">2</a></sup>
+</p>
+
+<p>
+I remain optimistic about the future of physics and physics-adjacent methods in small-molecule drug design for these reasons. Methods like quantum chemistry and FEP are able to avoid the training-data limitations of pure ML methods and show good generalizability for arbitrary small molecules. While I’m unbelievably excited about our new AI-powered scientific future, I think that the immense information content of small molecules puts fundamental limitations on what ML can accomplish, and means that (for better or worse) we’re going to be stuck with physics for the foreseeable future. 
+</p>
+
+<p>
+  <i>
+    Thanks to Ishaan Ganti and Ari Wagen for helpful discussions here. 
+  </i>
+</p>
+
+<h3>Footnotes</h3>
+<ol class=footnotes>
+  <li id="fn1">
+    Except for some peptides and other large molecules, which do diffuse through the blood–brain barrier! Some of these seem to occur through active transport, but there’s some mystery here still.
+  </li>
+  <li id="fn2">
+    Note that there are many different potential forms of data, the shape of these problems is different, and there are other issues that make this comparison imperfect. I use this analogy simply to argue that we probably need a lot more data, not a little.
+  </li>
+</ol>
+
+
