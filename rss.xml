@@ -4,6 +4,204 @@
           <link>https://corinwagen.github.io</link>
           <title>Corin Wagen</title>
           <item>
+              <title>What Reading Edward Feser&#39;s Introduction to Scholastic Metaphysics Taught Me about B2B SaaS</title>
+              <link>public/blog/20260730_scholastic_metaphysics.html</link>
+              <description><![CDATA[
+<p>
+If you’re wondering “is this a joke,” the answer is both yes and no.
+</p>
+
+<p>
+  This post is certainly a joke in the sense of "something that I'm intentionally doing because I thought it would be funny". I picked up Feser’s <i>Scholastic Metaphysics: A Contemporary Introduction</i> after reading <a href="https://firstthings.com/thomophobia/">a <i>First Things</i> article by Mary Harrington</a>, and whilst reading the book I thought of the title of this post and started laughing. By analogy to Anselm’s ontological argument, the funniest version of this joke would have to be not just a title in my head but rather a full post published on my blog, and thus I was honor-bound to actually write the post, which you’re now reading. 
+</p>
+
+<p>
+  Unfortunately, this post is also not a joke insofar as everything I’m writing is true: I actually read Feser’s <i>Scholastic Metaphysics</i>, I’m actually a B2B SaaS founder (yikes), and I’m actually going to write my sincere-yet-sarcastic thoughts about how the underappreciated field of Scholastic metaphysics connects to the scintillating topic of B2B SaaS.
+</p>
+
+<p>
+  Why write this post at all, though? <a href="https://en.wikipedia.org/wiki/Ontological_argument#Criticisms_and_objections">Thomas Aquinas was skeptical of Anselm’s ontological argument</a>, arguing that humans cannot sufficiently comprehend the divine, and one might be similarly skeptical of my claim that the full blog will be funnier than just imagining the title. B2B SaaS is a notoriously boring topic; it’s entirely possible that this joke just bogs down in philosophical terminology with few redeeming qualities. 
+</p>
+
+<p>
+  My real goal here is to provide an interesting yet accessible review of the ideas in Feser’s book. Borrowing Scholastic language, one might say that while the efficient cause of this post is to entertain, the final cause (<i>telos</i>) of this post is to educate modern readers about concepts from medieval metaphysics. Metaphysics is a topic that can be particularly slippery for the modern secular–materialist worldview; while the world that we inhabit is certainly not free from metaphysical claims and ideas, metaphysics <i>qua</i> metaphysics is rarely discussed and remains a cultural blind spot. 
+</p>
+
+<p>
+Feser’s book does an excellent job pitching metaphysical ideas to the skeptical modern reader in accessible language, connecting these ideas to modern scientific notions of substance and matter. Accordingly, a serious blog-based book review in my usual style seems unlikely to provide differential value: I can hardly distill Feser’s already compact introduction any further without losing what little nuance and rigor remains. What follows is my attempt to instead blend sober-minded exploration of philosophy with low-effort B2B SaaS–related humor.
+</p>
+
+<p>
+  <i>
+By way of quick background: metaphysics is the branch of philosophy concerned with the fundamental nature of reality, Scholasticism is the body of thought associated with late Medieval scholars like Thomas Aquinas, B2B refers to businesses selling to other businesses, and SaaS stands for “software as a service,” a business model wherein software is sold on an ongoing subscription basis.
+  </i>
+</p>
+
+<p>
+  <i>
+I should also give a disclaimer that (1) I’m not a philosophy expert, just a guy who read a book, (2) these ideas are tough and I may be misunderstanding them, and thus (3) my summary of Feser’s writing is likely to be cartoonishly incorrect or simplistic to trained audiences.
+  </i>
+</p>
+
+<h2> Act and Potency </h2>
+
+<p>
+The first big idea of Feser’s book is the distinction between act and potency, immortalized in the first of the 24 Thomistic Theses endorsed by Pope Pius X in 1914 (p. 31):
+</p>
+
+<blockquote>
+Potency and act are a complete division of being. Hence, whatever is must be either pure act or a unit composed of potency and act as its primary and intrinsic principles.
+</blockquote>
+
+<p>
+These terms are slightly obscure. “Being-in-act” refers to an object as it really exists at present, while “being-in-potency” refers to what that object might become through change. The thesis’s claim is that, at core, the nature of things is such that the act–potency distinction is fundamental and prior to other differences (like difference in material, identity, and so on and so forth). 
+</p>
+
+<p>
+This description doesn’t replace or oppose conventional scientific descriptions of objects as comprising molecules, atoms, electrons, and so on. Rather, Feser argues that the metaphysical description of objects is orthogonal to and deeper than the reductionist materialist description, and that concepts of act and potency lose no value when applied to understanding e.g. the nature of subatomic particles. In fact, much contemporary philosophy-of-science discourse appears to be essentially recapitulating a potency-based description of scientific laws (see discussion on pp. 62–73), wherein the action of processes like gravitational attraction is mediated by causal relations which are themselves “real” and not purely happenstantial. 
+</p>
+
+<p>
+Feser argues that the proper relationship between act and potency provides the resolution to countless ancient philosophical quandaries. The Eleatic philosophers (Parmenides and Zeno) denied the reality of change, arguing that change implies that being must arise from non-being, which is impossible—hence Zeno’s well-known paradoxes. In parallel, Heraclitus argued that change alone describes reality and “there is no stability of persistence or even a temporary sort” (p. 33). Both of these views might seem ridiculous to us, and indeed can be shown to be self-inconsistent. (Feser adores using the “principle of retorsion” here, which refutes a position by showing it to be logically inconsistent with itself—I had to look it up.)
+</p>
+
+<p>
+Instead, Feser argues that the correct view is to affirm both the reality of existence and change through the act–potency distinction (pp. 35–36, emphases original): 
+</p>
+
+<blockquote>
+We have, then, the following basic argument for the distinction between potency and act: that change and permanence, multiplicity and unity, are all real features of the world cannot coherently be denied; but they can be real features of the world only if there is a distinction in things between what they are <i>in act</i> and what they are <i>in potency</i>. 
+</blockquote>
+
+<p>
+How does this pertain to B2B SaaS? For software companies, being-in-act represents their current state—the product or services that they currently offer—while being-in-potency represents the products and markets they could conceivably address in the future.
+</p>
+
+<p>
+Understanding the act–potency distinction is key for aspiring B2B SaaS companies. Startups that are pure act are unambitious, lacking a clear forward vision and any sense of change or industry disruption. A pure being-in-act SaaS company can be an excellent lifestyle business or PE-rollup target, but it’s unlikely to be a high-growth company or a “live player” in a fast-moving industry—and the lack of vision and ambition makes it hard to acquire and retain good talent and good customers.
+</p>
+
+<p>
+  In contrast, a pure being-in-potency SaaS business is unmoored from reality and exists without sufficient present substance to make good on its commitments. Such businesses tend to overpromise and struggle to deliver, often collapsing due to operational difficulties: Parker Conrad has some good reflections on the operational challenges faced at Zenefits as a result of too-rapid growth (see pp. 6–7 in <a href="https://www.thesocialradars.com/transcripts/TSR-S2-Parker-Conrad.pdf">this transcript from <i>The Social Radars</i></a>). In the worst-case scenario, pure potency businesses can become fraudulent, like Delve or Theranos.
+</p>
+
+<p>
+Building a good B2B SaaS business, then, requires a keen understanding of the act–potency decision. The right business balances both act (what is) and potency (what might be), making sure to continue balancing these concepts as the company grows, employees turn over, and market conditions evolve. 
+</p>
+
+<h2> Efficient Causes and Final Causes </h2>
+
+<p>
+Feser’s second chapter deals with the ideas of efficient cause and final cause (p. 88, emphases original): 
+</p>
+
+<blockquote>
+  Aristotelians famously distinguish between <i>efficient</i> and <i>final</i> causes. An efficient cause is that which brings something into existence or changes it in some way… It is, more or less, what is usually meant by “cause” in contemporary philosophy. A final cause is an end, goal, or purpose, “that for the sake of which” something exists or occurs.
+</blockquote>
+
+<p>
+This leads us to ideas like the principle of finality: “if A is by nature an efficient cause of B, then generating B must be the final cause of A” (92). This claim is controversial in modern philosophy, where efficient causes alone are typically seen to be sufficient to describe why an efficient cause necessitates its effects, but Feser argues that modern views ultimately collapse either to an Ockham-style divine occasionalism or an admission that there is something intrinsic about the relationship between causes and effects, some “intrinsic feature” of A that points it toward B (pp. 93–105). While final causes don’t provide a complete explanation of all causal relationships, they’re a useful and necessary component of the metaphysical landscape.
+</p>
+
+<p>
+Here, the connection to B2B SaaS is obvious. Teleological statements, or statements pertaining to the “final cause” of a business, are shockingly common among Silicon Valley companies; take inter alia Airbnb’s goal “to create a world where anyone can belong anywhere,” Google’s aim to “organize the world’s information,” or Mark Zuckerberg’s statement that Facebook exists “to make the world more open and connected.” 
+</p>
+
+<p>
+  The naïve metaphysical nihilist will be tempted to dismiss these statements as purely public relations or marketing, and to analyze these businesses solely on the basis of efficient causes: current cash-flow statements, quarterly earnings, and so on and so forth. This approach can work over short timescales, but struggles to make sense of high-variance strategic moves, like Zuck’s Metaverse conviction or ByteDance’s growing AI-for-science investments. Only teleological analysis based on the self-proclaimed final cause of these companies can explain such behaviors. (See also <a href="https://conversationswithtyler.com/episodes/ben-thompson/">this <i>CWT</i> episode with Ben Thompson</a>, where he argues that most founder-CEOs are indeed “true believers” and take their own grandiose mission statements seriously.)
+</p>
+
+<h2> Form and Matter </h2>
+
+<p>
+Aristotle famously outlines four causes for any effect: the formal cause, the material cause, the efficient cause, and the final cause. On this topic, Feser writes (p. 160, emphases original):
+</p>
+
+<blockquote>
+  Our consideration of the theory of act and potency has led us to the latter two causes. A potency is always a potency <i>for</i> some actuality. It points beyond itself to an end or range of ends. Hence to understand a thing’s potencies is to understand it in terms of final causality. A potency can be actualized only by what is already actual. Hence to understand a thing’s coming into being or changing—that is to say, its becoming actual in various respects—is to understand it in terms of efficient causality. A thing’s final and efficient causes are <i>extrinsic</i> principles of its being, since the ends to which it points and the causes which actualize it are outside it.
+<br>
+<br>
+  Now the theory of act and potency also leads us naturally to two <i>intrinsic</i> principles of a thing’s being, namely its material and formal causes—that is to say, its matter and form.
+</blockquote>
+
+<p>
+Form refers to the “determinizing, actualizing pattern” that actualizes some potency, while matter refers to the “determinateable substratum that is the seat of the potencies in question” (p. 161). To illustrate this, Feser uses the example of ink inside a pen. The ink is matter that has the potency to dry into various shapes, like a circle or a star, and once dried has further potencies (like that of being erased). The ink is the matter, whereas the forms are the patterns like “being liquid,” “being circular,” “being blue,” and so forth; as the potencies of the ink are actualized, the forms are what result. 
+</p>
+
+<p>
+Feser next discusses the idea of “prime matter,” or matter that is completely devoid of form. While secondary forms of matter like ink are restricted in their potency (the ink cannot become a bottle of wine or a duck), prime matter “is not yet any particular thing or another… it is indeterminate, the pure potency for form” (p. 171). The modern scientific mind might think of atoms here, but even atoms have a metaphysical form (that of being atoms). Prime matter is so unformed that one cannot say anything about it other than that it is matter—it’s the raw substance from which all extant things are derived, through the action of various forms.
+</p>
+
+<p>
+In the context of B2B SaaS, “prime matter” is obviously money. Money is pure potency to companies: through the action of another, it can become “secondary matter” in the form of employees, office space, software licenses, cloud credits, and so forth, but of its own accord money is “amorphous or without any form whatsoever” (p. 172). This too is an advantage, though—secondary matter is “limited to a particular time and place, and limited in the degree of perfection to which a thing instantiates them” (p. 171), but prime matter has no such limitations. 
+</p>
+
+<p>
+Cash in the bank can represent many things to B2B SaaS companies at various stages. Early on, it’s often a vanity metric: founders who raise more are successful, while small fundraises are shameful. Later on, cash becomes health, with distressed companies struggling to grow revenue, cut burn rate, and extend their runway long enough to hit their next fundraising milestones. But plenty of successful and cash-flow positive B2B SaaS companies continue to fundraise long after they can safely generate free cash flow from their existing business—why? 
+</p>
+
+<p>
+Reading Feser’s book helps me to understand why. Money is business’s prime matter, a direct infusion of potency “without form or void” which counteracts the natural accretive tendencies of successful institutions and preserves the key act–potency balance discussed above. And indeed companies which raise too much can suffer from the flaws of excessive potency discussed above, wasting resources on lavish office spaces and expensive conference booths rather than on substantial matters.
+</p>
+
+<h2> Substantial and Accidental Form </h2>
+
+<p>
+The Scholastics distinguished between substantial and accidental forms. An object with substantial form has a characteristic behavior “that derives from something intrinsic to it,” while an object with accidental form does not have such an intrinsic principle of behavior (p. 164). Trees naturally grow, seek light and water, and produce fruit, while a pile of rocks, however artfully arranged, does no such thing. 
+</p>
+
+<p>
+This dichotomy can be applied to businesses too. While a strict Scholastic would likely say that all companies have accidental forms, taking these terms loosely we can say that some companies have “substantial-ish forms” (i.e. forms which work together harmoniously towards a single goal) and other companies have “accidental-ish forms” (i.e. forms comprising disparate pieces with disparate goals). Companies with substantial-ish forms can naturally respond and adapt to their environment as a consequence of their organization and nature, while companies with accidental forms struggle to do so efficiently. 
+</p>
+
+<p>
+  How can we determine which companies have substantial-ish forms, and how can we identify the ideal substantial form for a given company? Ronald Coase’s 1937 article <a href="https://en.wikipedia.org/wiki/The_Nature_of_the_Firm">“The Nature of the Firm”</a> puts together an elegant model of the natural structure of companies under different constraints. Briefly, Coase argues that corporations emerge to minimize transaction costs. In a world without transaction costs, everyone could be an autonomous worker: developers could be hired <i>ad hoc</i> by their engineering managers, SDRs could be hired per lead, the CEO could pay the CFO for his services as needed, and there would be no companies. In the real world, though, the overhead associated with all of this would be tremendous—”hey, can I get you to sign another NDA for this next weekly meeting?”—and it’s simpler to create companies to minimize transaction costs within the organization. Thus a single B2B SaaS company that sells a discrete standalone product likely has a substantial corporate form. 
+</p>
+
+<p>
+  Things start to get complicated, though, when contemplating ecosystem integration. Software conglomerates with few natural overlaps might be better off spinning out separate assets; <a href="https://corpgov.law.harvard.edu/2020/01/08/the-value-killers/">many mergers destroy value</a>, and it’s likely that the value of one overall conglomerate with accidental corporate form is lower than several divested entities with substantial corporate form. At the other extreme, some companies sell products that do not really deserve to be products <i>qua</i> products, but would make more sense as features of someone else’s product—if a merger would lower transaction costs throughout the system, both for vendors and customers, it might be possible that the proper substantial form is indeed the merged state. The current “death of SaaS” investor worries may stem from their belief that the substantial form of the frontier labs is, ultimately, to control all software.
+</p>
+
+<h2> Metaphysical Nihilists, Beware! </h2>
+
+<p>
+Feser argues that, despite the ignominity with which modern (i.e. post-1400s) philosophers treat Scholastic thought, the fundamental concepts of Scholastic metaphysics are nevertheless inescapable. Contemporary secular–materialist thought treats material and efficient causes as more or less sufficient, which leaves our culture dramatically ill-equipped to think critically about issues that cannot cleanly be reduced to an atomistic picture, including not only the nature of scientific laws but also of ideas, consciousness, and knowledge itself. On this topic Feser writes (pp. 27–28, emphases original):
+</p>
+
+<blockquote>
+  The Scholastic maintains that there are truths of a <i>metaphysical</i> nature which (like the truths of logic and mathematics) are necessary and objective but which also (like the truths of logic and mathematics) are not plausibly regarded as propositions either of natural science or mere “conceptual analysis” <i>[contra Hume]</i>... This situation illustrates what is for the Scholastic a basic philosophical truth, which is that <i>metaphysics is prior to epistemology</i>. One way in which this is the case is that absolutely every epistemological theory rests on metaphysical assumptions—including Hume’s when he begins with the supposition that there are impressions and ideas, and including the naturalist’s when he supposes that our cognitive faculties are at least reliable enough to make natural science an objective enterprise…. When the critic of metaphysics insists that the metaphysician establish his epistemological credentials before making any metaphysical assertions, he is making a demand that is incoherent and to which he does not submit himself. 
+</blockquote>
+
+<p>
+Feser’s argument is essentially that neglecting metaphysics is not an option, and that we’re all sneaking our metaphysics into our downstream philosophical or scientific thinking even if we don’t realize it. This isn’t, by itself, an argument that the Scholastic view is correct—but it should at least motivate the thoughtful modern reader to engage with Feser’s views and with metaphysics more broadly. Metaphysical nihilism is an unserious option.
+</p>
+
+<p>
+Like Scholastic metaphysics, many modern observers (c. summer 2026) feel that B2B SaaS is dead and a thing of the past. Without belaboring the point too much—a full discussion would take an entirely separate post, or several—I’m very skeptical of these claims, for largely Coasian reasons, and think that most of the so-called “reinventions” of how software is sold, delivered, and maintained in a B2B environment are doomed to recapitulate much of the broad structure of classic mid-2010s B2B SaaS. (<a href="https://erikbern.com/2026/02/25/software-companies-buying-software-from-software-companies">This blog post</a> by Erik Bernhardsson of Modal is a great read and very relevant here.) If software is eating the world, B2B SaaS may be as inescapable as metaphysics. 
+</p>
+
+<p>
+There’s a lot more that one could imagine writing here—how the dispute between Duns Scotus and Aquinas on analogical equivocation mirrors different B2B SaaS deployment architectures, whether hylomorphism provides a good framework for understanding AI agent frameworks, what “software-enabled business transformation” really means in a metaphysical sense (is it the form of the business that’s changing?), the teleological implications of public benefit corporations—but every joke has to end. 
+</p>
+
+<p>
+If you liked this post, like and comment “PRINCIPLE OF SUFFICIENT REASON” below to get a free preview of my 12-week course “Supercharging Revenue Growth With the POWER of Scholastic Metaphysics.”
+</p>
+ 
+<p>
+(n.b. please do not actually do this!)
+</p>
+
+<figure>
+  <img class=centered-img src="https://corinwagen.github.io/public/img/20260730_grow_revenue.png" style="width:650px;" />
+</figure>
+
+
+<i>Thanks to two philosophy professors (who shall remain nameless) for helpful discussions here, and Andrew White for sending me Erik's blog post.</i>
+]]></description>
+              <pubDate>Thu, 30 Jul 2026 00:00:00 +0000</pubDate>
+          </item>
+          <item>
               <title>Towards an Anagogical Reading of “Venice Bitch”</title>
               <link>public/blog/20260713_anagogical.html</link>
               <description><![CDATA[
